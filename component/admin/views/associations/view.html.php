@@ -10,37 +10,44 @@
 
 /* No direct access */
 defined('_JEXEC') or die('Restricted access');
-
-jimport( 'joomla.application.component.view' );
-
 /**
  * Associations View
  */
-class RedproductfinderViewAssociations extends JView {
+class RedproductfinderViewAssociations extends JViewLegacy
+{
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) {
+	function display($tpl = null)
+	{
 		global $mainframe;
 		/* Get the task */
-		$task = JRequest::getCmd('task');
-		$params = &JComponentHelper::getParams( 'com_redproductfinder' );
-		$use_quality_score = $params->get('use_quality_score');
-		$form_id = $params->get('form');
+		$task 				= JRequest::getCmd('task');
+		$params 			= &JComponentHelper::getParams( 'com_redproductfinder' );
+		$use_quality_score 	= $params->get('use_quality_score');
+		$form_id 			= $params->get('form');
 
-		switch ($task) {
+		/* add submenu here */
+		RedproductfinderHelper::addSubmenu("associations");
+
+		switch ($task)
+		{
 			case 'apply':
 			case 'edit':
 			case 'add':
 				if ($task == 'apply') $row = $this->get('SaveAssociation');
 				else $row = $this->get('Association');
 
-				if ($row) {
+				if ($row)
+				{
 					/* Get the published field */
 					$lists['published'] = JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published);
 				}
-				else $lists['published'] = '';
+				else
+				{
+					$lists['published'] = '';
+				}
 
 				/* Get the Redshop products */
 				$lists['products'] = JHTML::_('select.genericlist',  $this->get('Products'), 'product_id', '', 'product_id', 'full_product_name', $row->product_id);
@@ -95,8 +102,8 @@ class RedproductfinderViewAssociations extends JView {
 						foreach ($type['tags'] as $tagid => $tag) {
 							/* Check if the tag is selected */
 							$myassotype=$model->getAssociationTypes($tagid);
-							
-						
+
+
 							if(in_array($tagid, $associationtags) && $typeid==$myassotype->type_id)
 							{
 								//echo "<pre>";print_r($associationtags);
@@ -120,13 +127,13 @@ class RedproductfinderViewAssociations extends JView {
 								if($form_detail[0]->dependency==1)
 								{
 									$html .= '<select name="sel_dep'.$typeid.'_'.$tagid.'[]" id="sel_dep'.$typeid.'_'.$tagid.'" multiple="multiple" size="10"  >';
-		
+
 									foreach($types as $sel_typeid => $sel_type)
 									{
 										if($typeid==$sel_typeid)
 											continue;
 										$dependent_tag = $model->getDependenttag($row->product_id,$typeid,$tagid);
-		
+
 										$html .= '<optgroup label="'.$sel_type['type_name'].'">';
 										foreach ($sel_type['tags'] as $sel_tagid => $sel_tag) {
 											$selected = in_array($sel_tagid,$dependent_tag) ? "selected" : "";
@@ -193,12 +200,15 @@ class RedproductfinderViewAssociations extends JView {
 		parent::display($tpl);
 	}
 
-	function toolbar() {
-		switch (JRequest::getCmd('task')) {
+	function toolbar()
+	{
+		switch (JRequest::getCmd('task'))
+		{
 			case 'edit':
 			case 'apply':
 			case 'add':
-				switch (JRequest::getCmd('task')) {
+				switch (JRequest::getCmd('task'))
+				{
 					case 'add':
 						JToolBarHelper::title(JText::_( 'Add Association' ), 'redproductfinder_association');
 						break;
@@ -206,8 +216,9 @@ class RedproductfinderViewAssociations extends JView {
 						JToolBarHelper::title(JText::_( 'Edit Association' ), 'redproductfinder_association');
 						break;
 				}
+
 				JToolBarHelper::save();
-				// JToolBarHelper::apply();
+
 				JToolBarHelper::cancel();
 				break;
 			default:
@@ -216,7 +227,6 @@ class RedproductfinderViewAssociations extends JView {
 				JToolBarHelper::unpublishList();
 				JToolBarHelper::spacer();
 				JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the associations?'));
-				JToolBarHelper::editListX();
 				JToolBarHelper::addNew();
 				break;
 		}

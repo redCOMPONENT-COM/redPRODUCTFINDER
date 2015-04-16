@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path="component"/>
+	<buildpathentry kind="src" path="modules/mod_redproductfilter"/>
+	<buildpathentry kind="src" path="modules/mod_redproductfinder"/>
+	<buildpathentry kind="lib" path="modules/mod_redproductfilter.zip"/>
+	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+</buildpath>

@@ -15,7 +15,7 @@ jimport( 'joomla.application.component.model' );
 /**
  * Associations Model
  */
-class RedproductfinderModelAssociations extends JModel {
+class RedproductfinderModelAssociations extends JModelList {
 	/** @var integer Total entries */
 	protected $_total = null;
 
@@ -46,13 +46,13 @@ class RedproductfinderModelAssociations extends JModel {
 		$mainframe = JFactory::getApplication();
 		/* Lets load the pagination if it doesn't already exist */
 		if (empty($this->_pagination)) {
-		jimport('joomla.html.pagination');	
+		jimport('joomla.html.pagination');
 		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
 		$this->_limitstart = JRequest::getVar('limitstart', 0, '', 'int');
- 
+
 		// In case limit has been changed, adjust it
 		$this->_limitstart = ($this->_limit != 0 ? (floor($this->_limitstart / $this->_limit) * $this->_limit) : 0);
-	
+
 			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
 				//$mainframe->Redirect('index.php');
 		}
@@ -402,20 +402,20 @@ $mainframe = JFactory::getApplication();
 		$id = JRequest::getVar('cid', false);
 		if (!$id) return array();
 		else {
-			$q = "SELECT type_id 
+			$q = "SELECT type_id
 				FROM #__redproductfinder_association_tag
 				WHERE association_id = ".$id[0]." and tag_id=".$tag."";
-			
+
 			$db->setQuery($q);
 			return $db->loadObject();
 		}
 	}
-	
+
 	function getFormDetail($id) {
 		$db = JFactory::getDBO();
 		if (!$id) return array();
 		else {
-			$query = "SELECT * 
+			$query = "SELECT *
 				FROM #__redproductfinder_forms
 				WHERE id = ".$id."";
 			$db->setQuery($query);

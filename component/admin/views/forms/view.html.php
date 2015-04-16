@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license can be read in this package of software in the file license.txt or
@@ -11,24 +11,27 @@
 /* No direct access */
 defined('_JEXEC') or die('Restricted access');
 
-jimport( 'joomla.application.component.view' );
-
 /**
  * redFORM View
  */
-class RedproductfinderViewForms extends JView {
+class RedproductfinderViewForms extends JViewLegacy
+{
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) {
-		global $mainframe;
-$mainframe = JFactory::getApplication();
+	function display($tpl = null)
+	{
+		$mainframe = JFactory::getApplication();
 		/* Get the task */
 		$task = JRequest::getCmd('task');
 
+		/* add submenu here */
+		RedproductfinderHelper::addSubmenu("forms");
+
 		/* Check to see if we have a form name */
-		if (strlen(trim(JRequest::getVar('formname'))) == 0 && ($task == 'apply' || $task == 'save')) {
+		if (strlen(trim(JRequest::getVar('formname'))) == 0 && ($task == 'apply' || $task == 'save'))
+		{
 			$row = $this->get('SaveForm');
 			$mainframe->redirect('index.php?option=com_redproductfinder&controller=forms&task=edit&cid[]='.$row->id, JText::_('No form name specified'), 'error');
 		}
@@ -44,7 +47,7 @@ $mainframe = JFactory::getApplication();
 				$lists['showname']= JHTML::_('select.booleanlist',  'showname', 'class="inputbox"', $row->showname);
 
 				/* Get the published option */
-				
+
 				$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published);
 				/* Get the dependency option */
 				$lists['dependency']= JHTML::_('select.booleanlist',  'dependency', 'class="inputbox"', $row->dependency);
@@ -114,7 +117,7 @@ $mainframe = JFactory::getApplication();
 				JToolBarHelper::custom('importattributes', 'redvmproductfinder_importattributes_32', 'redvmproductfinder_importattributes_32', JText::_('IMPORT_ATTRIBUTES'), true);
 				JToolBarHelper::spacer();
 				JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields and values?'));
-				JToolBarHelper::editListX();
+				// JToolBarHelper::editListX();
 				JToolBarHelper::addNew();
 				break;
 		}

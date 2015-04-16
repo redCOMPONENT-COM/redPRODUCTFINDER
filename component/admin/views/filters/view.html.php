@@ -11,22 +11,26 @@
 /* No direct access */
 defined('_JEXEC') or die('Restricted access');
 
-jimport( 'joomla.application.component.view' );
-
 /**
  * Tags View
  */
-class RedproductfinderViewFilters extends JView {
+class RedproductfinderViewFilters extends JViewLegacy
+{
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) {
-
+	function display($tpl = null)
+	{
 		global $mainframe;
 		/* Get the task */
 		$task = JRequest::getCmd('task');
-		switch ($task) {
+
+		/* add submenu here */
+		RedproductfinderHelper::addSubmenu("filters");
+
+		switch ($task)
+		{
 			case 'apply':
 			case 'edit':
 			case 'add':
@@ -57,7 +61,8 @@ class RedproductfinderViewFilters extends JView {
 
 				break;
 			default:
-				switch($task) {
+				switch($task)
+				{
 					/*case 'save':
 						$this->get('SaveFilter');
 						break;*/
@@ -95,12 +100,15 @@ class RedproductfinderViewFilters extends JView {
 		parent::display($tpl);
 	}
 
-	function toolbar() {
-		switch (JRequest::getCmd('task')) {
+	function toolbar()
+	{
+		switch (JRequest::getCmd('task'))
+		{
 			case 'edit':
 			case 'apply':
 			case 'add':
-				switch (JRequest::getCmd('task')) {
+				switch (JRequest::getCmd('task'))
+				{
 					case 'add':
 						JToolBarHelper::title(JText::_( 'Add Filter' ), 'redproductfinder_filters');
 						break;
@@ -108,6 +116,7 @@ class RedproductfinderViewFilters extends JView {
 						JToolBarHelper::title(JText::_( 'Edit Filter' ), 'redproductfinder_filters');
 						break;
 				}
+
 				JToolBarHelper::save();
 				JToolBarHelper::apply();
 				JToolBarHelper::cancel();
@@ -118,7 +127,6 @@ class RedproductfinderViewFilters extends JView {
 				JToolBarHelper::unpublishList();
 				JToolBarHelper::spacer();
 				JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the filters?'));
-				JToolBarHelper::editListX();
 				JToolBarHelper::addNew();
 				break;
 		}

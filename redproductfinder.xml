@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.1" method="upgrade">
+	<name>com_redproductfinder</name>
+	<author>Redweb.dk</author>
+	<creationDate>21-07-2011</creationDate>
+	<copyright>redWEB ApS</copyright>
+	<license>GNU/GPL</license>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redweb.dk</authorUrl>
+	<version>2.0</version>
+	<description>Search Redshop products on user defined types and tags using redPRODUCTFINDER</description>
+	
+	<installfile>component/install.redproductfinder.php</installfile>
+	<uninstallfile>component/uninstall.redproductfinder.php</uninstallfile>
+	
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/mysql/install.sql</file>
+		</sql>
+	</install>
+	
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/mysql/uninstall.sql</file>
+		</sql>
+	</uninstall>
+	
+	<files folder="component/site">
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<filename>redproductfinder.php</filename>
+		<filename>router.php</filename>
+		<folder>controllers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+		<folder>helpers</folder>
+		<folder>assets</folder>
+	</files>
+	
+	<languages folder="component/site/language">
+		<language tag="en-GB">en-GB/en-GB.com_redproductfinder.ini</language>
+		<language tag="da-DK">da-DK/da-DK.com_redproductfinder.ini</language>
+	</languages>
+	
+	<media folder="component/admin/images" destination="com_redproductfinder">
+		<filename>redproductfinder_association16.png</filename>
+		<filename>redproductfinder_association32.png</filename>
+		<filename>redproductfinder_association48.png</filename>
+		<filename>redproductfinder_logo_400width.png</filename>
+		<filename>redproductfinder_logo_800width.png</filename>
+		<filename>redproductfinder_logo_1200width.png</filename>
+		<filename>redproductfinder_form16.png</filename>
+		<filename>redproductfinder_form32.png</filename>
+		<filename>redproductfinder_form48.png</filename>
+		<filename>redproductfinder_tags16.png</filename>
+		<filename>redproductfinder_tags32.png</filename>
+		<filename>redproductfinder_tags48.png</filename>
+		<filename>redproductfinder_type16.png</filename>
+		<filename>redproductfinder_type32.png</filename>
+		<filename>redproductfinder_type48.png</filename>
+		<filename>redproductfinder_prodlogo16.gif</filename>
+		<filename>redproductfinder_prodlogo32.gif</filename>
+		<filename>redproductfinder_prodlogo48.gif</filename>
+	</media>
+	
+	<administration>
+		<menu img="../media/com_redproductfinder/redproductfinder_prodlogo16.gif" link="option=com_redproductfinder"
+				view="redproductfinder">redPRODUCTFINDER</menu>
+		
+		<submenu>
+			<menu img="../media/com_redproductfinder/redproductfinder_prodlogo16.gif"  link="option=com_redproductfinder" view="redproductfinder">COM_REDPRODUCTFINDER_REDPRODUCTFINDER</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_form16.png" link="option=com_redproductfinder&view=forms" view="forms">COM_REDPRODUCTFINDER_FORMS</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_type16.png" link="option=com_redproductfinder&view=types" view="types">COM_REDPRODUCTFINDER_TYPES</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_tags16.png" link="option=com_redproductfinder&view=tags" view="tags">COM_REDPRODUCTFINDER_TAGS</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_association16.png" link="option=com_redproductfinder&view=associations" view="associations">COM_REDPRODUCTFINDER_ASSOCIATIONS</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_filter16.png" link="option=com_redproductfinder&view=filters" view="filters">COM_REDPRODUCTFINDER_FILTERS</menu>
+		</submenu>
+		
+		<files folder="component/admin">
+			<filename>changelog.txt</filename>
+			<filename>controller.php</filename>
+			<filename>config.xml</filename>
+			<filename>redproductfinder.php</filename>
+			<folder>extras</folder>
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>models</folder>
+			<folder>plugins</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<folder>elements</folder>
+			<folder>sql</folder>
+		</files>
+		
+		<languages folder="component/admin/language">
+			<language tag="en-GB">en-GB/en-GB.com_redproductfinder.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_redproductfinder.menu.ini</language>
+			<language tag="da-DK">da-DK/da-DK.com_redproductfinder.ini</language>
+			<language tag="da-DK">da-DK/da-DK.com_redproductfinder.menu.ini</language>
+		</languages>
+		
+	</administration>
+</extension>

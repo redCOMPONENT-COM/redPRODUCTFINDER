@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
+ * @license can be read in this package of software in the file license.txt or
+ * read on http://redcomponent.com/license.txt
+ * Developed by email@recomponent.com - redCOMPONENT.com
  *
  * Types model
  */
@@ -15,16 +15,16 @@ jimport( 'joomla.application.component.model' );
 /**
  * Types Model
  */
-class RedproductfinderModelTypes extends JModel {
+class RedproductfinderModelTypes extends JModelList {
 	/** @var integer Total entries */
 	protected $_total = null;
-	
+
 	/** @var integer pagination limit starter */
 	protected $_limitstart = null;
-	
+
 	/** @var integer pagination limit */
 	protected $_limit = null;
-	
+
 	var $_context = null;
 
 	function _construct()
@@ -34,16 +34,16 @@ class RedproductfinderModelTypes extends JModel {
 		$this->_context='formfilter';
 
 		$formfilter = $mainframe->getUserStateFromRequest( $this->_context.'formfilter',  'formfilter', 0 );
-				
+
 		$this->setState('formfilter', $formfilter);
 	}
-	   
+
 	/**
 	 * Show all types that have been created
 	 */
 	function getTypes() {
 		$db = JFactory::getDBO();
-		
+
 		$form_id =  JRequest::getVar('formfilter',0);
 		$filterForm = ($form_id >0) ? " WHERE t.form_id = '".$form_id."' ":"";
 		/* Get all the fields based on the limits */
@@ -51,30 +51,30 @@ class RedproductfinderModelTypes extends JModel {
 				LEFT JOIN #__redproductfinder_forms f
 				ON t.form_id = f.id $filterForm
 				ORDER BY ordering";
-		$db->setQuery($query, $this->_limitstart, $this->_limit);		
+		$db->setQuery($query, $this->_limitstart, $this->_limit);
 		return $db->loadObjectList();
 	}
-	
+
 	function getPagination() {
 		global $mainframe, $option;
 		$mainframe = JFactory::getApplication();
 		/* Lets load the pagination if it doesn't already exist */
 		if (empty($this->_pagination)) {
-		jimport('joomla.html.pagination');	
+		jimport('joomla.html.pagination');
 		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
 		$this->_limitstart = JRequest::getVar('limitstart', 0, '', 'int');
- 
+
 		// In case limit has been changed, adjust it
 		$this->_limitstart = ($this->_limit != 0 ? (floor($this->_limitstart / $this->_limit) * $this->_limit) : 0);
-	
+
 			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
 				//$mainframe->Redirect('index.php');
 		}
 
 		return $this->_pagination;
-		
+
 	}
-	
+
 	/**
 	 * Method to get the total number of testimonial items for the category
 	 *
@@ -92,7 +92,7 @@ class RedproductfinderModelTypes extends JModel {
 
 		return $this->_total;
 	}
-	
+
 	/**
     * Publish or Unpublish types
     */
@@ -104,7 +104,7 @@ class RedproductfinderModelTypes extends JModel {
       $state = ($task == 'publish') ? 1 : 0;
       $user = JFactory::getUser();
       $row = $this->getTable();
-	  
+
       if ($row->Publish($cids, $state, $user->id)) {
          if ($state == 1) {
          $mainframe->enqueueMessage(JText::_('Types have been published'));
@@ -114,7 +114,7 @@ class RedproductfinderModelTypes extends JModel {
          $mainframe->enqueueMessage(JText::_('Types have been unpublished'));
          $mainframe->Redirect('index.php?option=com_redproductfinder&task=types&controller=types');
          }
-         
+
       }
       else {
          if ($state == 1){
@@ -127,7 +127,7 @@ class RedproductfinderModelTypes extends JModel {
          }
       }
    }
-   
+
    /**
     * Retrieve a type to edit
     */
@@ -147,7 +147,7 @@ class RedproductfinderModelTypes extends JModel {
       }
       return $row;
    }
-   
+
    /**
     * Save a type
     */
@@ -155,7 +155,7 @@ class RedproductfinderModelTypes extends JModel {
      global $mainframe;
      $mainframe = JFactory::getApplication();
      $row = $this->getTable();
-	 
+
 	 /* Get the posted data */
 	 $post = JRequest::get('post');
 	 if (isset($post['id'])) $row->load($post['id']);
@@ -164,7 +164,7 @@ class RedproductfinderModelTypes extends JModel {
          $mainframe->enqueueMessage(JText::_('There was a problem binding the type data'), 'error');
          return false;
       }
-	  
+
       /* pre-save checks */
       if (!$row->check()) {
          $mainframe->enqueueMessage(JText::_('There was a problem checking the type data'), 'error');
@@ -176,22 +176,22 @@ class RedproductfinderModelTypes extends JModel {
          $mainframe->enqueueMessage(JText::_('There was a problem storing the type data'), 'error');
          return false;
       }
-	  
+
       $row->checkin();
       $mainframe->enqueueMessage(JText::_('The type has been saved'));
-	 
+
       return $row;
    }
-   
+
    /**
     * Delete a type
     */
-   function getRemoveType() {      
+   function getRemoveType() {
       $database =& JFactory::getDBO();
       $cid = JRequest::getVar('cid');
       JArrayHelper::toInteger( $cid );
 	  $mainframe = Jfactory::getApplication('site');
-	  
+
       if (!is_array( $cid ) || count( $cid ) < 1) {
          $mainframe->enqueueMessage(JText::_('No type found to delete'));
          return false;
@@ -213,14 +213,14 @@ class RedproductfinderModelTypes extends JModel {
             $mainframe->enqueueMessage(JText::_('Type has been deleted'));
             $mainframe->Redirect('index.php?option=com_redproductfinder&task=types&controller=types');
             }
-            
+
             /* Delete the relationship with the tag */
             $typecids = 'type_id=' . implode( ' OR type_id=', $cid );
             $query = "DELETE FROM #__redproductfinder_tag_type"
 				. "\n  WHERE ( $typecids )";
 			$database->setQuery( $query );
 			$database->query();
-			
+
 			$query = "SELECT * FROM #__redproductfinder_tags WHERE id NOT IN (
 				SELECT id FROM #__redproductfinder_tags a
 				RIGHT JOIN #__redproductfinder_tag_type b
@@ -238,7 +238,7 @@ class RedproductfinderModelTypes extends JModel {
          }
       }
    }
-   
+
    /**
     * Reorder types
 	*/
@@ -264,7 +264,7 @@ class RedproductfinderModelTypes extends JModel {
 		}
 		$mainframe->Redirect('index.php?option=com_redproductfinder&task=types&controller=types');
 	}
-	
+
 	/**
 	 * Load a list of forms
 	 */
@@ -275,4 +275,4 @@ class RedproductfinderModelTypes extends JModel {
 		return $db->loadObjectList();
 	}
 }
-?>	
+?>

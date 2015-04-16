@@ -1,9 +1,9 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
+ * @license can be read in this package of software in the file license.txt or
+ * read on http://redcomponent.com/license.txt
+ * Developed by email@recomponent.com - redCOMPONENT.com
  *
  * redFORM model
  */
@@ -15,55 +15,59 @@ jimport( 'joomla.application.component.model' );
 /**
  * redFORM Model
  */
-class RedproductfinderModelForms extends JModel {
+class RedproductfinderModelForms extends JModelList
+{
 	/** @var integer Total entries */
 	protected $_total = null;
-	
+
 	/** @var integer pagination limit starter */
 	protected $_limitstart = null;
-	
+
 	/** @var integer pagination limit */
 	protected $_limit = null;
-	   
+
 	/**
 	 * Show all orders for which an invitation to fill in
 	 * a testimonal has been sent
 	 */
-	function getForms() {
+	function getForms()
+	{
 		/* Get all the orders based on the limits */
-		$query = "SELECT * 
+		$query = "SELECT *
 				FROM #__redproductfinder_forms";
 		return $this->_getList($query, $this->_limitstart, $this->_limit);
 	}
-	
-	function getPagination() {
+
+	function getPagination()
+	{
 		global $mainframe, $option;
 		$mainframe = JFactory::getApplication();
-		
+
 		/* Lets load the pagination if it doesn't already exist */
 		if (empty($this->_pagination)) {
-		jimport('joomla.html.pagination');	
+		jimport('joomla.html.pagination');
 		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
 		$this->_limitstart = JRequest::getVar('limitstart', 0, '', 'int');
- 
+
 		// In case limit has been changed, adjust it
 		$this->_limitstart = ($this->_limit != 0 ? (floor($this->_limitstart / $this->_limit) * $this->_limit) : 0);
-	
+
 			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
 				//$mainframe->Redirect('index.php');
 		}
 
 		return $this->_pagination;
-		
+
 	}
-	
+
 	/**
 	 * Method to get the total number of testimonial items for the category
 	 *
 	 * @access public
 	 * @return integer
 	 */
-	function getTotal() {
+	function getTotal()
+	{
 		// Lets load the content if it doesn't already exist
 		if (empty($this->_total))
 		{
@@ -74,12 +78,12 @@ class RedproductfinderModelForms extends JModel {
 
 		return $this->_total;
 	}
-	
+
 	/**
     * Publish or Unpublish testimonials
     */
-   function getPublish() {
-   
+   function getPublish()
+   {
       global $mainframe;
 	  $mainframe = JFactory::getApplication();
       $cids = JRequest::getVar('cid');
@@ -87,121 +91,148 @@ class RedproductfinderModelForms extends JModel {
       $state = ($task == 'publish') ? 1 : 0;
       $user = &JFactory::getUser();
       $row = $this->getTable();
-	   
-      if ($row->Publish($cids, $state, $user->id)) 
+
+      if ($row->Publish($cids, $state, $user->id))
       {
          if ($state == 1)
          {
 	         $mainframe->enqueueMessage(JText::_('Forms have been published'));
 	         $mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
-         }else{
+         }
+         else
+         {
 	         $mainframe->enqueueMessage(JText::_('Forms have been unpublished'));
 	         $mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
          }
       }
-      else {
-         if ($state == 1){ 
-         $mainframe->enqueueMessage(JText::_('Forms could not be published'));
-         $mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
-         }else{
-         $mainframe->enqueueMessage(JText::_('Forms could not be unpublished'));
-         $mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
+      else
+      {
+         if ($state == 1)
+         {
+	         $mainframe->enqueueMessage(JText::_('Forms could not be published'));
+	         $mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
+	         }else{
+	         $mainframe->enqueueMessage(JText::_('Forms could not be unpublished'));
+	         $mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
          }
       }
    }
-   
+
    /**
     * Retrieve a competition to edit
     */
-   function getForm() {
+   function getForm()
+   {
       $row = $this->getTable();
       $my = JFactory::getUser();
       $id = JRequest::getVar('cid', false);
-	  
-	  if (!$id) $id = array(JRequest::getVar('form_id'));
-	  
+
+	  if (!$id)
+	  {
+	  	$id = array(JRequest::getVar('form_id'));
+	  }
+
       /* load the row from the db table */
       $row->load($id[0]);
-	  
-      if ($id[0]) {
+
+      if ($id[0])
+      {
          // do stuff for existing records
          $result = $row->checkout( $my->id );
-      } 
-	  else {
+      }
+	  else
+	  {
          // do stuff for new records
          $row->published    = 1;
       }
+
       return $row;
    }
-   
+
    /**
     * Save a competition
     */
-   function getSaveForm() {
+   function getSaveForm()
+   {
       global $mainframe;
       $mainframe = JFactory::getApplication();
       $row = $this->getTable();
 	  $post = JRequest::get('post', 4);
-	  
+
 	  /* Get the posted data */
-      if (!$row->bind($post)) {
+      if (!$row->bind($post))
+      {
          $mainframe->enqueueMessage(JText::_('There was a problem binding the form data'), 'error');
          return false;
       }
-	  
+
       /* pre-save checks */
-      if (!$row->check()) {
+      if (!$row->check())
+      {
          $mainframe->enqueueMessage(JText::_('There was a problem checking the form data'), 'error');
          return false;
       }
 
       /* save the changes */
-      if (!$row->store()) {
+      if (!$row->store())
+      {
          $mainframe->enqueueMessage(JText::_('There was a problem storing the form data'), 'error');
          return false;
       }
-	  
+
       $row->checkin();
       $mainframe->enqueueMessage(JText::_('The form has been saved'));
-	 
+
       return $row;
    }
-   
+
    /**
     * Delete a form
     */
-   function getRemoveForm() {
+   function getRemoveForm()
+   {
       global $mainframe;
       $mainframe = JFactory::getApplication();
       $database = JFactory::getDBO();
       $cid = JRequest::getVar('cid');
       JArrayHelper::toInteger( $cid );
-	  
-      if (!is_array( $cid ) || count( $cid ) < 1) {
+
+      if (!is_array( $cid ) || count( $cid ) < 1)
+      {
          $mainframe->enqueueMessage(JText::_('No form found to delete'));
          return false;
       }
-      if (count($cid)) {
+
+      if (count($cid))
+      {
          $cids = 'id=' . implode( ' OR id=', $cid );
          $query = "DELETE FROM #__redproductfinder_forms"
          . "\n  WHERE ( $cids )";
          $database->setQuery( $query );
-         if (!$database->query()) {
+         if (!$database->query())
+         {
             $mainframe->enqueueMessage(JText::_('A problem occured when deleting the form'));
          }
-         else {
-            if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Forms have been deleted'));
-            else $mainframe->enqueueMessage(JText::_('Form has been deleted'));
-			
+         else
+         {
+            if (count($cid) > 1)
+            {
+            	$mainframe->enqueueMessage(JText::_('Forms have been deleted'));
+            }
+            else
+            {
+            	$mainframe->enqueueMessage(JText::_('Form has been deleted'));
+            }
+
 			/* Get the field ids */
 			$cids = 'form_id=' . implode( ' OR form_id=', $cid );
 			$q = "SELECT id FROM #__redproductfinder_fields
 				WHERE ( $cids )";
 			$database->setQuery($q);
 			$fieldids = $database->loadResultArray();
-			
+
 			/* See if there is any data */
-			
+
 			if (count($fieldids) > 0) {
 				/* Now delete the fields */
 				$cids = 'form_id=' . implode( ' OR form_id=', $cid );
@@ -213,7 +244,7 @@ class RedproductfinderModelForms extends JModel {
 				}
 				else {
 					$mainframe->enqueueMessage(JText::_('Form fields have been deleted'));
-					
+
 					/* Delete the values */
 					$cids = 'field_id=' . implode( ' OR field_id=', $fieldids );
 					$q = "DELETE FROM #__redproductfinder_values
@@ -221,9 +252,9 @@ class RedproductfinderModelForms extends JModel {
 					$database->setQuery($q);
 					if (!$database->query()) {
 						$mainframe->enqueueMessage(JText::_('A problem occured when deleting the field values'));
-					
+
 		 				 $mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
-		
+
 					}
 					else {
 						$mainframe->enqueueMessage(JText::_('Field values have been deleted'));
@@ -236,7 +267,7 @@ class RedproductfinderModelForms extends JModel {
          }
       }
    }
-   
+
    /**
     * Clone a form and all its related tags/types/associations
     */
@@ -253,7 +284,7 @@ class RedproductfinderModelForms extends JModel {
     		$form->id = null;
     		$form->store();
     		$form_id_new = $form->id;
-    		
+
     		/* Clone the types */
     		$q = "SELECT id FROM #__redproductfinder_types WHERE form_id = ".$cid;
     		$db->setQuery($q);
@@ -265,7 +296,7 @@ class RedproductfinderModelForms extends JModel {
 				$type->id = null;
 				$type->form_id = $form_id_new;
 				$type->store();
-				
+
 				/* Clone the tags */
 				$q = "SELECT tag_id FROM #__redproductfinder_tag_type WHERE type_id = ".$type_id;
 				$db->setQuery($q);
@@ -275,15 +306,15 @@ class RedproductfinderModelForms extends JModel {
 					$tag->load($tag_id);
 					$tag->id = null;
 					$tag->store();
-					
+
 					$q = "INSERT INTO #__redproductfinder_tag_type VALUES (".$tag->id.", ".$type_id.")";
 					$db->setQuery($q);
 					$db->query();
-					
+
 					/* Clone the associations */
-					$q = "SELECT association_id 
-						FROM #__redproductfinder_association_tag 
-						WHERE tag_id = ".$tag_id." 
+					$q = "SELECT association_id
+						FROM #__redproductfinder_association_tag
+						WHERE tag_id = ".$tag_id."
 						AND type_id = ".$type_id;
 					$db->setQuery($q);
 					$assoc_ids = $db->loadResultArray();
@@ -299,29 +330,29 @@ class RedproductfinderModelForms extends JModel {
 						else {
 							$insert_id = $existing_assoc_ids[$assoc_id];
 						}
-						
+
 						$q = "INSERT INTO #__redproductfinder_association_tag VALUES (".$insert_id.", ".$tag_id.", ".$type_id.")";
 						$db->setQuery($q);
 						$db->query();
-						
+
 						/* Clean up */
 						unset($assoc);
 					}
-					
+
 					/* Clean up */
 					unset($tag);
 				}
-				
+
 				/* Clean up */
 				unset($type);
 			}
-			
+
 			/* Clean up */
     		unset($form);
     		$mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
     	}
     }
-    
+
     /**
      * Imports all attributes from Redshop and creates associations
      */
@@ -330,15 +361,15 @@ class RedproductfinderModelForms extends JModel {
     	$cids = JRequest::getVar('cid');
     	$form_id = $cids[0];
     	$mainframe = Jfactory::getApplication('site');
-    	    	
+
     	/* Go through the whole product list, 100 at a time */
-    	    		
-   		$q = "SELECT rdp.product_id as rdp_product_id,rdpa.* 
-   				FROM `#__redshop_product` as rdp 
+
+   		$q = "SELECT rdp.product_id as rdp_product_id,rdpa.*
+   				FROM `#__redshop_product` as rdp
    				left join #__redshop_product_attribute as rdpa on rdpa.product_id = rdp.product_id ";
    		$db->setQuery($q);
    		$attributes = $db->loadObjectList();
-   		
+
    		/* Store all the data */
    		foreach ($attributes as $key => $attribute) {
 
@@ -351,7 +382,7 @@ class RedproductfinderModelForms extends JModel {
 				$assoc->ordering = 1;
 				$assoc->product_id = $attribute->product_id;
 				$assoc->store();
-				    				
+
 				/* Types */
 				$types = $this->getTable('types');
 				$types->form_id = $form_id;
@@ -364,15 +395,15 @@ class RedproductfinderModelForms extends JModel {
 				$types->store();
 
 				/* get the attributes property */
-				$q = "SELECT * 
-						FROM `#__redshop_product_attribute_property` 
+				$q = "SELECT *
+						FROM `#__redshop_product_attribute_property`
 						WHERE `attribute_id` = '".$attribute->attribute_id."'";
    				$db->setQuery($q);
    				$properties = $db->loadObjectList();
-   				  				
+
 				/* Tags */
 				foreach ($properties as $tag_index => $tag) {
-					
+
 					$tags = $this->getTable('tags');
 					$tags->published = 1;
 					$tags->checked_out = 0;
@@ -380,21 +411,21 @@ class RedproductfinderModelForms extends JModel {
 					$tags->ordering = 1;
 					$tags->tag_name = $tag->property_name;
 					$tags->store();
-					
+
 					/* Store the relation with the type */
 					$q = "INSERT INTO #__redproductfinder_tag_type
 						VALUES (".$tags->id.", ".$types->id.")";
 					$db->setQuery($q);
 					$db->query();
-					
+
 					/* Store the relation with the association */
 					$q = "INSERT INTO #__redproductfinder_association_tag
 						VALUES (".$assoc->id.", ".$tags->id.", ".$types->id.")";
 					$db->setQuery($q);
-					$db->query();					
-				}					
+					$db->query();
+				}
    			}
-   		}    	
+   		}
     	$mainframe->enqueueMessage(JText::_('PROCESSED_X_PRODUCTS'));
     	$mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
     }

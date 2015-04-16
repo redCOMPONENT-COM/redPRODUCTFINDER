@@ -1,26 +1,28 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
+ * @license can be read in this package of software in the file license.txt or
+ * read on http://redcomponent.com/license.txt
+ * Developed by email@recomponent.com - redCOMPONENT.com
  */
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 if ($this->counttypes == 0) {
 	echo JText::_('No types found');
 }
-else { ?>
+else
+{
+?>
 <form action="index.php" method="post" name="adminForm">
 	<table>
       <tr>
          <td align="left" width="100%">
             <?php echo JText::_('Filter'); ?>:
-	    <?php echo $this->lists['FormList']; ?>		            
+	    <?php echo $this->lists['FormList']; ?>
          </td>
       </tr>
     </table>
-	<table class="adminlist">
+	<table class="table table-striped" id="typeslist" class="adminlist">
 		<thead>
 		<tr>
 			<th width="20">
@@ -51,14 +53,14 @@ else { ?>
 		$k = 0;
 		for ($i=0, $n=count( $this->types ); $i < $n; $i++) {
 			$row = $this->types[$i];
-			
+
 			JFilterOutput::objectHTMLSafe($row);
 			$link 	= 'index.php?option=com_redproductfinder&task=edit&controller=types&hidemainmenu=1&cid[]='. $row->id;
 
 			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
 			$task 	= $row->published ? 'unpublish' : 'publish';
 			$alt 	= $row->published ? JText::_('PUBLISHED') : JText::_('UNPUBLISHED');
-			
+
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = JFactory::getUser();
 			?>

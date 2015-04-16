@@ -9,12 +9,10 @@
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
-jimport('joomla.application.component.controller');
-
 /**
  * Tags Controller
  */
-class RedproductfinderControllerAssociations extends JController {
+class RedproductfinderControllerAssociations extends JControllerAdmin {
 	/**
 	 * Method to display the view
 	 *

@@ -1,20 +1,18 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
+ * @license can be read in this package of software in the file license.txt or
+ * read on http://redcomponent.com/license.txt
+ * Developed by email@recomponent.com - redCOMPONENT.com
  *
  */
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
-jimport('joomla.application.component.controller');
-
 /**
  * forms Controller
  */
-class RedproductfinderControllerForms extends JController
+class RedproductfinderControllerForms extends JControllerAdmin
 {
 	/**
 	 * Method to display the view
@@ -23,7 +21,7 @@ class RedproductfinderControllerForms extends JController
 	 */
 	function __construct() {
 		parent::__construct();
-		
+
 		/* Redirect templates to templates as this is the standard call */
 		$this->registerTask('save','forms');
 		$this->registerTask('remove','forms');
@@ -34,17 +32,17 @@ class RedproductfinderControllerForms extends JController
 		$this->registerTask('importattributes','forms');
 		$this->registerTask('apply','edit');
 	}
-	
+
 	/**
 	 * Gets a list of IP/IP ranges in the database
 	 */
 	function Forms() {
 		JRequest::setVar('view', 'forms');
 		JRequest::setVar('layout', 'forms');
-		
+
 		parent::display();
 	}
-	
+
 	/**
 	 * Editing a form
 	 */
@@ -52,10 +50,10 @@ class RedproductfinderControllerForms extends JController
 		JRequest::setVar('hidemainmenu', 1);
 		JRequest::setVar('view', 'forms');
 		JRequest::setVar('layout', 'editform');
-		
+
 		parent::display();
 	}
-	
+
 	/**
 	 * Adding a form
 	 */
@@ -63,7 +61,7 @@ class RedproductfinderControllerForms extends JController
 		JRequest::setVar('hidemainmenu', 1);
 		JRequest::setVar('view', 'forms');
 		JRequest::setVar('layout', 'editform');
-		
+
 		parent::display();
 	}
 }
