@@ -10,85 +10,99 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm">
 	<table  class="table table-striped" id="formslist" class="adminlist">
-		<tr>
-			<th width="20">
-			<?php echo JText::_('COM_REDPRODUCTFINDER_ID'); ?>
-			</th>
-			<th width="20">
-			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->forms ); ?>);" />
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDPRODUCTFINDER_FORM_NAME'); ?>
-			</th>
-			<th class="title">
+		<thead>
+			<tr>
+				<th width="20">
+				<?php echo JText::_('COM_REDPRODUCTFINDER_ID'); ?>
+				</th>
+				<th width="20">
+				<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->forms ); ?>);" />
+				</th>
+				<th class="title">
+				<?php echo JText::_('COM_REDPRODUCTFINDER_FORM_NAME'); ?>
+				</th>
+				<th class="title">
 
-			<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDPRODUCTFINDER_TAG'); ?>
-			</th>
-		</tr>
-		<?php
-		$k = 0;
-		for ($i=0, $n=count( $this->forms ); $i < $n; $i++) {
-			$row = $this->forms[$i];
+				<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
+				</th>
+				<th class="title">
+				<?php echo JText::_('COM_REDPRODUCTFINDER_TAG'); ?>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
 
-			JFilterOutput::objectHTMLSafe($row);
-			$link 	= 'index.php?option=com_redproductfinder&task=edit&controller=forms&hidemainmenu=1&cid[]='. $row->id;
+			$k = 0;
+			for ($i=0, $n=count( $this->forms ); $i < $n; $i++)
+			{
+				$row = $this->forms[$i];
 
-			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
-			$task 	= $row->published ? 'unpublish' : 'publish';
-			$alt 	= $row->published ? JText::_('Published') : JText::_('Unpublished');
+				JFilterOutput::objectHTMLSafe($row);
+				$link 	= 'index.php?option=com_redproductfinder&task=edit&controller=forms&hidemainmenu=1&cid[]='. $row->id;
 
-			$checked = JHTML::_('grid.checkedout',  $row, $i);
-			$my  = JFactory::getUser();
-			?>
-			<tr class="<?php echo 'row'. $k; ?>">
-				<td align="center">
-				<?php echo $this->pagination->getRowOffset($i); ?>
-				</td>
-				<td>
-				<?php echo $checked; ?>
-				</td>
-				<td>
-				<?php
-				if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
-					?>
-					<?php echo $row->formname; ?>
-					&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
+				$img 	= $row->published ? 'tick.png' : 'publish_x.png';
+				$task 	= $row->published ? 'unpublish' : 'publish';
+				$alt 	= $row->published ? JText::_('Published') : JText::_('Unpublished');
+
+				$checked = JHTML::_('grid.checkedout',  $row, $i);
+				$my  = JFactory::getUser();
+				?>
+				<tr class="<?php echo 'row'. $k; ?>">
+					<td align="center">
+					<?php echo $this->pagination->getRowOffset($i); ?>
+					</td>
+					<td>
+					<?php echo $checked; ?>
+					</td>
+					<td>
 					<?php
-				} else {
+					if ( $row->checked_out && ( $row->checked_out != $my->id ) )
+					{
+						?>
+						<?php echo $row->formname; ?>
+						&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
+						<?php
+					} else {
+						?>
+						<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit form'); ?>">
+						<?php echo $row->formname; ?>
+						</a>
+						<?php
+					}
 					?>
-					<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit form'); ?>">
-					<?php echo $row->formname; ?>
+					</td>
+					<td width="10%" align="center">
+					<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $task;?>')">
+					<img src="../images/<?php echo $img;?>" border="0" alt="<?php echo $alt; ?>" />
 					</a>
+					</td>
+					<td>
 					<?php
-				}
-				?>
-				</td>
-				<td width="10%" align="center">
-				<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $task;?>')">
-				<img src="../images/<?php echo $img;?>" border="0" alt="<?php echo $alt; ?>" />
-				</a>
-				</td>
-				<td>
+						echo "{redproductfinder}".$row->id."{/redproductfinder}";
+					?>
+					</td>
+				</tr>
 				<?php
-					echo "{redproductfinder}".$row->id."{/redproductfinder}";
-				?>
+				$k = 1 - $k;
+			};
+
+			?>
+		</tbody>
+        <tfoot>
+        	<tr>
+				<td colspan="10">
+					<?php echo $this->pagination->getListFooter(); ?>
 				</td>
 			</tr>
-			<?php
-			$k = 1 - $k;
-		}
-		?>
-		<tr>
-            <td colspan="9"><?php echo $this->pagination->getListFooter(); ?></td>
-         </tr>
+		</tfoot>
+
 		</table>
 	<input type="hidden" name="option" value="com_redproductfinder" />
-	<input type="hidden" name="task" value="forms" />
+	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="controller" value="forms" />
+
+	<?php echo JHtml::_('form.token'); ?>
 </form>

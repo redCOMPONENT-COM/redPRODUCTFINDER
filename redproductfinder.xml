@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.1" method="upgrade">
+<!DOCTYPE install SYSTEM "http://www.joomla.org/xml/dtd/1.5/component-install.dtd">
+<extension type="component" version="3.4" method="upgrade">
 	<name>com_redproductfinder</name>
 	<author>Redweb.dk</author>
 	<creationDate>21-07-2011</creationDate>
@@ -64,16 +65,15 @@
 	</media>
 	
 	<administration>
-		<menu img="../media/com_redproductfinder/redproductfinder_prodlogo16.gif" link="option=com_redproductfinder"
-				view="redproductfinder">redPRODUCTFINDER</menu>
+		<menu img="../media/com_redproductfinder/redproductfinder_prodlogo16.gif" link="option=com_redproductfinder" view="redproductfinder">redPRODUCTFINDER</menu>
 		
 		<submenu>
 			<menu img="../media/com_redproductfinder/redproductfinder_prodlogo16.gif"  link="option=com_redproductfinder" view="redproductfinder">COM_REDPRODUCTFINDER_REDPRODUCTFINDER</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_form16.png" link="option=com_redproductfinder&view=forms" view="forms">COM_REDPRODUCTFINDER_FORMS</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_type16.png" link="option=com_redproductfinder&view=types" view="types">COM_REDPRODUCTFINDER_TYPES</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_tags16.png" link="option=com_redproductfinder&view=tags" view="tags">COM_REDPRODUCTFINDER_TAGS</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_association16.png" link="option=com_redproductfinder&view=associations" view="associations">COM_REDPRODUCTFINDER_ASSOCIATIONS</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_filter16.png" link="option=com_redproductfinder&view=filters" view="filters">COM_REDPRODUCTFINDER_FILTERS</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_form16.png" link="option=com_redproductfinder&amp;view=forms" view="forms">COM_REDPRODUCTFINDER_FORMS</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_type16.png" link="option=com_redproductfinder&amp;view=types" view="types">COM_REDPRODUCTFINDER_TYPES</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_tags16.png" link="option=com_redproductfinder&amp;view=tags" view="tags">COM_REDPRODUCTFINDER_TAGS</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_association16.png" link="option=com_redproductfinder&amp;view=associations" view="associations">COM_REDPRODUCTFINDER_ASSOCIATIONS</menu>
+			<menu img="../media/com_redproductfinder/redproductfinder_filter16.png" link="option=com_redproductfinder&amp;view=filters" view="filters">COM_REDPRODUCTFINDER_FILTERS</menu>
 		</submenu>
 		
 		<files folder="component/admin">
@@ -100,4 +100,5 @@
 		</languages>
 		
 	</administration>
+	
 </extension>

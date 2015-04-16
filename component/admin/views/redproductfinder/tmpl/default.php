@@ -20,7 +20,7 @@ JHtml::_('formbehavior.chosen', 'select');
 	<div id="j-main-container" class="span10">
 		<div><?php echo JHTML::_('image', JURI::root().'media/com_redproductfinder/redproductfinder_logo_400width.png', JText::_('redPRODUCTFINDER')); ?></div>
 
-		<table class="adminlist">
+		<table class="table table-striped" id="typeslist" class="adminlist">
 		<thead>
 			<tr>
 				<th><?php echo JText::_('NAME'); ?></th>

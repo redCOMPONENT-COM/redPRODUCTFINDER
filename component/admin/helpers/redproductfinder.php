@@ -34,33 +34,33 @@ class RedproductfinderHelper
 		);
 		JSubMenuHelper::addEntry(
 			JText::_('Forms'),
-			'index.php?option=com_redproductfinder&task=forms&controller=forms',
+			'index.php?option=com_redproductfinder&view=forms',
 			$vName == 'forms'
 		);
 		JSubMenuHelper::addEntry(
 			JText::_('Types'),
-			'index.php?option=com_redproductfinder&task=types&controller=types',
+			'index.php?option=com_redproductfinder&view=types',
 			$vName == 'types'
 		);
 		JSubMenuHelper::addEntry(
 			JText::_('Tags'),
-			'index.php?option=com_redproductfinder&task=tags&controller=tags',
+			'index.php?option=com_redproductfinder&view=tags',
 			$vName == 'tags'
 		);
 		JSubMenuHelper::addEntry(
 			JText::_('Associations'),
-			'index.php?option=com_redproductfinder&task=associations&controller=associations',
+			'index.php?option=com_redproductfinder&view=associations',
 			$vName == 'associations'
 		);
 		JSubMenuHelper::addEntry(
 			JText::_('Filters'),
-			'index.php?option=com_redproductfinder&task=filters&controller=filters',
+			'index.php?option=com_redproductfinder&view=filters',
 			$vName == 'filters'
 		);
 
-		
+
 	}
 
-	
+
 
 }
