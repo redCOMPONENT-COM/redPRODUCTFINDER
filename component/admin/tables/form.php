@@ -10,25 +10,35 @@
 /* No direct access */
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Registry\Registry;
+
 /**
  */
-class TableForms extends JTable {
+class RedproductfinderTableForm extends JTable
+{
 	/** @var int Primary key */
 	var $id = null;
+
 	/** @var string The IP address or range to block */
 	var $formname = null;
+
 	/** @var string Whether or not the entry is published */
 	var $published = 0;
+
 	/** @var string Whether or not the competition name is shown */
 	var $showname = null;
+
 	/** @var string CSS classname to allow individual styling */
 	var $classname = null;
+
 	/** @var string Whether or not the entry is dependency */
 	var $dependency = 0;
+
 	/**
 	* @param database A database connector object
 	*/
-	function __construct( &$db ) {
+	function __construct( &$db )
+	{
 		parent::__construct('#__redproductfinder_forms', 'id', $db );
 	}
 }

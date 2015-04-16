@@ -21,174 +21,6 @@ JLoader::register('ContactHelper', JPATH_ADMINISTRATOR . '/components/com_contac
 class RedproductfinderModelForm extends JModelAdmin
 {
 	/**
-	 * The type alias for this content type.
-	 *
-	 * @var      string
-	 * @since    3.2
-	 */
-	public $typeAlias = 'com_contact.contact';
-
-	/**
-	 * Batch copy/move command. If set to false,
-	 * the batch copy/move command is not supported
-	 *
-	 * @var string
-	 */
-	protected $batch_copymove = 'category_id';
-
-	/**
-	 * Allowed batch commands
-	 *
-	 * @var array
-	 */
-	protected $batch_commands = array(
-		'assetgroup_id' => 'batchAccess',
-		'language_id' => 'batchLanguage',
-		'tag' => 'batchTag',
-		'user_id' => 'batchUser'
-	);
-
-	/**
-	 * Batch copy items to a new category or current.
-	 *
-	 * @param   integer  $value     The new category.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
-	 *
-	 * @return  mixed  An array of new IDs on success, boolean false on failure.
-	 *
-	 * @since   11.1
-	 */
-	protected function batchCopy($value, $pks, $contexts)
-	{
-		$categoryId = (int) $value;
-
-		$table = $this->getTable();
-		$newIds = array();
-
-		if (!parent::checkCategoryId($categoryId))
-		{
-			return false;
-		}
-
-		// Parent exists so we proceed
-		while (!empty($pks))
-		{
-			// Pop the first ID off the stack
-			$pk = array_shift($pks);
-
-			$this->table->reset();
-
-			// Check that the row actually exists
-			if (!$this->table->load($pk))
-			{
-				if ($error = $this->table->getError())
-				{
-					// Fatal error
-					$this->setError($error);
-
-					return false;
-				}
-				else
-				{
-					// Not fatal error
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-					continue;
-				}
-			}
-
-			// Alter the title & alias
-			$data = $this->generateNewTitle($categoryId, $this->table->alias, $this->table->name);
-			$this->table->name = $data['0'];
-			$this->table->alias = $data['1'];
-
-			// Reset the ID because we are making a copy
-			$this->table->id = 0;
-
-			// New category ID
-			$this->table->catid = $categoryId;
-
-			// Unpublish because we are making a copy
-			$this->table->published = 0;
-
-			// TODO: Deal with ordering?
-
-			// Check the row.
-			if (!$this->table->check())
-			{
-				$this->setError($this->table->getError());
-
-				return false;
-			}
-
-			parent::createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
-
-			// Store the row.
-			if (!$this->table->store())
-			{
-				$this->setError($this->table->getError());
-
-				return false;
-			}
-
-			// Get the new item ID
-			$newId = $this->table->get('id');
-
-			// Add the new ID to the array
-			$newIds[$pk] = $newId;
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return $newIds;
-	}
-
-	/**
-	 * Batch change a linked user.
-	 *
-	 * @param   integer  $value     The new value matching a User ID.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchUser($value, $pks, $contexts)
-	{
-		foreach ($pks as $pk)
-		{
-			if ($this->user->authorise('core.edit', $contexts[$pk]))
-			{
-				$this->table->reset();
-				$this->table->load($pk);
-				$this->table->user_id = (int) $value;
-
-				static::createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
-
-				if (!$this->table->store())
-				{
-					$this->setError($this->table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
 	 * Method to test whether a record can be deleted.
 	 *
 	 * @param   object  $record  A record object.
@@ -248,7 +80,7 @@ class RedproductfinderModelForm extends JModelAdmin
 	 *
 	 * @since   1.6
 	 */
-	public function getTable($type = 'Contact', $prefix = 'ContactTable', $config = array())
+	public function getTable($type = 'Form', $prefix = 'RedproductfinderTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -265,29 +97,14 @@ class RedproductfinderModelForm extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		JForm::addFieldPath('JPATH_ADMINISTRATOR/components/com_users/models/fields');
+		JForm::addFieldPath('JPATH_ADMINISTRATOR/components/com_redproductfinder/models/fields');
 
 		// Get the form.
-		$form = $this->loadForm('com_contact.contact', 'contact', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_redproductfinder.form', 'form', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
 			return false;
-		}
-
-		// Modify the form based on access controls.
-		if (!$this->canEditState((object) $data))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('featured', 'disabled', 'true');
-			$form->setFieldAttribute('ordering', 'disabled', 'true');
-			$form->setFieldAttribute('published', 'disabled', 'true');
-
-			// Disable fields while saving.
-			// The controller has already verified this is a record you can edit.
-			$form->setFieldAttribute('featured', 'filter', 'unset');
-			$form->setFieldAttribute('ordering', 'filter', 'unset');
-			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
 
 		return $form;
@@ -304,39 +121,7 @@ class RedproductfinderModelForm extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
-		if ($item = parent::getItem($pk))
-		{
-			// Convert the metadata field to an array.
-			$registry = new Registry;
-			$registry->loadString($item->metadata);
-			$item->metadata = $registry->toArray();
-		}
-
-		// Load associated contact items
-		$app = JFactory::getApplication();
-		$assoc = JLanguageAssociations::isEnabled();
-
-		if ($assoc)
-		{
-			$item->associations = array();
-
-			if ($item->id != null)
-			{
-				$associations = JLanguageAssociations::getAssociations('com_contact', '#__contact_details', 'com_contact.item', $item->id);
-
-				foreach ($associations as $tag => $association)
-				{
-					$item->associations[$tag] = $association->id;
-				}
-			}
-		}
-
-		// Load item tags
-		if (!empty($item->id))
-		{
-			$item->tags = new JHelperTags;
-			$item->tags->getTagIds($item->id, 'com_contact.contact');
-		}
+		$item = parent::getItem($pk);
 
 		return $item;
 	}
@@ -351,21 +136,14 @@ class RedproductfinderModelForm extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_contact.edit.contact.data', array());
+		$data = JFactory::getApplication()->getUserState('com_redproductfinder.edit.form.data', array());
 
 		if (empty($data))
 		{
 			$data = $this->getItem();
-
-			// Prime some default values.
-			if ($this->getState('contact.id') == 0)
-			{
-				$app = JFactory::getApplication();
-				$data->set('catid', $app->input->get('catid', $app->getUserState('com_contact.contacts.filter.category_id'), 'int'));
-			}
 		}
 
-		$this->preprocessData('com_contact.contact', $data);
+		$this->preprocessData('com_redproductfinder.form', $data);
 
 		return $data;
 	}
