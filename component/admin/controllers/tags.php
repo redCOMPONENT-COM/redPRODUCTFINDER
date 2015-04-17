@@ -12,55 +12,27 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 /**
  * Tags Controller
  */
-class RedproductfinderControllerTags extends JControllerAdmin {
+class RedproductfinderControllerTags extends JControllerAdmin
+{
 	/**
 	 * Method to display the view
 	 *
 	 * @access	public
 	 */
-	function __construct() {
+	function __construct()
+	{
 		parent::__construct();
 
 		/* Redirect templates to templates as this is the standard call */
+		$this->registerTask('unpublish','publish');
 		$this->registerTask('apply','edit');
-		$this->registerTask('add','edit');
-		$this->registerTask('save','tags');
-		$this->registerTask('cancel','tags');
-		$this->registerTask('remove','tags');
-		$this->registerTask('saveorder','tags');
-		$this->registerTask('publish','tags');
-		$this->registerTask('unpublish','tags');
 	}
 
-	/**
-	 * Get the default layout
-	 */
-	function Tags() {
-		JRequest::setVar('view', 'tags');
-		JRequest::setVar('layout', 'tags');
+	public function getModel($name = 'Tag', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
 
-		parent::display();
-	}
-
-	/**
-	 * Get the edit layout
-	 */
-	function Edit() {
-		/* Create the view */
-		$view = $this->getView('tags', 'html');
-
-		/* Add the main model */
-		$view->setModel( $this->getModel( 'tags', 'RedproductfinderModel' ), true );
-
-		/* Add extra models */
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redproductfinder' . DS . 'models' );
-		$view->setModel( $this->getModel( 'types', 'RedproductfinderModel' ));
-
-		/* Add the layout */
-		$view->setLayout('edittag');
-
-		/* Display it all */
-		$view->display();
+		return $model;
 	}
 }
 ?>

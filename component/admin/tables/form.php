@@ -25,6 +25,12 @@ class RedproductfinderTableForm extends JTable
 	/** @var string Whether or not the entry is published */
 	var $published = 0;
 
+	/** @var string Whether or not the entry is published */
+	var $publish_up = 0;
+
+	/** @var string Whether or not the entry is published */
+	var $publish_down = 0;
+
 	/** @var string Whether or not the competition name is shown */
 	var $showname = null;
 

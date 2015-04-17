@@ -8,7 +8,6 @@
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
-// Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHTML::_('behavior.tooltip');
@@ -23,6 +22,7 @@ JFactory::getDocument()->addScriptDeclaration('
 		}
 	};
 ');
+
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="redproductfinder-form" class="form-validate">
@@ -32,19 +32,19 @@ JFactory::getDocument()->addScriptDeclaration('
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
 					<div>
-						<?php echo $this->form->renderField('formname'); ?>
+						<?php echo $this->form->renderField('type_name'); ?>
 					</div>
 					<div>
-						<?php echo $this->form->renderField('showname'); ?>
+						<?php echo $this->form->renderField('form_id'); ?>
 					</div>
 					<div>
-						<?php echo $this->form->renderField('classname'); ?>
+						<?php echo $this->form->renderField('type_select'); ?>
+					</div>
+					<div>
+						<?php echo $this->form->renderField('tooltip'); ?>
 					</div>
 					<div>
 						<?php echo $this->form->renderField('published'); ?>
-					</div>
-					<div>
-						<?php echo $this->form->renderField('dependency'); ?>
 					</div>
 					<div>
 						<?php echo $this->form->renderField('id'); ?>
@@ -54,6 +54,6 @@ JFactory::getDocument()->addScriptDeclaration('
 		</div>
 	</div>
 
-	<input type="hidden" name="task" value="forms" />
+	<input type="hidden" name="task" value="types" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>

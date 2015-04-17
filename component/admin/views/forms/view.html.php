@@ -33,6 +33,7 @@ class RedproductfinderViewForms extends JViewLegacy
 		/* Set variabels */
 		$this->assignRef('pagination',   $pagination);
 		$this->assignRef('forms',   $forms);
+		$this->assignRef('items',   $forms);
 
 		/* Get the toolbar */
 		$this->toolbar();
@@ -43,7 +44,7 @@ class RedproductfinderViewForms extends JViewLegacy
 
 	function toolbar()
 	{
-		JToolBarHelper::title(JText::_( 'Forms' ), 'redproductfinder_form');
+		JToolBarHelper::title(JText::_( 'Forms' ), 'address contact');
 		JToolbarHelper::addNew('form.add');
 		JToolbarHelper::editList('form.edit');
 		JToolbarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields and values?'), 'forms.delete', 'JTOOLBAR_EMPTY_TRASH');

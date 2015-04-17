@@ -34,60 +34,54 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 		</thead>
 		<tbody>
 			<?php
+				$k = 0;
 
-			$k = 0;
-			for ($i=0, $n=count( $this->forms ); $i < $n; $i++)
-			{
-				$row = $this->forms[$i];
+				for ($i=0, $n=count( $this->items ); $i < $n; $i++)
+				{
+					$row = $this->items[$i];
 
-				JFilterOutput::objectHTMLSafe($row);
-				$link 	= 'index.php?option=com_redproductfinder&task=edit&controller=forms&hidemainmenu=1&cid[]='. $row->id;
+					JFilterOutput::objectHTMLSafe($row);
+					$link 	= 'index.php?option=com_redproductfinder&task=form.edit&id='. $row->id;
 
-				$img 	= $row->published ? 'tick.png' : 'publish_x.png';
-				$task 	= $row->published ? 'unpublish' : 'publish';
-				$alt 	= $row->published ? JText::_('Published') : JText::_('Unpublished');
-
-				$checked = JHTML::_('grid.checkedout',  $row, $i);
-				$my  = JFactory::getUser();
-				?>
-				<tr class="<?php echo 'row'. $k; ?>">
-					<td align="center">
-					<?php echo $this->pagination->getRowOffset($i); ?>
-					</td>
-					<td>
-					<?php echo $checked; ?>
-					</td>
-					<td>
-					<?php
-					if ( $row->checked_out && ( $row->checked_out != $my->id ) )
-					{
-						?>
-						<?php echo $row->formname; ?>
-						&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
-						<?php
-					} else {
-						?>
-						<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit form'); ?>">
-						<?php echo $row->formname; ?>
-						</a>
-						<?php
-					}
+					$checked = JHTML::_('grid.checkedout',  $row, $i);
+					$my  = JFactory::getUser();
 					?>
-					</td>
-					<td width="10%" align="center">
-					<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $task;?>')">
-					<img src="../images/<?php echo $img;?>" border="0" alt="<?php echo $alt; ?>" />
-					</a>
-					</td>
-					<td>
+					<tr class="<?php echo 'row'. $k; ?>">
+						<td align="center">
+							<?php echo $this->pagination->getRowOffset($i); ?>
+						</td>
+						<td>
+							<?php echo $checked; ?>
+						</td>
+						<td>
+						<?php
+							if ( $row->checked_out && ( $row->checked_out != $my->id ) )
+							{
+								?>
+								<?php echo $row->formname; ?>
+								&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
+								<?php
+							} else {
+								?>
+								<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit form'); ?>">
+								<?php echo $row->formname; ?>
+								</a>
+								<?php
+							}
+						?>
+						</td>
+						<td width="10%" align="center">
+							<?php echo JHtml::_('jgrid.published', $row->published, $i, 'forms.', 1, 'cb', $row->publish_up, $row->publish_down); ?>
+						</td>
+						<td>
+						<?php
+							echo "{redproductfinder}".$row->id."{/redproductfinder}";
+						?>
+						</td>
+					</tr>
 					<?php
-						echo "{redproductfinder}".$row->id."{/redproductfinder}";
-					?>
-					</td>
-				</tr>
-				<?php
-				$k = 1 - $k;
-			};
+					$k = 1 - $k;
+				};
 
 			?>
 		</tbody>
@@ -100,8 +94,8 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 		</tfoot>
 
 		</table>
-	<input type="hidden" name="option" value="com_redproductfinder" />
 	<input type="hidden" name="task" value="" />
+	<input type="hidden" name="view" value="forms" />
 	<input type="hidden" name="boxchecked" value="0" />
 
 	<?php echo JHtml::_('form.token'); ?>

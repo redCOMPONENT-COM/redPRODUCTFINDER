@@ -12,69 +12,27 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 /**
  * Tags Controller
  */
-class RedproductfinderControllerFilters extends JControllerAdmin {
+class RedproductfinderControllerFilters extends JControllerAdmin
+{
 	/**
 	 * Method to display the view
 	 *
 	 * @access	public
 	 */
-	function __construct() {
-		parent::__construct();
-		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('apply','save');
-		$this->registerTask('add','edit');
-
-		$this->registerTask('cancel','filters');
-		$this->registerTask('remove','filters');
-		$this->registerTask('saveorder','filters');
-		$this->registerTask('publish','filters');
-		$this->registerTask('unpublish','filters');
-	}
-
-	/**
-	 * Get the default layout
-	 */
-	function filters() {
-		JRequest::setVar('view', 'filters');
-		JRequest::setVar('layout', 'filters');
-
-		parent::display();
-	}
-
-	/**
-	 * Get the edit layout
-	 */
-	function Edit() {
-		/* Create the view */
-		$view = $this->getView('filters', 'html');
-
-		/* Add the main model */
-		$view->setModel( $this->getModel( 'filters', 'RedproductfinderModel' ), true );
-
-		/* Add extra models */
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redproductfinder' . DS . 'models' );
-		$view->setModel( $this->getModel( 'types', 'RedproductfinderModel' ));
-
-		/* Add the layout */
-		$view->setLayout('editfilter');
-
-		/* Display it all */
-		$view->display();
-	}
-	function save()
+	function __construct()
 	{
-		 global $mainframe;
-		$task = JRequest :: getVar('task');
-		$cid = JRequest::getVar ( 'id');
+		parent::__construct();
 
-		$model = $this->getModel('filters');
-		$model->SaveFilter();
-		$msg = $model->getError();
+		/* Redirect templates to templates as this is the standard call */
+		$this->registerTask('unpublish','publish');
+		$this->registerTask('apply','edit');
+	}
 
-		if($task=='apply')
-			$mainframe->redirect('index.php?option=com_redproductfinder&task=edit&controller=filters&hidemainmenu=1&cid[]='.$cid,$msg);
-		else
-			$mainframe->redirect('index.php?option=com_redproductfinder&task=filters&controller=filters',$msg);
+	public function getModel($name = 'Filter', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }
 ?>

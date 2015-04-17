@@ -81,28 +81,6 @@ class RedproductfinderControllerType extends JControllerForm
 	}
 
 	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   object  $model  The model.
-	 *
-	 * @return  boolean   True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Set the model
-		$model = $this->getModel('Contact', '', array());
-
-		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contacts' . $this->getRedirectToListAppend(), false));
-
-		return parent::batch($model);
-	}
-
-	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
 	 * @param   JModelLegacy  $model      The data model object.

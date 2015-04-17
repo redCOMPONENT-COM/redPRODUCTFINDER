@@ -12,44 +12,27 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 /**
  * Types Controller
  */
-class RedproductfinderControllerTypes extends JControllerAdmin {
+class RedproductfinderControllerTypes extends JControllerAdmin
+{
 	/**
 	 * Method to display the view
 	 *
 	 * @access	public
 	 */
-	function __construct() {
+	function __construct()
+	{
 		parent::__construct();
 
 		/* Redirect templates to templates as this is the standard call */
+		$this->registerTask('unpublish','publish');
 		$this->registerTask('apply','edit');
-		$this->registerTask('add','edit');
-		$this->registerTask('save','types');
-		$this->registerTask('cancel','types');
-		$this->registerTask('remove','types');
-		$this->registerTask('saveorder','types');
-		$this->registerTask('publish','types');
-		$this->registerTask('unpublish','types');
 	}
 
-	/**
-	 * Get the default layout
-	 */
-	function Types() {
-		JRequest::setVar('view', 'types');
-		JRequest::setVar('layout', 'types');
+	public function getModel($name = 'Type', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
 
-		parent::display();
-	}
-
-	/**
-	 * Get the edit layout
-	 */
-	function Edit() {
-		JRequest::setVar('view', 'types');
-		JRequest::setVar('layout', 'edittype');
-
-		parent::display();
+		return $model;
 	}
 }
 ?>

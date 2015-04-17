@@ -19,50 +19,20 @@ class RedproductfinderControllerForms extends JControllerAdmin
 	 *
 	 * @access	public
 	 */
-	function __construct() {
+	function __construct()
+	{
 		parent::__construct();
 
 		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('save','forms');
-		$this->registerTask('remove','forms');
-		$this->registerTask('publish','forms');
-		$this->registerTask('unpublish','forms');
-		$this->registerTask('cancel','forms');
-		$this->registerTask('clone','forms');
-		$this->registerTask('importattributes','forms');
+		$this->registerTask('unpublish','publish');
 		$this->registerTask('apply','edit');
 	}
 
-	/**
-	 * Gets a list of IP/IP ranges in the database
-	 */
-	function Forms() {
-		JRequest::setVar('view', 'forms');
-		JRequest::setVar('layout', 'forms');
+	public function getModel($name = 'Form', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
 
-		parent::display();
-	}
-
-	/**
-	 * Editing a form
-	 */
-	function Edit() {
-		JRequest::setVar('hidemainmenu', 1);
-		JRequest::setVar('view', 'forms');
-		JRequest::setVar('layout', 'editform');
-
-		parent::display();
-	}
-
-	/**
-	 * Adding a form
-	 */
-	function Add() {
-		JRequest::setVar('hidemainmenu', 1);
-		JRequest::setVar('view', 'forms');
-		JRequest::setVar('layout', 'editform');
-
-		parent::display();
+		return $model;
 	}
 }
 ?>
