@@ -3,7 +3,9 @@
     <fieldset addfieldpath="/administrator/components/com_redproductfinder/models/fields">
 		<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL" description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true" class="readonly"/>
 
-		<field name="tag_name" type="text" label="Tag name"/>
+		<field name="type_id" type="ListTypes" label="List Types"/>
+		
+		<field name="tag_name" type="text" label="Tag name" required="true"/>
 		
 		<field name="aliases" type="text" label="Tag aliases"/>
 		

@@ -14,6 +14,7 @@
 		<field name="formname"
 			type="text"
 			label="COM_REDPRODUCTFINDER_FORM_NAME"
+			required="true"
 		 />
 
 		<field name="classname"

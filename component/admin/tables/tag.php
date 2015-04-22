@@ -34,6 +34,9 @@ class RedproductfinderTableTag extends JTable
 	/** @var integer The order of the tag */
 	var $ordering = 0;
 
+	/** @var integer The order of the tag */
+	var $type_id = 0;
+
 	/** @var string Tag type 1 */
 	var $tag_name = null;
 

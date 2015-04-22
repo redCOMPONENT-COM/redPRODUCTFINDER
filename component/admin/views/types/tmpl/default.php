@@ -40,9 +40,9 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 		<tbody>
 		<?php
 		$k = 0;
-		for ($i=0, $n=count( $this->types ); $i < $n; $i++)
+		for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 		{
-			$row = $this->types[$i];
+			$row = $this->items[$i];
 
 			JFilterOutput::objectHTMLSafe($row);
 			$link 	= 'index.php?option=com_redproductfinder&task=type.edit&id='. $row->id;

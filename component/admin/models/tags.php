@@ -263,14 +263,18 @@ class RedproductfinderModelTags extends JModelList
 	/**
 	 * Get the list of selected types for this tag
 	 */
-	public function getTagTypes() {
+	public function getTagTypes($id)
+	{
 		$db = JFactory::getDBO();
-		$id = JRequest::getVar('cid');
-		$q = "SELECT type_id
-			FROM #__redproductfinder_tag_type
-			WHERE tag_id = ".$id[0];
-		$db->setQuery($q);
-		return $db->loadResultArray();
+		$query	= $db->getQuery(true);
+
+		$query->select($db->qn("type_id"))
+		->from($db->qn("#__redproductfinder_tag_type"))
+		->where($db->qn("tag_id") . " = " . $db->q($id));
+
+		$db->setQuery($query);
+
+		return $db->loadAssocList();
 	}
 
 	/**
@@ -314,6 +318,39 @@ class RedproductfinderModelTags extends JModelList
 		$db->setQuery($query);
 
 		return $db->loadAssocList('qs_id');
+	}
+
+/**
+	 * Build an SQL query to load the list data.
+	 *
+	 * @return  JDatabaseQuery
+	 *
+	 * @since   1.6
+	 */
+	protected function getListQuery()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Get filter state - do it later
+		$state = "1";
+
+		$query->select("t.*")
+		->from($db->qn("#__redproductfinder_tags") . " t")
+		->join("LEFT", $db->qn("#__redproductfinder_tag_type") . " y ON t.id = y.tag_id")
+		->order($db->qn("t") . "." . $db->qn("id"));
+
+		if ($state == "-2")
+		{
+			$query->where($db->qn("t") . "." . $db->qn("published") . "=" . $db->qn("-2"));
+		}
+		else
+		{
+			$query->where($db->qn("t") . "." . $db->qn("published") . "!=" . $db->q("-2"));
+		}
+
+		return $query;
 	}
 }
 ?>

@@ -30,6 +30,7 @@ class RedproductfinderViewTags extends JViewLegacy
 
 		/* Get the fields list */
 		$tags = $this->get('Tags');
+		$items = $this->get('Items');
 
 		/* Get the used types */
 		$types = $this->get('TagTypeNames');
@@ -38,6 +39,7 @@ class RedproductfinderViewTags extends JViewLegacy
 		$this->assignRef('pagination', $pagination);
 		$this->assignRef('tags', $tags);
 		$this->assignRef('types', $types);
+		$this->assignRef('items', $items);
 
 		/* Get the toolbar */
 		$this->toolbar();
@@ -48,14 +50,12 @@ class RedproductfinderViewTags extends JViewLegacy
 
 	function toolbar()
 	{
-		JToolBarHelper::title(JText::_( 'Type' ), 'address contact');
-		JToolbarHelper::addNew('type.add');
-		JToolbarHelper::editList('type.edit');
-		JToolbarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields and values?'), 'forms.delete', 'JTOOLBAR_EMPTY_TRASH');
-		JToolbarHelper::trash('types.trash');
-
-		JToolbarHelper::publish('types.publish', 'JTOOLBAR_PUBLISH', true);
-		JToolbarHelper::unpublish('types.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+		JToolBarHelper::title(JText::_( 'Tag' ), 'address contact');
+		JToolbarHelper::addNew('tag.add');
+		JToolbarHelper::editList('tag.edit');
+		JToolbarHelper::publish('tags.publish', 'JTOOLBAR_PUBLISH', true);
+		JToolbarHelper::unpublish('tags.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+		JToolbarHelper::trash('tags.trash');
 	}
 }
 ?>

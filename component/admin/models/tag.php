@@ -147,27 +147,80 @@ class RedproductfinderModelTag extends JModelAdmin
 	public function save($data)
 	{
 		$input = JFactory::getApplication()->input;
+		$db = JFactory::getDbo();
 
+		$post = $input->post->get("jform", null, null);
+
+		// Edit
 		if (parent::save($data))
 		{
+			if ($post["id"] != 0)
+			{
+				// Save tag type into table tag_type
+				if (count($post["type_id"]) > 0)
+				{
+					// Delete tag
+					$r = $this->deleteTag_Type($post, $post["id"]);
+
+					// Insert tag type
+					$a = $this->insertTag_Type($post, $post["id"]);
+				}
+			}
+			else
+			{
+				$idTag			= $db->insertid();
+
+				// Save tag type into table tag_type
+				if (count($post["type_id"]) > 0)
+				{
+					$a = $this->insertTag_Type($post, $idTag);
+				}
+			}
+
 			return true;
 		}
-
 		return false;
 	}
 
-	/**
-	 * Prepare and sanitise the table prior to saving.
-	 *
-	 * @param   JTable  $table  The JTable object
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function prepareTable($table)
+	protected function insertTag_Type($data, $idTag)
 	{
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+
+		$query->insert($db->quoteName('#__redproductfinder_tag_type'))
+			->columns($db->quoteName(array('tag_id', 'type_id')));
+
+		foreach ($data["type_id"] as $key => $value)
+		{
+			$values = $db->quote($idTag) . ',' . $db->quote($value);
+			$query->values($values);
+		}
+
+		$db->setQuery($query);
+		$result = $db->query();
+
+		return $result;
+	}
+
+	protected function deleteTag_Type($data, $idTag)
+	{
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+
+		// delete all custom keys for user 1001.
+		$conditions = array(
+			$db->quoteName('tag_id') . ' = ' . $idTag
+		);
+
+		$query->delete($db->quoteName('#__redproductfinder_tag_type'));
+		$query->where($conditions);
+
+		$db->setQuery($query);
+
+		$result = $db->execute();
+
+		return $result;
 	}
 }

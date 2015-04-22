@@ -17,7 +17,7 @@ JHtml::_('behavior.formvalidator');
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
 	{
-		if (task == "form.cancel" || document.formvalidator.isValid(document.getElementById("redproductfinder-form")))
+		if (task == "filter.cancel" || document.formvalidator.isValid(document.getElementById("redproductfinder-form")))
 		{
 			Joomla.submitform(task, document.getElementById("redproductfinder-form"));
 		}
@@ -31,19 +31,19 @@ JFactory::getDocument()->addScriptDeclaration('
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
 					<div>
-						<?php echo $this->form->renderField('formname'); ?>
+						<?php echo $this->form->renderField("filter_name"); ?>
 					</div>
 					<div>
-						<?php echo $this->form->renderField('showname'); ?>
+						<?php echo $this->form->renderField("type_select"); ?>
 					</div>
 					<div>
-						<?php echo $this->form->renderField('classname'); ?>
+						<?php echo $this->form->renderField("select_name"); ?>
+					</div>
+					<div>
+						<?php echo $this->form->renderField("tag_id"); ?>
 					</div>
 					<div>
 						<?php echo $this->form->renderField('published'); ?>
-					</div>
-					<div>
-						<?php echo $this->form->renderField('dependency'); ?>
 					</div>
 					<div>
 						<?php echo $this->form->renderField('id'); ?>
@@ -53,6 +53,6 @@ JFactory::getDocument()->addScriptDeclaration('
 		</div>
 	</div>
 
-	<input type="hidden" name="task" value="forms" />
+	<input type="hidden" name="task" value="filters" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>

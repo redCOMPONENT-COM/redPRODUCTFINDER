@@ -29,11 +29,12 @@ class RedproductfinderViewForms extends JViewLegacy
 
 		/* Get the competitions list */
 		$forms = $this->get('Forms');
+		$items = $this->get("Items");
 
 		/* Set variabels */
 		$this->assignRef('pagination',   $pagination);
 		$this->assignRef('forms',   $forms);
-		$this->assignRef('items',   $forms);
+		$this->assignRef('items',   $items);
 
 		/* Get the toolbar */
 		$this->toolbar();
@@ -47,11 +48,10 @@ class RedproductfinderViewForms extends JViewLegacy
 		JToolBarHelper::title(JText::_( 'Forms' ), 'address contact');
 		JToolbarHelper::addNew('form.add');
 		JToolbarHelper::editList('form.edit');
-		JToolbarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields and values?'), 'forms.delete', 'JTOOLBAR_EMPTY_TRASH');
-		JToolbarHelper::trash('forms.trash');
-
 		JToolbarHelper::publish('forms.publish', 'JTOOLBAR_PUBLISH', true);
 		JToolbarHelper::unpublish('forms.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+		// JToolbarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields and values?'), 'forms.delete', 'JTOOLBAR_EMPTY_TRASH');
+		JToolbarHelper::trash('forms.trash');
 	}
 }
 ?>

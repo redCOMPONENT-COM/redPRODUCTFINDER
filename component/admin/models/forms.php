@@ -429,5 +429,36 @@ class RedproductfinderModelForms extends JModelList
     	$mainframe->enqueueMessage(JText::_('PROCESSED_X_PRODUCTS'));
     	$mainframe->Redirect('index.php?option=com_redproductfinder&task=forms&controller=forms');
     }
+
+    /**
+     * Build an SQL query to load the list data.
+     *
+     * @return  JDatabaseQuery
+     *
+     * @since   1.6
+     */
+    protected function getListQuery()
+    {
+    	// Create a new query object.
+    	$db = $this->getDbo();
+    	$query = $db->getQuery(true);
+
+    	// Get filter state - do it later
+    	$state = "1";
+
+    	$query->select("*")
+    	->from($db->qn("#__redproductfinder_forms"));
+
+    	if ($state == "-2")
+    	{
+    		$query->where($db->qn("published") . "=" . $db->qn("-2"));
+    	}
+    	else
+    	{
+    		$query->where($db->qn("published") . "!=" . $db->q("-2"));
+    	}
+
+    	return $query;
+    }
 }
 ?>

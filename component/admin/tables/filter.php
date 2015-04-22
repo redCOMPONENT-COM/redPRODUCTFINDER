@@ -13,7 +13,8 @@ defined('_JEXEC') or die('Restricted access');
 
 /**
  */
-class TableFilters extends JTable {
+class RedproductfinderTableFilter extends JTable
+{
 	/** @var int Primary key */
 	var $id = null;
 	/** @var string Whether or not a tag is published */

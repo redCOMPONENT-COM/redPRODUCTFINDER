@@ -16,7 +16,7 @@ JHtml::_('behavior.formvalidator');
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
 	{
-		if (task == "contact.cancel" || document.formvalidator.isValid(document.getElementById("redproductfinder-form")))
+		if (task == "type.cancel" || document.formvalidator.isValid(document.getElementById("redproductfinder-form")))
 		{
 			Joomla.submitform(task, document.getElementById("redproductfinder-form"));
 		}

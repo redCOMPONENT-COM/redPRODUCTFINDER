@@ -31,6 +31,17 @@ class RedproductfinderModelType extends JModelAdmin
 	 */
 	protected function canDelete($record)
 	{
+		if (!empty($record->id))
+		{
+			if ($record->published != -2)
+			{
+				return;
+			}
+
+			$user = JFactory::getUser();
+
+			return $user->authorise('core.delete', 'com_contact.category.' . (int) $record->catid);
+		}
 	}
 
 	/**
@@ -44,6 +55,7 @@ class RedproductfinderModelType extends JModelAdmin
 	 */
 	protected function canEditState($record)
 	{
+		return parent::canEditState($record);
 	}
 
 	/**

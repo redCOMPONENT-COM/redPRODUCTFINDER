@@ -26,6 +26,7 @@ class RedproductfinderViewTypes extends JViewLegacy
 
 		/* Get the fields list */
 		$types = $this->get('Types');
+		$items = $this->get('Items');
 
 		/* Check if there are any forms */
 		$counttypes = $this->get('Total');
@@ -33,6 +34,7 @@ class RedproductfinderViewTypes extends JViewLegacy
 		/* Set variabels */
 		$this->assignRef('pagination', $pagination);
 		$this->assignRef('types', $types);
+		$this->assignRef('items', $items);
 		$this->assignRef('counttypes', $counttypes);
 
 		/* Get the toolbar */
@@ -47,11 +49,10 @@ class RedproductfinderViewTypes extends JViewLegacy
 		JToolBarHelper::title(JText::_( 'Type' ), 'address contact');
 		JToolbarHelper::addNew('type.add');
 		JToolbarHelper::editList('type.edit');
-		JToolbarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields and values?'), 'forms.delete', 'JTOOLBAR_EMPTY_TRASH');
-		JToolbarHelper::trash('types.trash');
-
 		JToolbarHelper::publish('types.publish', 'JTOOLBAR_PUBLISH', true);
 		JToolbarHelper::unpublish('types.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+// 		JToolbarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields and values?'), 'forms.delete', 'JTOOLBAR_EMPTY_TRASH');
+		JToolbarHelper::trash('types.trash');
 	}
 }
 ?>

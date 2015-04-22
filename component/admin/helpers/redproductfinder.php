@@ -57,10 +57,5 @@ class RedproductfinderHelper
 			'index.php?option=com_redproductfinder&view=filters',
 			$vName == 'filters'
 		);
-
-
 	}
-
-
-
 }

@@ -1,9 +1,9 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
+ * @license can be read in this package of software in the file license.txt or
+ * read on http://redcomponent.com/license.txt
+ * Developed by email@recomponent.com - redCOMPONENT.com
  *
  * Products table
  */
@@ -13,7 +13,7 @@ defined('_JEXEC') or die('Restricted access');
 
 /**
  */
-class TableAssociations extends JTable {
+class RedproductfinderTableAssociation extends JTable {
 	/** @var int Primary key */
 	var $id = null;
 	/** @var string Whether or not a product is published */
@@ -28,7 +28,7 @@ class TableAssociations extends JTable {
 	var $product_id = 0;
 	/** @var varchar of the free text */
 	var $aliases = null;
-	
+
 	/**
 	* @param database A database connector object
 	*/

@@ -116,22 +116,18 @@ class RedproductfinderModelFilters extends JModelList {
    /**
     * Retrieve a Filter to edit
     */
-   function getFilter() {
-      $row = $this->getTable();
-      $my = JFactory::getUser();
-      $id = JRequest::getVar('cid');
+    function getFilter($id)
+    {
+    	$db = JFactory::getDBO();
+    	$query = $db->getQuery(true);
 
-      /* load the row from the db table */
-      $row->load($id[0]);
+    	$query->select("f.*")
+    	->from("#__redproductfinder_filters f")
+    	->where($db->qn("id") . " = " . $db->q($id));
 
-      if ($id[0]) {
-         // do stuff for existing records
-         $result = $row->checkout( $my->id );
-      } else {
-         // do stuff for new records
-         $row->published    = 1;
-      }
-      return $row;
+    	$db->setQuery($query);
+
+    	return $db->loadAssoc();
    }
 
    /**
@@ -290,14 +286,87 @@ class RedproductfinderModelFilters extends JModelList {
 	/**
 	 * Show tag name
 	 */
-	public function getTagname($tag_ids='') {
+	public function getTagname($tag_ids = '')
+	{
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
-		/* Get all the fields based on the limits */
-		$query = "SELECT tag_name FROM #__redproductfinder_tags
-				WHERE id IN (".$tag_ids.")";
-		$db->setQuery($query);
-		return implode(', ',$db->loadResultArray());
+		if (!empty($tag_ids))
+		{
+			$query->select("tag_name")
+			->from("#__redproductfinder_tags");
+
+			$tagsArray = explode(",", $tag_ids);
+			$tags = array();
+
+			foreach ($tagsArray as $k => $value)
+			{
+				$arr = explode(".", $value);
+				$tags[] = $arr[1];
+			}
+
+			$tag_ids = implode(",", $tags);
+
+			// Add where query
+			$query->where("id IN (" . $tag_ids . ")");
+
+			$db->setQuery($query);
+
+			$result = $db->loadAssocList();
+		}
+		else
+		{
+			$result = array();
+		}
+
+		$return = array();
+
+		$str	= "";
+
+		if (count($result) > 0)
+		{
+			foreach ($result as $k => $r)
+			{
+				$return[] = $r["tag_name"];
+			}
+
+			$str = implode(",", $return);
+		}
+
+		return $str;
+	}
+
+	/**
+	 * Build an SQL query to load the list data.
+	 *
+	 * @return  JDatabaseQuery
+	 *
+	 * @since   1.6
+	 */
+	protected function getListQuery()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Get filter state - do it later
+		$state = "1";
+
+		$query->select("f.*")
+		->from($db->qn("#__redproductfinder_filters") . " f")
+		->group($db->qn("f") . "." . $db->qn("ordering"))
+		->group($db->qn("f") . "." . $db->qn("id"));
+
+		if ($state == "-2")
+		{
+			$query->where($db->qn("f") . "." . $db->qn("published") . "=" . $db->qn("-2"));
+		}
+		else
+		{
+			$query->where($db->qn("f") . "." . $db->qn("published") . "!=" . $db->q("-2"));
+		}
+
+		return $query;
 	}
 }
 ?>

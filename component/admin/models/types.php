@@ -55,6 +55,21 @@ class RedproductfinderModelTypes extends JModelList {
 		return $db->loadObjectList();
 	}
 
+	function getTypesList()
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
+		/* Get all the fields based on the limits */
+		$query->select('t.id, t.type_name')
+		->from($db->qn('#__redproductfinder_types') . 'as t')
+		->where($db->qn('published') . ' = 1');
+
+		$db->setQuery($query);
+
+		return $db->loadAssocList();
+	}
+
 	function getPagination() {
 		global $mainframe, $option;
 		$mainframe = JFactory::getApplication();
@@ -273,6 +288,39 @@ class RedproductfinderModelTypes extends JModelList {
 		$q = "SELECT id, formname FROM #__redproductfinder_forms";
 		$db->setQuery($q);
 		return $db->loadObjectList();
+	}
+
+	/**
+	 * Build an SQL query to load the list data.
+	 *
+	 * @return  JDatabaseQuery
+	 *
+	 * @since   1.6
+	 */
+	protected function getListQuery()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Get filter state - do it later
+		$state = "1";
+
+		$query->select("t.*, f.formname AS form_name")
+		->from($db->qn("#__redproductfinder_types") . " t")
+		->join("LEFT", $db->qn("#__redproductfinder_forms") . " f ON t.form_id = f.id")
+		->order($db->qn("t") . "." . $db->qn("ordering"));
+
+		if ($state == "-2")
+		{
+			$query->where($db->qn("t") . "." . $db->qn("published") . "=" . $db->qn("-2"));
+		}
+		else
+		{
+			$query->where($db->qn("t") . "." . $db->qn("published") . "!=" . $db->q("-2"));
+		}
+
+		return $query;
 	}
 }
 ?>

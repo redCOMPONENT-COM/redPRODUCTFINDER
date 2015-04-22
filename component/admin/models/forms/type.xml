@@ -3,9 +3,9 @@
     <fieldset addfieldpath="/administrator/components/com_categories/models/fields">
 		<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL" description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true" class="readonly"/>
 
-		<field name="type_name" type="text" label="Type name"/>
+		<field name="type_name" type="text" label="Type name" required="true"/>
 
-		<field name="form_id" type="sql" label="Select form" query="SELECT id, formname FROM #__redproductfinder_forms" key_field="id" value_field="formname"/>
+		<field name="form_id" type="sql" label="Select form" query="SELECT id, formname FROM #__redproductfinder_forms WHERE published = 1" key_field="id" value_field="formname"/>
 
 		<field name="type_select" type="list" label="Selector type">
 			<option value="checkbox">Checkbox</option>

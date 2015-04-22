@@ -35,9 +35,9 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 		</thead>
 		<?php
 			$k = 0;
-			for ($i=0, $n=count( $this->tags ); $i < $n; $i++)
+			for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 			{
-				$row = $this->tags[$i];
+				$row = $this->items[$i];
 
 				JFilterOutput::objectHTMLSafe($row);
 				$link 	= 'index.php?option=com_redproductfinder&task=tag.edit&id='. $row->id;
@@ -54,12 +54,15 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 					</td>
 					<td>
 					<?php
-					if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
+					if ($row->checked_out && ( $row->checked_out != $my->id ))
+					{
 						?>
 						<?php echo $row->tag_name; ?>
 						&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
 						<?php
-					} else {
+					}
+					else
+					{
 						?>
 						<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit field'); ?>">
 						<?php echo $row->tag_name; ?>
@@ -70,15 +73,20 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 					</td>
 					<td>
 						<?php
-						foreach ($this->types[$row->id] as $tagid => $type) {
-							echo $type.'<br />';
-						}; ?>
+						if (!empty($this->types[$row->id]))
+						{
+							foreach ($this->types[$row->id] as $tagid => $type)
+							{
+								echo $type.'<br />';
+							};
+						}
+						?>
 					</td>
 					<td>
 						<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />
 					</td>
 					<td width="10%" align="center">
-						<?php echo JHtml::_('jgrid.published', $row->published, $i, 'types.', 1, 'cb', $row->publish_up, $row->publish_down); ?>
+						<?php echo JHtml::_('jgrid.published', $row->published, $i, 'tags.', 1, 'cb', $row->publish_up, $row->publish_down); ?>
 					</td>
 				</tr>
 			<?php

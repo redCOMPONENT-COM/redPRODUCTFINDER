@@ -15,7 +15,8 @@ jimport( 'joomla.application.component.model' );
 /**
  * Associations Model
  */
-class RedproductfinderModelAssociations extends JModelList {
+class RedproductfinderModelAssociations extends JModelList
+{
 	/** @var integer Total entries */
 	protected $_total = null;
 
@@ -28,7 +29,8 @@ class RedproductfinderModelAssociations extends JModelList {
 	/**
 	 * Show all tags that have been created
 	 */
-	function getAssociations() {
+	function getAssociations()
+	{
 		$db = JFactory::getDBO();
 
 		/* Get all the fields based on the limits */
@@ -36,8 +38,10 @@ class RedproductfinderModelAssociations extends JModelList {
 			FROM #__redproductfinder_associations a, #__redshop_product p
 			WHERE a.product_id = p.product_id
 			ORDER BY a.ordering";
+
 		$db->setQuery($query, $this->_limitstart, $this->_limit);
 		$products = $db->loadObjectList();
+
 		return $products;
 	}
 
@@ -136,13 +140,16 @@ $mainframe = JFactory::getApplication();
    /**
     * Retrieve a list of products from Redshop
     */
-   public function getProducts() {
+   public function getProducts()
+   {
 	   $db = JFactory::getDBO();
 
 	   $q = "SELECT product_id, CONCAT(product_number, '::', product_name) AS full_product_name
 	   		FROM #__redshop_product
 			ORDER BY product_name";
+
       $db->setQuery($q);
+
 	  return $db->loadObjectList();
    }
 
@@ -282,17 +289,18 @@ $mainframe = JFactory::getApplication();
 	/**
 	 * Get the list of selected types for this tag
 	 */
-	public function getAssociationTags() {
+	public function getAssociationTags($id)
+	{
 		$db = JFactory::getDBO();
-		$id = JRequest::getVar('cid', false);
-		if (!$id) return array();
-		else {
-			$q = "SELECT tag_id
-				FROM #__redproductfinder_association_tag
-				WHERE association_id = ".$id[0];
-			$db->setQuery($q);
-			return $db->loadResultArray();
-		}
+		$query = $db->getQuery(true);
+
+		$query->select($db->qn("tag_id") . "," . $db->qn("type_id") . ", CONCAT(tag_id, '.', type_id ) as tag_type")
+		->from($db->qn("#__redproductfinder_association_tag"))
+		->where($db->qn("association_id") . " = " . $id);
+
+		$db->setQuery($query);
+
+		return $db->loadAssocList();
 	}
 
 	/**
@@ -323,23 +331,37 @@ $mainframe = JFactory::getApplication();
 	/**
 	 * Get a multi-select list with types and tags
 	 */
-	public function getTypeTagList() {
+	public function getTypeTagList()
+	{
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
 		/* 1. Get all types */
-		$q = "SELECT id, type_name FROM #__redproductfinder_types where type_select!='Productfinder datepicker' ORDER by ordering";
-		$db->setQuery($q);
+		$query->select("id, type_name")
+		->from("#__redproductfinder_types")
+		->where("published = 1")
+		->order("ordering");
+
+		$db->setQuery($query);
+
 		$types = $db->loadAssocList('id');
 
 		/* 2. Go through each type and get the tags */
-		foreach ($types as $id => $type) {
-			$q = "SELECT t.id, tag_name
-				FROM #__redproductfinder_tag_type j, #__redproductfinder_tags t
-				WHERE j.tag_id = t.id
-				AND j.type_id = ".$id."
-				ORDER BY t.ordering";
-			$db->setQuery($q);
+		foreach ($types as $id => $type)
+		{
+			$query = $db->getQuery(true);
+			$query->select("t.id, tag_name")
+				->from("#__redproductfinder_tag_type j")
+				->join("LEFT", "#__redproductfinder_tags t ON j.tag_id = t.id")
+				->where("j.type_id = " . $id)
+				->where("t.published = 1")
+				->order("t.ordering");
+
+			$db->setQuery($query);
+
 			$types[$id]['tags'] = $db->loadAssocList('id');
 		}
+
 		return $types;
 	}
 /*
@@ -397,21 +419,23 @@ $mainframe = JFactory::getApplication();
 	/**
 	 * Get the list of selected types for this type id
 	 */
-	public function getAssociationTypes($tag) {
+	public function getAssociationTypes($association, $id)
+	{
 		$db = JFactory::getDBO();
-		$id = JRequest::getVar('cid', false);
-		if (!$id) return array();
-		else {
-			$q = "SELECT type_id
-				FROM #__redproductfinder_association_tag
-				WHERE association_id = ".$id[0]." and tag_id=".$tag."";
 
-			$db->setQuery($q);
-			return $db->loadObject();
-		}
+		$query = $db->getQuery(true);
+
+		$q = "SELECT type_id
+			FROM #__redproductfinder_association_tag
+			WHERE association_id = ".$id[0]." and tag_id=".$tag."";
+
+		$db->setQuery($q);
+
+		return $db->loadObject();
 	}
 
-	function getFormDetail($id) {
+	function getFormDetail($id)
+	{
 		$db = JFactory::getDBO();
 		if (!$id) return array();
 		else {
@@ -422,6 +446,39 @@ $mainframe = JFactory::getApplication();
 			$list = $db->loadObjectlist();
 			return $list;
 		}
+	}
+
+	/**
+	 * Build an SQL query to load the list data.
+	 *
+	 * @return  JDatabaseQuery
+	 *
+	 * @since   1.6
+	 */
+	protected function getListQuery()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Get filter state - do it later
+		$state = "1";
+
+		$query->select("a.*, p.product_name")
+		->from($db->qn("#__redproductfinder_associations") . " a")
+		->join("LEFT", $db->qn("#__redshop_product") . " p ON a.product_id = p.product_id")
+		->order($db->qn("a") . "." . $db->qn("ordering"));
+
+		if ($state == "-2")
+		{
+			$query->where($db->qn("a") . "." . $db->qn("published") . "=" . $db->qn("-2"));
+		}
+		else
+		{
+			$query->where($db->qn("a") . "." . $db->qn("published") . "!=" . $db->q("-2"));
+		}
+
+		return $query;
 	}
 }
 ?>

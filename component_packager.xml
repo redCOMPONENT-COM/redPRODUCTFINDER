@@ -65,8 +65,7 @@
         <copy todir="${tmpdir}/${extension}">
             <fileset dir="${extpath}/">
                 <include name="LICENSE.txt" />
-                <include name="redshop.xml" />
-                <include name="install.php" />
+                <include name="redproductfinder.xml" />
             </fileset>
         </copy>
 
@@ -81,45 +80,6 @@
         <echo msg="Copying MEDIA folder to build directory..." />
         <copy todir="${tmpdir}/${extension}/media">
             <fileset dir="${extpath}/media">
-                <include name="**" />
-                <exclude name=".*" />
-            </fileset>
-        </copy>
-
-		<echo message="Copying libraries..."/>
-		<copy todir="${tmpdir}/${extension}/libraries" overwrite="true">
-			<fileset dir="${extpath}/libraries">
-				<include name="**"/>
-			</fileset>
-		</copy>
-
-        <echo msg="Copying main MODULES folder to build directory..." />
-        <echo msg="Copying redSHOP Cart module" />
-        <copy todir="${tmpdir}/${extension}/modules/site/mod_redshop_cart">
-            <fileset dir="${extpath}/modules/site/mod_redshop_cart">
-                <include name="**" />
-                <exclude name=".*" />
-            </fileset>
-        </copy>
-
-        <echo msg="Copying main PLUGINS folder to build directory..." />
-        <echo msg="Copying rs_payment_banktransfer plugin" />
-        <copy todir="${tmpdir}/${extension}/plugins/redshop_payment/rs_payment_banktransfer">
-            <fileset dir="${extpath}/plugins/redshop_payment/rs_payment_banktransfer">
-                <include name="**" />
-                <exclude name=".*" />
-            </fileset>
-        </copy>
-        <echo msg="Copying rs_payment_paypal plugin" />
-        <copy todir="${tmpdir}/${extension}/plugins/redshop_payment/rs_payment_paypal">
-            <fileset dir="${extpath}/plugins/redshop_payment/rs_payment_paypal">
-                <include name="**" />
-                <exclude name=".*" />
-            </fileset>
-        </copy>
-        <echo msg="Copying default_shipping plugin" />
-        <copy todir="${tmpdir}/${extension}/plugins/redshop_shipping/default_shipping">
-            <fileset dir="${extpath}/plugins/redshop_shipping/default_shipping">
                 <include name="**" />
                 <exclude name=".*" />
             </fileset>
