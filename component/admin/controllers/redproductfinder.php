@@ -31,16 +31,5 @@ class RedproductfinderControllerRedproductfinder extends JControllerAdmin
 
 		parent::display();
 	}
-
-	/**
-	 * Get the default layout
-	 */
-	function Redproductfinder()
-	{
-// 		JRequest::setVar('view', 'redproductfinder');
-// 		JRequest::setVar('layout', 'redproductfinder');
-
-// 		parent::display();
-	}
 }
 ?>

@@ -14,17 +14,10 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
  */
 class RedproductfinderControllerTags extends JControllerAdmin
 {
-	/**
-	 * Method to display the view
-	 *
-	 * @access	public
-	 */
 	function __construct()
 	{
 		parent::__construct();
 
-		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('unpublish','publish');
 		$this->registerTask('apply','edit');
 	}
 

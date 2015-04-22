@@ -1,20 +1,20 @@
 <?php
 /**
- * @package     Joomla.Administrator
- * @subpackage  com_contact
+ * @package    RedPRODUCTFINDER.Backend
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 /**
- * Item Model for a Contact.
+ * RedPRODUCTFINDER form controller.
  *
- * @since  1.6
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
 class RedproductfinderModelAssociation extends JModelAdmin
 {
@@ -192,7 +192,15 @@ class RedproductfinderModelAssociation extends JModelAdmin
 		return false;
 	}
 
-	protected function insertTag_Type($data, $idTag)
+	/**
+	 * This function will insert data record to map database between tag and type
+	 *
+	 * @param   array   $data   Default value is array()
+	 * @param   string  $idTag  Default value is null
+	 *
+	 * @return boolean
+	 */
+	protected function insertTag_Type($data = array(), $idTag = "")
 	{
 		$db = JFactory::getDbo();
 
@@ -205,7 +213,6 @@ class RedproductfinderModelAssociation extends JModelAdmin
 		{
 			$arr = explode(".", $value);
 
-			# $arr[0] : type # $arr[1] : tag
 			$values = $db->q($idTag) . ',' . $db->q($arr[1]) . ',' . $db->q($arr[0]);
 			$query->values($values);
 		}
@@ -222,7 +229,7 @@ class RedproductfinderModelAssociation extends JModelAdmin
 
 		$query = $db->getQuery(true);
 
-		// delete all custom keys for user 1001.
+		// Delete all custom keys for user 1001.
 		$conditions = array(
 			$db->quoteName('association_id') . ' = ' . $idTag
 		);

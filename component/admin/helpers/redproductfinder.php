@@ -1,28 +1,28 @@
 <?php
 /**
- * @version		$Id: categories.php 20196 2011-01-09 02:40:25Z ian $
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @package    RedPRODUCTFINDER.Backend
+ *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
- * Categories helper.
+ * RedPRODUCTFINDER form controller.
  *
- * @package		Joomla.Administrator
- * @subpackage	com_categories
- * @since		1.6
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    2.0
  */
 class RedproductfinderHelper
 {
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param	string	$vName	The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return	void
+	 *
 	 * @since	1.6
 	 */
 	public static function addSubmenu($vName)

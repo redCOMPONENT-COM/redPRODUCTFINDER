@@ -1,42 +1,35 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
- * redPRODUCTFINDER default controller
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-jimport('joomla.application.component.controller');
+defined('_JEXEC') or die;
 
 /**
- * redPRODUCTFINDER Component Controller
+ * RedPRODUCTFINDER master controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    1.3.3.1
  */
 class RedproductfinderController extends JControllerLegacy
 {
 	/**
-	 * @var		string	The default view.
-	 * @since   1.6
-	 */
-	protected $default_view = 'redproductfinder';
-
-	/**
-	 * Method to display the view
+	 * Method display sub controller
 	 *
-	 * @access	public
+	 * @param   string  $cachable   Default variable is false
+	 * @param   string  $urlparams  Default variable is false
+	 *
+	 * @return object
 	 */
 	function display($cachable = false, $urlparams = false)
 	{
 		require_once JPATH_COMPONENT . '/helpers/redproductfinder.php';
-
-		$view   = $this->input->get('view', 'redproductfinder');
-		$layout = $this->input->get('layout', 'redproductfinder');
-		$id     = $this->input->getInt('id');
 
 		parent::display();
 
 		return $this;
 	}
 }
-?>

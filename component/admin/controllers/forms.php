@@ -23,8 +23,6 @@ class RedproductfinderControllerForms extends JControllerAdmin
 	{
 		parent::__construct();
 
-		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('unpublish','publish');
 		$this->registerTask('apply','edit');
 	}
 
