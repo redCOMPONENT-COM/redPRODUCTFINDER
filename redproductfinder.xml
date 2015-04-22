@@ -95,10 +95,8 @@
 		<languages folder="component/admin/language">
 			<language tag="en-GB">en-GB/en-GB.com_redproductfinder.ini</language>
 			<language tag="en-GB">en-GB/en-GB.com_redproductfinder.sys.ini</language>
-			<language tag="en-GB">en-GB/en-GB.com_redproductfinder.menu.ini</language>
 			<language tag="da-DK">da-DK/da-DK.com_redproductfinder.ini</language>
 			<language tag="da-DK">da-DK/da-DK.com_redproductfinder.sys.ini</language>
-			<language tag="da-DK">da-DK/da-DK.com_redproductfinder.menu.ini</language>
 		</languages>
 		
 	</administration>
