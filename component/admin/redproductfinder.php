@@ -8,7 +8,22 @@
  */
 
 defined('_JEXEC') or die;
-JHtml::_('behavior.tabstate');
+
+$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
+
+if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+{
+	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
+}
+
+include_once $redcoreLoader;
+
+// Bootstraps redCORE
+RBootstrap::bootstrap();
+
+$app   = JFactory::getApplication();
+$user  = JFactory::getUser();
+$input = $app->input;
 
 if (!JFactory::getUser()->authorise('core.manage', 'com_redproductfinder'))
 {

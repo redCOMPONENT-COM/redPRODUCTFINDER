@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  *
  * @since    2.0
  */
-class RedproductfinderModelAssociations extends JModelList
+class RedproductfinderModelAssociations extends RModelList
 {
 	/** @var integer Total entries */
 	protected $_total = null;
@@ -26,6 +26,38 @@ class RedproductfinderModelAssociations extends JModelList
 
 	/** @var integer pagination limit */
 	protected $_limit = null;
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		$app = JFactory::getApplication();
+
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
+		{
+			$this->context .= '.' . $layout;
+		}
+
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+
+		// List state information.
+		parent::populateState('p.product_name', 'asc');
+	}
 
 	/**
 	 * Show all tags that have been created
@@ -129,7 +161,7 @@ $mainframe = JFactory::getApplication();
       $row->load($id[0]);
 
       if ($id[0]) {
-         // do stuff for existing records
+         // do stuff for existing recordsrdering
          $result = $row->checkout( $my->id );
       } else {
          // do stuff for new records
@@ -479,6 +511,23 @@ $mainframe = JFactory::getApplication();
 			$query->where($db->qn("a") . "." . $db->qn("published") . "!=" . $db->q("-2"));
 		}
 
+
+		// Filter by search in formname.
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$query->where('(p.product_name LIKE ' . $search . ')');
+		}
+
+		// Add the list ordering clause.
+		$orderCol = $this->state->get('list.ordering', 't.type_name');
+		$orderDirn = $this->state->get('list.direction', 'asc');
+
+		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+
+		echo $query->dump();
 		return $query;
 	}
 }

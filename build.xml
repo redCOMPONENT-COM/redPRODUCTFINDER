@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Redproductfinder" default="site" basedir=".">
-
+	<import file="./redCORE/build.xml"/>
+	
+	<!-- Do initialization stuff -->
+	<target name="init" >
+		<if>
+			<not>
+				 <available file="build.properties"/>
+			</not>
+			<then>
+				<fail message="The file build.properties does not exists." />
+			</then>
+			<else>
+				<property file="build.properties"  override="true"/>
+				<echo message="build.properties File included successfully." />
+			</else>
+		</if>
+		<property name="src" value="./" />
+	</target>
+	
 	<!-- Do initialization stuff -->
     <target name="prepare" >
         <property file="build.properties"  override="true"/>
@@ -17,7 +35,7 @@
 
 	<property name="src" value="./" />
 	
-	<target name="sites" description="Copies files to a existing joomla site" depends="prepare">
+	<target name="sites" description="Copies files to a existing joomla site" depends="init, redCORE-submodule, prepare">
 		<echo message="---------------- || PLUGIN || ----------------"/>
 
 		<!-- Manifest & install script -->
@@ -42,7 +60,7 @@
 		</copy>
 	</target>
 	
-	<target name="site" description="Copies files to a existing joomla site" depends="prepare">
+	<target name="site" description="Copies files to a existing joomla site" depends="init, redCORE-submodule, prepare">
 	        <echo message="Copying administrator component..." />
 
 	        <!-- Manifest & install script -->

@@ -15,7 +15,7 @@ jimport( 'joomla.application.component.model' );
 /**
  * Tags Model
  */
-class RedproductfinderModelFilters extends JModelList {
+class RedproductfinderModelFilters extends RModelList {
 	/** @var integer Total entries */
 	protected $_total = null;
 

@@ -9,6 +9,7 @@
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redweb.dk</authorUrl>
 	<version>2.0</version>
+	<redcore version="1.5.6" />
 	<description>Search Redshop products on user defined types and tags using redPRODUCTFINDER</description>
 	
 	<installfile>component/install.redproductfinder.php</installfile>

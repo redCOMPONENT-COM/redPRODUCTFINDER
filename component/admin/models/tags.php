@@ -15,7 +15,7 @@ jimport( 'joomla.application.component.model' );
 /**
  * Tags Model
  */
-class RedproductfinderModelTags extends JModelList
+class RedproductfinderModelTags extends RModelList
 {
 	/** @var integer Total entries */
 	protected $_total = null;
@@ -25,6 +25,38 @@ class RedproductfinderModelTags extends JModelList
 
 	/** @var integer pagination limit */
 	protected $_limit = null;
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		$app = JFactory::getApplication();
+
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
+		{
+			$this->context .= '.' . $layout;
+		}
+
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+
+		// List state information.
+		parent::populateState('t.tag_name', 'asc');
+	}
 
 	/**
 	 * Show all tags that have been created
@@ -44,81 +76,11 @@ class RedproductfinderModelTags extends JModelList
 		return $db->loadObjectList();
 	}
 
-	function getPagination() {
-		global $mainframe, $option;
-		$mainframe = JFactory::getApplication();
-		/* Lets load the pagination if it doesn't already exist */
-		if (empty($this->_pagination)) {
-		jimport('joomla.html.pagination');
-		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-		$this->_limitstart = JRequest::getVar('limitstart', 0, '', 'int');
-
-		// In case limit has been changed, adjust it
-		$this->_limitstart = ($this->_limit != 0 ? (floor($this->_limitstart / $this->_limit) * $this->_limit) : 0);
-
-			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
-				//$mainframe->Redirect('index.php');
-		}
-
-		return $this->_pagination;
-	}
-
-	/**
-	 * Method to get the total number of testimonial items for the category
-	 *
-	 * @access public
-	 * @return integer
-	 */
-	function getTotal() {
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_total))
-		{
-			$query = "SELECT COUNT(*) AS total"
-			. "\n FROM #__redproductfinder_tags";
-			$this->_total = $this->_getListCount($query);
-		}
-
-		return $this->_total;
-	}
-
-	/**
-    * Publish or Unpublish tags
-    */
-   function getPublish() {
-      global $mainframe;
-	  $mainframe = JFactory::getApplication();
-      $cids = JRequest::getVar('cid');
-      $task = JRequest::getCmd('task');
-      $state = ($task == 'publish') ? 1 : 0;
-      $user = JFactory::getUser();
-      $row = $this->getTable();
-
-      if ($row->Publish($cids, $state, $user->id)) {
-         if ($state == 1){
-         $mainframe->enqueueMessage(JText::_('Tags have been published'));
-         $mainframe->Redirect('index.php?option=com_redproductfinder&task=tags&controller=tags');
-         }
-         else{
-         $mainframe->enqueueMessage(JText::_('Tags have been unpublished'));
-         $mainframe->Redirect('index.php?option=com_redproductfinder&task=tags&controller=tags');
-         }
-      }
-      else {
-         if ($state == 1){
-         $mainframe->enqueueMessage(JText::_('Tags could not be published'));
-         $mainframe->Redirect('index.php?option=com_redproductfinder&task=tags&controller=tags');
-         }
-         else{
-         $mainframe->enqueueMessage(JText::_('Tags could not be unpublished'));
-         $mainframe->Redirect('index.php?option=com_redproductfinder&task=tags&controller=tags');
-         }
-      }
-   }
-
    /**
     * Retrieve a tag to edit
     */
-   function getTag() {
+   function getTag()
+   {
       $row = $this->getTable();
       $my = JFactory::getUser();
       $id = JRequest::getVar('cid');
@@ -126,139 +88,19 @@ class RedproductfinderModelTags extends JModelList
       /* load the row from the db table */
       $row->load($id[0]);
 
-      if ($id[0]) {
+      if ($id[0])
+      {
          // do stuff for existing records
          $result = $row->checkout( $my->id );
-      } else {
+      }
+      else
+      {
          // do stuff for new records
          $row->published    = 1;
       }
-      return $row;
-   }
-
-   /**
-    * Save a tag
-    */
-   function getSaveTag() {
-      global $mainframe;
-      $mainframe = JFactory::getApplication();
-      $row = $this->getTable();
-
-	 /* Get the posted data */
-	 $post = JRequest::get('post');
-	 $row->load($post['id']);
-	 if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder();
-      if (!$row->bind($post)) {
-         $mainframe->enqueueMessage(JText::_('There was a problem binding the tag data'), 'error');
-         return false;
-      }
-
-      /* pre-save checks */
-      if (!$row->check()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem checking the tag data'), 'error');
-         return false;
-      }
-
-      /* save the changes */
-      if (!$row->store()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem storing the tag data'), 'error');
-         return false;
-      }
-	  else {
-		  $db = JFactory::getDBO();
-		  /* Delete all tag type relations */
-		  $q = "DELETE FROM #__redproductfinder_tag_type
-		  		WHERE tag_id = ".$row->id;
-		  $db->setQuery($q);
-		  $db->query();
-		  /* Store the tag type relations */
-		  $types = JRequest::getVar('type_id');
-		  if(count($types)>0)
-		  {
-			  foreach ($types as $key => $type) {
-
-				$q = "INSERT IGNORE INTO #__redproductfinder_tag_type
-				  		VALUES (".$row->id.",".$type.")";
-				$db->setQuery($q);
-
-				if ($db->query()){
-					$q = "UPDATE `#__redproductfinder_association_tag` SET `type_id` = ".$type." WHERE `tag_id` = ".$row->id;
-					$db->setQuery($q);
-					$db->query();
-				}
-
-
-			  }
-		  }
-	  }
-
-      $row->checkin();
-      $mainframe->enqueueMessage(JText::_('The tag has been saved'));
 
       return $row;
    }
-
-   /**
-    * Delete a tag
-    */
-   function getRemoveTag() {
-      global $mainframe;
-      $mainframe = JFactory::getApplication();
-      $database =& JFactory::getDBO();
-      $cid = JRequest::getVar('cid');
-      JArrayHelper::toInteger( $cid );
-
-      if (!is_array( $cid ) || count( $cid ) < 1) {
-         $mainframe->enqueueMessage(JText::_('No tag found to delete'));
-         return false;
-      }
-      if (count($cid)) {
-         $cids = 'id=' . implode( ' OR id=', $cid );
-         $query = "DELETE FROM #__redproductfinder_tags"
-         . "\n  WHERE ( $cids )";
-         $database->setQuery( $query );
-         if (!$database->query()) {
-            $mainframe->enqueueMessage(JText::_('A problem occured when deleting the tag'));
-         }
-         else {
-            if (count($cid) > 1) {
-            $mainframe->enqueueMessage(JText::_('Tags have been deleted'));
-            $mainframe->Redirect('index.php?option=com_redproductfinder&task=tags&controller=tags');
-            }
-            else {
-            $mainframe->enqueueMessage(JText::_('Tag has been deleted'));
-            $mainframe->Redirect('index.php?option=com_redproductfinder&task=tags&controller=tags');
-            }
-         }
-      }
-   }
-
-   /**
-    * Reorder tags
-	*/
-	function getSaveOrder() {
-		$mainframe = JFactory::getApplication();
-		$db = JFactory::getDBO();
-		$cid = JRequest::getVar('cid');
-		$order = JRequest::getVar('order');
-		$total = count($cid);
-		$row = $this->getTable();
-
-		if (empty( $cid )) {
-			return JError::raiseWarning( 500, JText::_( 'No items selected' ) );
-		}
-		// update ordering values
-		for ($i = 0; $i < $total; $i++) {
-			$row->load( (int) $cid[$i] );
-			if ($row->ordering != $order[$i]) {
-				$row->ordering = $order[$i];
-				if (!$row->store()) {
-					return JError::raiseError( 500, $db->getErrorMsg() );
-				}
-			}
-		}
-		$mainframe->Redirect('index.php?option=com_redproductfinder&task=tags&controller=tags');
-	}
 
 	/**
 	 * Get the list of selected types for this tag
@@ -309,18 +151,6 @@ class RedproductfinderModelTags extends JModelList
 	}
 
 	/**
-	 * Get all Quality Score values
-	 */
-	public function getQualityScores() {
-		$db = JFactory::getDBO();
-		$query = "SELECT CONCAT(association_id, '.', type_id,'.',tag_id) AS qs_id, quality_score
-				FROM #__redproductfinder_association_tag";
-		$db->setQuery($query);
-
-		return $db->loadAssocList('qs_id');
-	}
-
-/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
@@ -338,7 +168,7 @@ class RedproductfinderModelTags extends JModelList
 
 		$query->select("t.*")
 		->from($db->qn("#__redproductfinder_tags") . " t")
-		->join("LEFT", $db->qn("#__redproductfinder_tag_type") . " y ON t.id = y.tag_id")
+		//->join("LEFT", $db->qn("#__redproductfinder_tag_type") . " y ON t.id = y.tag_id")
 		->order($db->qn("t") . "." . $db->qn("id"));
 
 		if ($state == "-2")
@@ -349,6 +179,23 @@ class RedproductfinderModelTags extends JModelList
 		{
 			$query->where($db->qn("t") . "." . $db->qn("published") . "!=" . $db->q("-2"));
 		}
+
+		// Filter by search
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$query->where('(t.tag_name LIKE ' . $search . ')');
+		}
+
+		// Add the list ordering clause.
+		$orderCol = $this->state->get('list.ordering', 't.tag_name');
+		$orderDirn = $this->state->get('list.direction', 'asc');
+
+		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+
+		echo $query->dump();
 
 		return $query;
 	}

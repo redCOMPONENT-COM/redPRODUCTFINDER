@@ -14,6 +14,6 @@ defined('_JEXEC') or die;
  *
  * @since  1.6
  */
-class RedproductfinderControllerTag extends JControllerForm
+class RedproductfinderControllerTag extends RControllerForm
 {
 }

@@ -14,6 +14,6 @@ defined('_JEXEC') or die;
  * @package  RedPRODUCTFINDER.Administrator
  * @since    2.0
  */
-class RedproductfinderControllerAssociation extends JControllerForm
+class RedproductfinderControllerAssociation extends RControllerForm
 {
 }

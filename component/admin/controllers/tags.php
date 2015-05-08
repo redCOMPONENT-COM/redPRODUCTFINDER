@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 /**
  * Tags Controller
  */
-class RedproductfinderControllerTags extends JControllerAdmin
+class RedproductfinderControllerTags extends RControllerForm
 {
 	function __construct()
 	{

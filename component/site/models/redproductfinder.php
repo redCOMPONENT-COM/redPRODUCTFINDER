@@ -11,42 +11,49 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die( 'Restricted access' );
 
-
-$config = JComponentHelper::getParams('com_redproductfinder');
 jimport('joomla.application.component.model');
 jimport( 'joomla.application.module.helper' );
 jimport( 'joomla.html.parameter' );
-$db = JFactory::getDBO();
-$module = JModuleHelper::getModule( 'redproductfinder' );
-if($module!='')
+
+class RedproductfinderModelRedproductfinder extends JModelForm
 {
-	$params = new JParameter($module->params);
-	$form=$params->get('form');
-	$query = "SELECT f.dependency,f.id FROM  #__redproductfinder_forms f
-	         where id='".$form."'
-	          ORDER BY id";
-	$db->setQuery($query);
-	$frmdependancy = $db->loadObject();
-
-	$check_dependency =$frmdependancy ->dependency;
-}else{
-	$form=$config->get('form');
-	$query = "SELECT f.dependency,f.id FROM  #__redproductfinder_forms f
-	         where id='".$form."'
-	          ORDER BY id";
-	$db->setQuery($query);
-	$frmdependancy = $db->loadObject();
-
-	$check_dependency =$frmdependancy ->dependency;
-}
-/**
- */
-class RedproductfinderModelRedproductfinder extends JModel
-{
-
 	private $_results = array();
 
-	public function __construct(){
+	public function __construct()
+	{
+
+		$config = JComponentHelper::getParams('com_redproductfinder');
+
+		$db = JFactory::getDBO();
+		$module = JModuleHelper::getModule( 'redproductfinder' );
+
+		if($module!='')
+		{
+			$params = new JParameter($module->params);
+			$form=$params->get('form');
+
+			$query = "SELECT f.dependency,f.id FROM  #__redproductfinder_forms f
+	         where id='".$form."'
+	          ORDER BY id";
+			$db->setQuery($query);
+			$frmdependancy = $db->loadObject();
+
+			$check_dependency =$frmdependancy ->dependency;
+		}
+		else
+		{
+			$form=$config->get('form');
+
+			$query = "SELECT f.dependency,f.id FROM  #__redproductfinder_forms f
+	         where id='".$form."'
+	          ORDER BY id";
+
+			$db->setQuery($query);
+			$frmdependancy = $db->loadObject();
+
+			$check_dependency =$frmdependancy ->dependency;
+		}
+
 		parent::__construct();
 	}
 
@@ -66,9 +73,9 @@ class RedproductfinderModelRedproductfinder extends JModel
 		if($month!='')
 		{
 			$splitmonth=explode(",",$month);
-			
-		
-		
+
+
+
 			for($s=0;$s<count($splitmonth);$s++)
 			{
 				if($splitmonth[$s]!='')
@@ -76,13 +83,13 @@ class RedproductfinderModelRedproductfinder extends JModel
 					$mnth=explode("-",$splitmonth[$s]);
 					$mainmonth.=$mnth[0];
 					$mainyear.=$mnth[2];
-					
-					
+
+
 				}
 			}
 		}
-		
-	
+
+
 		$fullyear = date("Y");
 		//echo "<pre />";
 		//print_r($post);
@@ -171,11 +178,11 @@ class RedproductfinderModelRedproductfinder extends JModel
 		$q = "SELECT id  AS total FROM #__redproductfinder_types";
 		$db->setQuery($q);
 		$type_result = $db->loadResultArray();
-		
+
 		$q = "SELECT extrafield  FROM #__redproductfinder_types where type_select='Productfinder datepicker'";
 		$db->setQuery($q);
 		$finaltypetype_result = $db->loadObject();
-		
+
 		$query = "SELECT * FROM #__redshop_product where product_parent_id!=0";
 		$db->setQuery($query);
 		$childproducts = $db->loadObjectList();
@@ -194,7 +201,7 @@ class RedproductfinderModelRedproductfinder extends JModel
 
 			$condition .= "JRequest::getVar('type".$type_result[$i]."') != 0 ";
 		}
-		$myq='';	
+		$myq='';
 		// If any product associations exists (queries exists).
 		//if (JRequest::getVar('type0') != 0 || JRequest::getVar('type1') != 0 || JRequest::getVar('type2') != 0)
 		if ($condition)
@@ -208,29 +215,29 @@ class RedproductfinderModelRedproductfinder extends JModel
 					  FROM #__redproductfinder_association_tag AS ta
 					  LEFT JOIN #__redproductfinder_associations AS a ON a.id = ta.association_id
 					  LEFT JOIN #__redshop_product AS p ON p.product_id = a.product_id ";
-				
-				
+
+
 
 				if(($from_startdate!='' && $to_enddate!='') || $month!='')
 				{
 
-						
+
 					if($search_child_product==1 && $show_main_product==1)
 					{
 						$q .=" AND p.product_id IN (SELECT product_parent_id FROM jos_redshop_product WHERE product_id IN (SELECT f.itemid FROM jos_redshop_fields_data AS f WHERE  f.fieldid='".$finaltypetype_result->extrafield."' AND f.itemid IN (".substr_replace($fianlparentid,"",-1).") AND ";
-					
+
 							$cnt=1;
 							for($w=0;$w<count($splitmonth);$w++)
 							{
 								if($splitmonth[$w]!='')
 								{
-		                                                      
+
 										$t=explode("-",$splitmonth[$w]);
-										
-										
+
+
 										$fmonth=$t[0];
 										$fyear=$t[2];
-										
+
 										//$fmonth=date('m',strtotime($t[0]));
 										$q .=" FIND_IN_SET( '".$fmonth."', SUBSTRING(data_txt,4,2)) AND FIND_IN_SET( '".$fyear."', SUBSTRING(data_txt,7,4)) ";
 
@@ -239,7 +246,7 @@ class RedproductfinderModelRedproductfinder extends JModel
 											$q .=" OR ";
 											$cnt++;
 										}
-								
+
 								}
 							}
 							if(($from_startdate!='' && $to_enddate!='') && ($search_child_product==1 && $show_main_product==1))
@@ -250,19 +257,19 @@ class RedproductfinderModelRedproductfinder extends JModel
 						$q .=" LEFT JOIN #__redproductfinder_types  AS t ON t.id=ta.type_id ";
 					}elseif(($search_child_product==0 && $show_main_product==1) || ($search_child_product==1 && $show_main_product==0) || ($search_child_product==0 && $show_main_product==0)){
 						$q .=" LEFT JOIN #__redshop_fields_data AS f ON f.itemid=a.product_id LEFT JOIN #__redproductfinder_types  AS t ON t.id=ta.type_id ";
-					}	
-								
+					}
+
 				}
 				if($from_startdate!='' && $to_enddate!='')
 				{
 				//$q .=" LEFT JOIN #__redshop_fields_data AS f ON f.itemid=a.product_id ";
-				}	
+				}
 				$check_dependency = $config->get('check_dependency');
 				$consider_all_tags = $config->get('consider_all_tags');
 				$search_relation = $config->get('search_relation', 'AND');
 
 				$dep_cond = array();
-			
+
 				for ($i = 0; $i < $typecount; $i++)
 				{
 					if (JRequest::getVar('type'.$type_result[$i]) != 0 || is_array(JRequest::getVar('type'.$type_result[$i])))
@@ -271,15 +278,15 @@ class RedproductfinderModelRedproductfinder extends JModel
 							$q .= " LEFT JOIN #__redproductfinder_association_tag AS t".$i." ON t".$i.".association_id=ta.association_id ";
 					}
 				}
-				
-				
-				
-				
+
+
+
+
 				$wherevar = (JRequest::getVar('searchkey') != "" || JRequest::getVar('productprice') != "" || $condition) ? "WHERE " : "";
 				if(($from_startdate!='' && $to_enddate!='') &&  ($search_child_product==0 && $show_main_product==1))
 				{
-					$wherevar .=" f.data_txt between '".trim($from_startdate)."' AND '".trim($to_enddate)."' AND  f.fieldid='".$finaltypetype_result->extrafield."' AND ";	
-							
+					$wherevar .=" f.data_txt between '".trim($from_startdate)."' AND '".trim($to_enddate)."' AND  f.fieldid='".$finaltypetype_result->extrafield."' AND ";
+
 				}elseif($month!='' )
 				{
 						$cnt=1;
@@ -289,7 +296,7 @@ class RedproductfinderModelRedproductfinder extends JModel
 							{
                                  if(($search_child_product==0 && $show_main_product==1) || ($search_child_product==1 && $show_main_product==0)  || ($search_child_product==0 && $show_main_product==0)){
 									$t=explode("-",$splitmonth[$w]);
-									
+
 										$fmonth=$t[0];
 										$fyear=$t[2];
 									//$fmonth=date('m',strtotime($t[0]));
@@ -305,20 +312,20 @@ class RedproductfinderModelRedproductfinder extends JModel
 						if(($search_child_product==0 && $show_main_product==1)  || ($search_child_product==1 && $show_main_product==0)  || ($search_child_product==0 && $show_main_product==0)){
 						$wherevar .=" AND  f.fieldid='".$finaltypetype_result->extrafield."' AND ";
 						}
-						
+
 				}
-				
+
 						if($search_child_product==1 && $show_main_product==0){
 							$wherevar .=" p.product_parent_id!=0 AND ";
 						}
 						if($search_child_product==0 && $show_main_product==1){
 							$wherevar .=" p.product_parent_id=0 AND ";
 						}
-				
+
 				$q .= $wherevar;
-						
+
 				$q .= "a.published = '1' AND  p.product_id IS NOT NULL AND ";
-		
+
 				if (JRequest::getVar('searchkey'))
 				$searchkey = "";
 				$searchkey = JRequest::getVar('searchkey');
@@ -336,7 +343,7 @@ class RedproductfinderModelRedproductfinder extends JModel
 					$q .= "p.product_price LIKE '%".$productprice."%' ";
 					$q .= ($search_relation=='or') ? " OR ": " AND ";
 				}
-		
+
 				$q .= " (";
 
 				$or = false; //To determine if or should be added
@@ -470,12 +477,12 @@ class RedproductfinderModelRedproductfinder extends JModel
 					else
 						$q .= implode(" AND ",$dep_cond);
 				}
-		
+
 				$q .= ") ";
 
-				
+
 				$q .= $finder_condition;
-				
+
 				if (substr(trim($q), -6, 3) == "AND") //If last three characters is "AND" (nothing is filled out)
 				{
 					//Replace string with full search string
@@ -491,18 +498,18 @@ class RedproductfinderModelRedproductfinder extends JModel
 					$q .= "p.product_price LIKE '%".$productprice."%' ";
 					//$q .= "AND p.published = '1' ";
 				}
-		
-				
+
+
 				if (substr(trim($q), -3, 3) == "AND")
 				{
 					$q .= "order by ".$filter_order." ta.quality_score";
 				}
-				
+
 				$order_by = JRequest::getVar('order_by');
 				if($order_by!="")
 				{
 					if($order_by == "pc.ordering ASC")
-					{ 
+					{
 						$order_by = " order by a.ordering ASC";
 					}else{
 						$order_by = " order by ".$order_by."";
@@ -513,11 +520,11 @@ class RedproductfinderModelRedproductfinder extends JModel
 					//$order_by = "";
 				}
 				$q .= " AND p.published = '1' group by association_id".$order_by."";
-				
+
 				$db->setQuery($q);
 				//echo $db->getQuery();
 				$products = $db->loadObjectList();
-				
+
 				return $products;
 		}
 	}
@@ -627,6 +634,6 @@ class RedproductfinderModelRedproductfinder extends JModel
 			return $db->loadObjectList();
 	}
 
-
+	public function getForm($data = array(), $loadData = true){}
 }
 ?>

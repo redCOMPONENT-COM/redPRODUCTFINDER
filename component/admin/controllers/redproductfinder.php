@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 /**
  * ProductSearch Controller
  */
-class RedproductfinderControllerRedproductfinder extends JControllerAdmin
+class RedproductfinderControllerRedproductfinder extends RControllerForm
 {
 	/**
 	 * Method to display the view

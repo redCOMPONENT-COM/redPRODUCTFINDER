@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset addfieldpath="/administrator/components/com_redproductfinder/models/fields">
+		<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL" description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true" class="readonly"/>
+
+		<field name="product_id" type="sql" label="Select Product" query="SELECT product_id, CONCAT(product_number, '::', product_name) AS full_product_name FROM #__redshop_product ORDER BY product_name" key_field="product_id" value_field="full_product_name"/>
+
+		<field name="aliases" type="text" label="Tag aliases"/>
+		
+		<field name="form_type_tag" type="form" label="Select tag"/>
+		
+		<field id="published" name="published" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" class="chzn-color-state" size="1" default="1">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+	</fieldset>
+</form>
