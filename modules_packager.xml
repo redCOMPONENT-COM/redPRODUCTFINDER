@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ==================================================================  -->
-<!-- redSHOP packager                                                    -->
-<!-- This PHING build file generates the redSHOP Modules package         -->
+<!-- redITEM 2.0 packager                                                -->
+<!-- This PHING build file generates the redITEM 2.0 Modules package     -->
 <!-- To use in your environment do the following steps:                  -->
 <!--    Change the following variables in build.properties file          -->
 <!--            (copy variables from build.properties.dist )             -->
@@ -10,167 +10,78 @@
 <!--    - execute this PHING build file                                  -->
 <!-- ==================================================================  -->
 
-<project name="modules packager" basedir="." default="pack">
-    <!-- ============================================  -->
-    <!-- Create packages folder                        -->
-    <!-- ============================================  -->
-    <target name="prepare">
-        <if>
-            <not>
-                <isset property="package.dir" />
-            </not>
-            <then>
-                <fail msg="package.dir not specified, specify package.dir in build.properties file" />
-            </then>
-        </if>
+<project name="modules packager" basedir="." default="main">
 
-        <!-- Folder where the redSHOP repository is located  -->
-        <property
-                name="extpath"
-                value="."
-                override="true"/>
+	<!-- Do initialization stuff -->
+	<property file="build.properties" override="true"/>
 
-        <xmlproperty file="${extpath}/${extension}.xml" prefix="extensionDetails" keepRoot="false" />
+	<!-- Folder where the redITEM 2.0 repository modules are located  -->
+	<property name="extpath" value="${project.basedir}/modules/" override="true" />
 
-        <property
-                name="version"
-                value="${extensionDetails.version}"
-                override="true"/>
+	<!-- Target dir where media folder -->
+	<property name="mediapath" value="${project.basedir}/media/" override="true" />
 
-        <!-- Temp dir to create packages -->
-        <property
-                name="tmpdir"
-                value=".tmp"
-                override="true"/>
+	<!-- Target dir where module packages will be created  -->
+	<property name="targetdir" value="${package.dir}/redITEM2-Modules/" override="true" />
 
-        <!-- Check if the temp folder exists. If not, create it -->
-        <if>
-            <available file="${tmpdir}" type="dir"/>
-            <then>
-                <echo msg="Removing old ${tmpdir}"/>
-                <delete dir="${tmpdir}"/>
-            </then>
-        </if>
-        <echo msg="Making directory to store the temporary packages at ${tmpdir}"/>
-        <mkdir dir="${tmpdir}"/>
-    </target>
+	<!-- MAIN -->
+	<target name="main" description="Loops through folders creating module packages">
 
-    <!-- ============================================  -->
-    <!-- Target: build                                 -->
-    <!-- ============================================  -->
-    <!-- Loops through folders creating module packages -->
-
-    <target name="build" depends="prepare">
-    	<mkdir dir="${tmpdir}/site" />
-    	<mkdir dir="${tmpdir}/admin" />
+		<!-- Cleanup build area -->
+		<delete dir="${targetdir}" />
+		<mkdir dir="${targetdir}" />
 
 		<!-- Generate site modules packages -->
-		<foreach param="dirname" target="site_modules">
-			<fileset dir="${extpath}/modules/site/">
+		<foreach param="dirname" absparam="absname" target="site_modules">
+			<fileset dir="${extpath}/site/">
 				<type type="dir" />
 				<depth max="0" min="0" />
 			</fileset>
 		</foreach>
 
-		<!-- Generate site modules packages -->
-		<foreach param="dirname" target="admin_modules">
-			<fileset dir="${extpath}/modules/admin/">
-				<type type="dir" />
-				<depth max="0" min="0" />
-			</fileset>
-		</foreach>
+	</target>
 
-		<if>
-			<available file="${package.dir}/${extension}-${version}-modules" type="dir" />
-			<then>
-		        <delete dir="${package.dir}/${extension}-${version}-modules"/>
-			</then>
-		</if>
-
-        <copy todir="${package.dir}/${extension}-${version}-modules/site">
-            <fileset dir="${tmpdir}/site">
-                <include name="*.zip" />
-            </fileset>
-        </copy>
-
-        <copy todir="${package.dir}/${extension}-${version}-modules/admin">
-            <fileset dir="${tmpdir}/admin">
-                <include name="*.zip" />
-            </fileset>
-        </copy>
+	<target name="subtask">
+		<echo msg="${dirname} ${absname}" />
 	</target>
 
 	<target name="site_modules" description="Packages the extension for delivery">
-		<zip
-				destfile="${tmpdir}/site/${dirname}_${version}_${joomla.version}j.zip"
-				basedir="${extpath}/modules/site/${dirname}">
-			<fileset dir="${extpath}/modules/site/${dirname}">
+		<!-- Create temporary folder -->
+		<mkdir dir="${targetdir}/site/${dirname}" />
+
+		<!-- Copy module files & folder -->
+		<copy todir="${targetdir}/site/${dirname}">
+			<fileset dir="${extpath}/site/${dirname}">
+				<include name="**"/>
+				<exclude name=".*"/>
+			</fileset>
+		</copy>
+
+		<!-- Load extension property in XML file -->
+    	<xmlproperty file="${targetdir}/site/${dirname}/${dirname}.xml" prefix="extensionDetails" keepRoot="false" />
+
+		<!-- Check if media folder of module exist -->
+		<if>
+			<available file='${mediapath}/${dirname}' type='dir' />
+			<then>
+				<copy todir="${targetdir}/site/${dirname}/media/${dirname}">
+					<fileset dir="${mediapath}/${dirname}">
+						<include name="**"/>
+						<exclude name=".*"/>
+					</fileset>
+				</copy>
+			</then>
+		</if>
+
+		<!-- Create zip files -->
+		<zip destfile="${targetdir}/site/${dirname}-${extensionDetails.version}.zip" basedir="${targetdir}/site/${dirname}">
+			<fileset dir="${targetdir}/site/${dirname}">
 				<include name="**" />
 				<exclude name=".*" />
 			</fileset>
 		</zip>
+
+		<!-- Clean up the temporary folder -->
+		<delete dir="${targetdir}/site/${dirname}" />
 	</target>
-
-	<target name="admin_modules" description="Packages the extension for delivery">
-		<zip
-				destfile="${tmpdir}/admin/${dirname}_${version}_${joomla.version}j.zip"
-				basedir="${extpath}/modules/admin/${dirname}">
-			<fileset dir="${extpath}/modules/admin/${dirname}">
-				<include name="**" />
-				<exclude name=".*" />
-			</fileset>
-		</zip>
-	</target>
-
-    <target name="clean-tmp">
-        <delete dir="${tmpdir}"/>
-    </target>
-
-    <target name="compress-clean" depends="clean-tmp">
-        <!-- needed for external cleaning and compressing -->
-    </target>
-
-    <target name="dist" depends="build, compress-clean">
-        <echo msg="Modules build successful!"/>
-    </target>
-
-    <target name="pack">
-        <!-- Do initialization stuff -->
-        <if>
-            <not>
-                <available file="build.properties" type="file" />
-            </not>
-            <then>
-                <fail msg="File not found: build.properties" />
-            </then>
-        </if>
-
-        <property file="build.properties" override="true"/>
-
-        <property
-                name="extension"
-                value="${comp.name}"
-                override="true"/>
-
-        <phingcall target="dist" />
-    </target>
-
-    <target name="autopack">
-        <property
-                name="package.dir"
-                value=".dist"
-                override="true"/>
-
-        <property
-                name="extension"
-                value="redshop"
-                override="true"/>
-
-        <property
-                name="joomla.version"
-                value="3"
-                override="true"/>
-
-        <phingcall target="dist" />
-    </target>
 </project>

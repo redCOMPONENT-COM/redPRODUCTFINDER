@@ -30,12 +30,10 @@ class RedproductfinderViewRedproductfinder extends JViewLegacy
 // 			$document->addStyleSheet ( 'components/com_redshop/assets/css/style.css' );
 
 		$model = $this->getModel();
-
 		$tags = $model->getType('id, tag_name', 'tags', 1);
 
 		//$type_model = $this->getModel('Redproductfinder');
 		// Load the types
-
 		$types = $this->get('Types');
 		$post = JRequest::get('post');
 

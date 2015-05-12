@@ -10,27 +10,39 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die( 'Restricted access' );
 
-jimport('joomla.application.component.controller');
-
 /**
  * redPRODUCTFINDER Controller
  */
 class RedproductfinderControllerFindproducts extends JControllerForm
 {
-	/**
-    * Method to display the view
-    *
-    * @access   public
-    */
-   function __construct()
-   {
-      parent::__construct();
-   }
+	function display($cachable = false, $urlparams = array())
+	{
+		parent::display($cachable, $urlparams);
+	}
 
-   function find()
-   {
+	function find()
+	{
+	   	$app		= JFactory::getApplication();
+	   	$document 	= JFactory::getDocument();
+	   	$input		= $app->input;
 
-   }
+	   	$model = JModelLegacy::getInstance("FindProducts", "RedproductfinderModel");
+
+	   	$layout = new JLayoutFile('result', JPATH_COMPONENT . '/layouts');
+
+	   	$post = $input->post->get('redform', array(), 'filter');
+
+	   	$model->setState("redform.data", $post);
+
+	   	$list = $model->getItem();
+
+	   	$html = $layout->render(
+	   		array(
+	   		)
+	   	);
+
+	   	echo $html;
+	}
 }
 
 ?>
