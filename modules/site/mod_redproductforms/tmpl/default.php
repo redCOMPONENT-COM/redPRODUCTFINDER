@@ -30,10 +30,38 @@ defined('_JEXEC') or die('Restricted access');
 				</div>
 			</div>
 		</div>
+		<div  class="row-fluid">
+			Min: <input type="text" name="redform[filterprice][min]" value="0"/>
+			Max: <input type="text" name="redform[filterprice][max]" value="100"/>
+		</div>
 	</div>
-
 	<input type="submit" name="submit" value="submit" />
-	<input type="hidden" name="view" value="findproducts" />
+<!-- 	<input type="hidden" name="view" value="findproducts" /> -->
+	<input type="hidden" name="task" value="findproducts.find" />
 	<input type="hidden" name="formid" value="<?php echo $params->get("form_id");?>" />
 	<?php echo JHtml::_('form.token'); ?>
+
 </form>
+<script>
+  $(function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 0,
+      max: 500,
+      values: [ 75, 300 ]
+    });
+  });
+  </script>
+  <style>
+  .slide-wrapper #slider-range{
+  	height: 10px!important;
+  	margin-top: 0!important;
+  }
+  .slide-wrapper >div:not(#slider-range){
+  	overflow: auto!important;
+  	height: 10px!important;
+  }
+  </style>
+<div class="slide-wrapper">
+	<div id="slider-range"></div>
+</div>

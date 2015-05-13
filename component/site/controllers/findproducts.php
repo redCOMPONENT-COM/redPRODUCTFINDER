@@ -10,9 +10,11 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die( 'Restricted access' );
 
-/**
- * redPRODUCTFINDER Controller
- */
+require_once JPATH_SITE . "/administrator/components/com_redshop/helpers/redshop.cfg.php";
+JLoader::import('redshop.library');
+JLoader::load('RedshopHelperUser');
+JLoader::import('product', JPATH_SITE . '/libraries/redshop/helper');
+
 class RedproductfinderControllerFindproducts extends JControllerForm
 {
 	function display($cachable = false, $urlparams = array())
@@ -35,6 +37,12 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 	   	$model->setState("redform.data", $post);
 
 	   	$list = $model->getItem();
+
+	   	// Get all product from here
+	   	foreach ( $list as $k => $value )
+	   	{
+	   		$products[] = RedshopHelperProduct::getProductById($value);
+	   	}
 
 	   	$html = $layout->render(
 	   		array(

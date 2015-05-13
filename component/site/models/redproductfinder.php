@@ -635,5 +635,204 @@ class RedproductfinderModelRedproductfinder extends JModelForm
 	}
 
 	public function getForm($data = array(), $loadData = true){}
+
+	/**
+	 * Get finder list
+	 *
+	 * @param   string  $form  Form id
+	 *
+	 * @return array
+	 */
+	public function getFinderList($form = '')
+	{
+		$list = array();
+		$db = JFactory::getDBO();
+		$finderConfig = JComponentHelper::getParams('com_redproductfinder');
+		$searchRelation = $finderConfig->get('search_relation', 'AND');
+		$types = array();
+		$app = JFactory::getApplication();
+
+		$query = $db->getQuery(true)
+		->select('*')
+		->from($db->qn('#__redproductfinder_types'))
+		->where('published = 1');
+
+		if ($form)
+		{
+			$query->where('form_id = ' . (int) $form);
+		}
+
+		$db->setQuery($query);
+
+		if ($typeResults = $db->setQuery($query)->loadObjectList())
+		{
+			$productsInPriceFilter = array();
+			$query->clear()
+			->select('p.product_id')
+			->from($db->qn('#__redshop_product', 'p'))
+			->where('p.published = 1')
+			->where('p.expired = 0');
+			$db->setQuery($query);
+
+			if ($productIds = $db->loadColumn())
+			{
+				$priceMin = $app->getUserState('finder.texpricemin', null);
+				$priceMax = $app->getUserState('finder.texpricemax', null);
+
+				if ($priceMin !== null && $priceMax !== null)
+				{
+					$productHelper = new producthelper;
+
+					foreach ($productIds as $productId)
+					{
+						$productPrices = $productHelper->getProductNetPrice($productId);
+
+						if ($productPrices['product_price'] >= $priceMin && $productPrices['product_price'] <= $priceMax)
+						{
+							$productsInPriceFilter[] = $productId;
+						}
+					}
+				}
+				else
+				{
+					$productsInPriceFilter = $productIds;
+				}
+			}
+
+			foreach ($typeResults as $typeResult)
+			{
+				$types[$typeResult->id] = $app->getUserState('finder.type' . $typeResult->id);
+			}
+
+			foreach ($typeResults as $typeResult)
+			{
+				$subQuery = $db->getQuery(true)
+				->select('COUNT(DISTINCT(p.product_id))')
+				->from($db->qn('#__redshop_product', 'p'))
+				->leftJoin($db->qn('#__redproductfinder_associations', 'rpfa') . ' ON rpfa.product_id = p.product_id')
+				->leftJoin($db->qn('#__redproductfinder_association_tag', 'rpfat') . ' ON rpfat.association_id = rpfa.id')
+				->leftJoin($db->qn('#__redproductfinder_tags', 'tags') . ' ON tags.id = rpfat.tag_id')
+				//->leftJoin($db->qn('#__redshop_product_attribute', 'att') . ' ON att.product_id = p.product_id')
+				//->leftJoin($db->qn('#__redshop_product_attribute_property', 'pr') . ' ON pr.attribute_id = att.attribute_id')
+				//->leftJoin($db->qn('#__redshop_product_subattribute_color', 'sp') . ' ON sp.subattribute_id = pr.property_id')
+				->where('p.published = 1')
+				->where('p.expired = 0')
+				//->where('sp.subattribute_published = 1')
+				->where('rpfat.tag_id = tag.id');
+
+				if (count($productsInPriceFilter) > 0)
+				{
+					$subQuery->where('p.product_id IN (' . implode(',', $productsInPriceFilter) . ')');
+				}
+
+				if (count($types) > 0)
+				{
+					$conditions = array();
+					$and = '';
+
+					foreach ($types as $key => $type)
+					{
+						if ($typeResult->id == $key)
+						{
+							continue;
+						}
+
+						if (is_array($type))
+						{
+							$condition = array();
+
+							foreach ($type as $value)
+							{
+								$condition[] = 't' . (int) $key . '.tag_id = ' . (int) $value;
+							}
+
+							if (count($condition) > 0)
+							{
+								$conditions[] = '(' . implode(' OR ', $condition) . ')';
+							}
+						}
+						elseif ($type)
+						{
+							$conditions[] = 't' . (int) $key . '.tag_id = ' . (int) $type;
+						}
+						else
+						{
+							continue;
+						}
+
+						$subQuery->leftJoin(
+							$db->qn('#__redproductfinder_association_tag', 't' . (int) $key)
+							. ' ON t' . (int) $key . '.association_id = rpfa.id');
+					}
+
+					if (count($conditions) > 0)
+					{
+						switch ($searchRelation)
+						{
+							case 'or':
+								$and .= '(' . implode(' OR ', $conditions) . ') ';
+								break;
+							default:
+								$and .= '(' . implode(' AND ', $conditions) . ') ';
+						}
+
+						$subQuery->where($and);
+					}
+				}
+
+				// Names should only be compared when the tag is a size or a color
+				if ($typeResult->id == '6')
+				{
+					//$subQuery->where('sp.subattribute_color_name = tags.tag_name');
+				}
+
+				$query->clear()
+				->select(
+					array(
+						'tag.id', 'tag.tag_name', 'tag.parent_id',
+						'(' . $subQuery . ') AS countProduct'
+					)
+				)
+				->from($db->qn('#__redproductfinder_tags', 'tag'))
+				->leftJoin($db->qn('#__redproductfinder_tag_type', 'ty') . ' ON ty.tag_id = tag.id')
+				->where('ty.type_id = ' . (int) $typeResult->id)
+				->where('tag.published = 1')
+				->order('tag.parent_id asc')
+				->order('tag.ordering asc')
+				->order('tag.tag_name asc');
+				$db->setQuery($query);
+
+				if ($tags = $db->loadObjectList('id'))
+				{
+					foreach ($tags as $id => $tag)
+					{
+						if ($tag->parent_id != 0)
+						{
+							if (!isset($tags[$tag->parent_id]->childs))
+							{
+								$tags[$tag->parent_id]->childs = array();
+							}
+
+							$tags[$tag->parent_id]->childs[] = $tag;
+							unset($tags[$tag->id]);
+						}
+					}
+
+					foreach ($tags as $tag)
+					{
+						if (!isset($list[$typeResult->id]))
+						{
+							$list[$typeResult->id] = new stdClass;
+						}
+
+						$list[$typeResult->id]->type_name = $typeResult->type_name;
+						$list[$typeResult->id]->parents[] = $tag;
+					}
+				}
+			}
+		}
+
+		return $list;
+	}
 }
 ?>

@@ -43,7 +43,13 @@ class RedproductfinderModelFindproducts extends RModel
 
 		$query->select("DISTINCT a.product_id")
 			->from($db->qn("#__redproductfinder_associations") . " AS a")
-			->join("LEFT", $db->qn("#__redproductfinder_association_tag") . " AS at ON a.id = at.association_id");
+			->join("LEFT", $db->qn("#__redproductfinder_association_tag") . " AS at ON a.id = at.association_id")
+			->where("a.published=1");
+
+		// Delete filter price here
+		$filter = $pk["filterprice"];
+
+		unset($pk["filterprice"]);
 
 		// Add type id
 		$keyTypes = array_keys($pk);
@@ -73,13 +79,37 @@ class RedproductfinderModelFindproducts extends RModel
 			$keyTags = array_unique($keyTags);
 			$keyTagString = implode(",", $keyTags);
 			$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
+
+			$db->setQuery($query);
+
+			$data = $db->loadAssocList();
+
+			$dispatcher	= RFactory::getDispatcher();
+			$loaded = JPluginHelper::importPlugin('redproductfinder');
+
+			if ($loaded)
+			{
+				$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter));
+
+				return $data[0];
+			}
+			else
+			{
+				$temp = array();
+
+				foreach ($data as $k => $value)
+				{
+					$temp[] = $value["product_id"];
+				}
+
+				return $temp;
+			}
+		}
+		else
+		{
+			return array();
 		}
 
-		$db->setQuery($query);
-
-		$data = $db->loadAssocList();
-
-		return $data;
 	}
 }
 ?>

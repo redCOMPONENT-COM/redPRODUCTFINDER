@@ -40,7 +40,8 @@ class redproductfinderForms
 					$forms[$r]["tags"][] = array(
 						"tagid" 	=> $record->tagid,
 						"tagname" 	=> $record->tag_name,
-						"ordering"	=> $record->ordering
+						"ordering"	=> $record->ordering,
+						"aliases"	=> $record->aliases
 					);
 
 					unset($data[$key]);

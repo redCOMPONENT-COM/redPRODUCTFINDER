@@ -49,7 +49,7 @@ class RedproductfinderModelForms extends RModel
 
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
-			->select("f.id as formid,t.*, t.id as typeid, tg.*, tg.id as tagid");
+			->select("f.id as formid,t.*, t.id as typeid,tg.*, tg.id as tagid");
 
 		$query->from($db->qn("#__redproductfinder_forms") . " AS f");
 		$query->join("INNER", $db->qn("#__redproductfinder_types") . " AS t ON t.form_id = f.id");

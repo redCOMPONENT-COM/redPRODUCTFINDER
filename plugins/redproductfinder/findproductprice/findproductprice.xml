@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" client="site" type="plugin" group="redproductfinder">
+	<name>PLG_REDPRODUCTFINDER_FINDPRODUCTPRICE</name>
+	<version>1.0</version>
+	<creationDate>MAY 2015</creationDate>
+	<author>redCOMPONENT.com</author>
+	<copyright>redCOMPONENT.com</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<description>PLG_REDPRODUCTFINDER_FINDPRODUCTPRICE_DESC</description>
+	<files>
+		<filename plugin="findproductprice">findproductprice.php</filename>
+	</files>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/en-GB.plg_redproductfinder_findproductprice.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_redproductfinder_findproductprice.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+		</fields>
+	</config>
+</extension>

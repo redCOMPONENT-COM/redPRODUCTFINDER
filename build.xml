@@ -114,7 +114,7 @@
 	            </fileset>
 	        </copy>
 		
-		<!-- Modules - Site -->
+			<!-- Modules - Site -->
 			<echo message="Copying frontend modules..." />
 			<copy todir="${www.dir}/modules" overwrite="true">
 				<fileset dir="${src}/modules/site">
@@ -128,6 +128,41 @@
 					<include name="**" />
 				</fileset>
 			</copy>
+		
+			<!-- Plugins -->
+			<echo message="Copying redPRODUCTFINDER plugins..." />
+			<copy todir="${www.dir}/plugins" overwrite="true">
+				<fileset dir="${src}/plugins">
+					<include name="**" />
+				</fileset>
+			</copy>
+
+			<!-- Plugins - Languages -->
+			<!-- Copy redPRODUCTFINDER plugins language -->
+			<foreach param="group_name" target="red_plg_copy">
+				<fileset dir="${src}/plugins">
+					<type type="dir" />
+					<depth max="0" min="0" />
+				</fileset>
+			</foreach>
 	</target>
 		
+	<target name="red_plg_copy" description="Loops through plugins folders inside groups">
+		<!-- Loop through plugins -->
+		<foreach param="plugin_name" target="red_plg_copy_files">
+			<fileset dir="${src}/plugins/${group_name}">
+				<type type="dir" />
+				<depth max="0" min="0" />
+			</fileset>
+		</foreach>
+	</target>
+	<target name="red_plg_copy_files" description="Packages the extension for delivery">
+		<!-- Copy plugin files & folder -->
+		<copy todir="${www.dir}/administrator/language" overwrite="true">
+			<fileset dir="${src}/plugins/${group_name}/${plugin_name}/language">
+				<include name="**"/>
+				<exclude name=".*"/>
+			</fileset>
+		</copy>
+	</target>
 </project>

@@ -195,8 +195,6 @@ class RedproductfinderModelTags extends RModelList
 
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
-		echo $query->dump();
-
 		return $query;
 	}
 }

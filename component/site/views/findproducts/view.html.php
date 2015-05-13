@@ -22,22 +22,23 @@ class RedproductfinderViewFindProducts extends RViewSite
 	function display($tpl = null)
 	{
 		$app        = JFactory::getApplication();
+		$input      = JFactory::getApplication()->input;
 		$user       = JFactory::getUser();
-		$dispatcher = JEventDispatcher::getInstance();
+		$dispatcher	= RFactory::getDispatcher();
 
-		$this->item  = $this->get('Item');
-		$this->state = $this->get('State');
+		$this->item  		= $this->get('Item');
+		$this->state 		= $this->get('State');
+		$this->Itemid 		= $input->getInt('Itemid', null);
+		$this->option 		= $input->getString('option', 'com_redshop');
+		$this->dispatcher	= $dispatcher;
 
 		$products = array();
 
 		// Get all product from here
 		foreach ( $this->item as $k => $item )
 		{
-			$products[] = RedshopHelperProduct::getProductById($item['product_id']);
+			$products[] = RedshopHelperProduct::getProductById($item);
 		}
-
-// 		echo "<pre>";
-// 		print_r($product);
 
 		$this->products = $products;
 

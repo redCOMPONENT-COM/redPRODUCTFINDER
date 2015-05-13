@@ -78,25 +78,6 @@ class RedproductfinderModelAssociations extends RModelList
 		return $products;
 	}
 
-	function getPagination() {
-		global $mainframe, $option;
-		$mainframe = JFactory::getApplication();
-		/* Lets load the pagination if it doesn't already exist */
-		if (empty($this->_pagination)) {
-		jimport('joomla.html.pagination');
-		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-		$this->_limitstart = JRequest::getVar('limitstart', 0, '', 'int');
-
-		// In case limit has been changed, adjust it
-		$this->_limitstart = ($this->_limit != 0 ? (floor($this->_limitstart / $this->_limit) * $this->_limit) : 0);
-
-			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
-				//$mainframe->Redirect('index.php');
-		}
-
-		return $this->_pagination;
-	}
-
 	/**
 	 * Method to get the total number of testimonial items for the category
 	 *
@@ -527,7 +508,6 @@ $mainframe = JFactory::getApplication();
 
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
-		echo $query->dump();
 		return $query;
 	}
 }
