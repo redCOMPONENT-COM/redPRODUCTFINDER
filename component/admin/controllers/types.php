@@ -1,16 +1,18 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die;
 
 /**
- * Types Controller
+ * RedPRODUCTFINDER Types controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    2.0
  */
 class RedproductfinderControllerTypes extends RControllerForm
 {
@@ -23,9 +25,20 @@ class RedproductfinderControllerTypes extends RControllerForm
 	{
 		parent::__construct();
 
-		$this->registerTask('apply','edit');
+		$this->registerTask('apply', 'edit');
 	}
 
+	/**
+	 * Returns a Table object, always creating it
+	 *
+	 * @param   type    $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A database object
+	 *
+	 * @since   1.6
+	 */
 	public function getModel($name = 'Type', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
@@ -33,4 +46,3 @@ class RedproductfinderControllerTypes extends RControllerForm
 		return $model;
 	}
 }
-?>

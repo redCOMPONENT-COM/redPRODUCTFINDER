@@ -1,16 +1,18 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die;
 
 /**
- * ProductSearch Controller
+ * RedPRODUCTFINDER Redproductfinder controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    2.0
  */
 class RedproductfinderControllerRedproductfinder extends RControllerForm
 {
@@ -23,13 +25,9 @@ class RedproductfinderControllerRedproductfinder extends RControllerForm
 	{
 		parent::__construct();
 
-		/* Redirect templates to templates as this is the standard call */
-		/* $this->registerTask('apply','edit'); */
-
 		JRequest::setVar('view', 'redproductfinder');
 		JRequest::setVar('layout', 'redproductfinder');
 
 		parent::display();
 	}
 }
-?>

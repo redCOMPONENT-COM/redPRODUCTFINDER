@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
  * RedPRODUCTFINDER master controller.
  *
  * @package  RedPRODUCTFINDER.Administrator
- * @since    1.3.3.1
+ * @since    2.0
  */
 class RedproductfinderController extends JControllerLegacy
 {

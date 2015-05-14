@@ -10,22 +10,20 @@
 defined('_JEXEC') or die;
 
 /**
- * RedPRODUCTFINDER form controller.
+ * RedPRODUCTFINDER Association controller.
  *
  * @package  RedPRODUCTFINDER.Administrator
  *
  * @since    2.0
  */
-class RedproductfinderModelAssociation extends JModelAdmin
+class RedproductfinderModelAssociation extends RModelAdmin
 {
 	/**
-	 * Method to test whether a record can be deleted.
+	 * This method will check this item can be deleted or no
 	 *
-	 * @param   object  $record  A record object.
+	 * @param   object  $record  Value can be empty or object
 	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
+	 * @return void
 	 */
 	protected function canDelete($record)
 	{
@@ -223,6 +221,14 @@ class RedproductfinderModelAssociation extends JModelAdmin
 		return $result;
 	}
 
+	/**
+	 * This method will delete record tag and type in table tag_type with idTag
+	 *
+	 * @param   object  $data   This data can be use on future
+	 * @param   string  $idTag  This is idtag that we can know what record will be deleted
+	 *
+	 * @return boolean
+	 */
 	protected function deleteTag_Type($data, $idTag)
 	{
 		$db = JFactory::getDbo();

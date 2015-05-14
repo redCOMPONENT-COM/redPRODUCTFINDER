@@ -1,34 +1,28 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
- * Tags model
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-
-jimport( 'joomla.application.component.model' );
+defined('_JEXEC') or die;
 
 /**
- * Tags Model
+ * RedPRODUCTFINDER Association controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
-class RedproductfinderModelFilters extends RModelList {
-	/** @var integer Total entries */
-	protected $_total = null;
-
-	/** @var integer pagination limit starter */
-	protected $_limitstart = null;
-
-	/** @var integer pagination limit */
-	protected $_limit = null;
-
+class RedproductfinderModelFilters extends RModelList
+{
 	/**
 	 * Show all Filter that have been created
 	 */
-	function getFilters() {
+	function getFilters()
+	{
 		$db = JFactory::getDBO();
 		//$filtertype = JRequest::getInt('filtertype', false);
 
@@ -42,7 +36,8 @@ class RedproductfinderModelFilters extends RModelList {
 		return $db->loadObjectList();
 	}
 
-	function getPagination() {
+	function getPagination()
+	{
 		global $mainframe, $option;
 		$mainframe = JFactory::getApplication();
 		/* Lets load the pagination if it doesn't already exist */
@@ -79,40 +74,6 @@ class RedproductfinderModelFilters extends RModelList {
 		return $this->_total;
 	}
 
-	/**
-    * Publish or Unpublish Filters
-    */
-   function getPublish() {
-      global $mainframe;
-	  $mainframe = JFactory::getApplication();
-      $cids = JRequest::getVar('cid');
-      $task = JRequest::getCmd('task');
-      $state = ($task == 'publish') ? 1 : 0;
-      $user = JFactory::getUser();
-      $row = $this->getTable();
-
-      if ($row->Publish($cids, $state, $user->id)) {
-         if ($state == 1){
-         $mainframe->enqueueMessage(JText::_('Filters have been published'));
-         $mainframe->Redirect('index.php?option=com_redproductfinder&task=filters&controller=filters');
-         }
-         else{
-         $mainframe->enqueueMessage(JText::_('Filters have been unpublished'));
-          $mainframe->Redirect('index.php?option=com_redproductfinder&task=filters&controller=filters');
-         }
-      }
-      else {
-         if ($state == 1) {
-         $mainframe->enqueueMessage(JText::_('Filters could not be published'));
-          $mainframe->Redirect('index.php?option=com_redproductfinder&task=filters&controller=filters');
-         }
-         else {
-         $mainframe->enqueueMessage(JText::_('Filters could not be unpublished'));
-          $mainframe->Redirect('index.php?option=com_redproductfinder&task=filters&controller=filters');
-         }
-      }
-   }
-
    /**
     * Retrieve a Filter to edit
     */
@@ -129,118 +90,6 @@ class RedproductfinderModelFilters extends RModelList {
 
     	return $db->loadAssoc();
    }
-
-   /**
-    * Save a Filter
-    */
-   function SaveFilter() {
-      global $mainframe;
-      $mainframe = JFactory::getApplication();
-      $db = JFactory::getDBO();
-      $row = $this->getTable();
-
-	 /* Get the posted data */
-	 $post = JRequest::get('post');
-	 if(!strstr($post['filter_name'],'rp_'))
-	 	$post['filter_name'] = 'rp_'.$post['filter_name'];
-
-	 $query = "SELECT id FROM #__redproductfinder_filters WHERE id!=".$post['id']." AND filter_name='".$post['filter_name']."'";
-	 $db->setQuery($query);
-
-	 if($db->loadResult())
-	 {
-		 $mainframe->enqueueMessage(JText::_('Filter name already exits'),'error');
-         return false;
-	 }
-	 else
-	 {
-	 	if(isset($post['tag_id']))
-		 $post['tag_id'] = implode(",",$post['tag_id']);
-		 $row->load($post['id']);
-		 if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder();
-	      if (!$row->bind($post)) {
-	       	 $mainframe->enqueueMessage(JText::_('There was a problem binding the filter data'),'error');
-	         return false;
-	      }
-
-	      /* pre-save checks */
-	      if (!$row->check()) {
-	         $mainframe->enqueueMessage(JText::_('There was a problem checking the filter data'),'error');
-	         return false;
-	      }
-
-	      /* save the changes */
-	      if (!$row->store()) {
-	         $mainframe->enqueueMessage(JText::_('There was a problem storing the tag data'),'error');
-	         return false;
-	      }
-	      $row->checkin();
-      	  $mainframe->enqueueMessage(JText::_('The Filter has been saved'),'message');
-      	  return $row;
-	 }
-   }
-
-   /**
-    * Delete a Filter
-    */
-   function getRemoveFilter() {
-      global $mainframe;
-      $mainframe = JFactory::getApplication();
-      $database =& JFactory::getDBO();
-      $cid = JRequest::getVar('cid');
-      JArrayHelper::toInteger( $cid );
-
-      if (!is_array( $cid ) || count( $cid ) < 1) {
-         $mainframe->enqueueMessage(JText::_('No filter found to delete'));
-         return false;
-      }
-      if (count($cid)) {
-         $cids = 'id=' . implode( ' OR id=', $cid );
-         $query = "DELETE FROM #__redproductfinder_filters"
-         . "\n  WHERE ( $cids )";
-         $database->setQuery( $query );
-         if (!$database->query()) {
-            $mainframe->enqueueMessage(JText::_('A problem occured when deleting the filter'));
-         }
-         else {
-            if (count($cid) > 1){
-            $mainframe->enqueueMessage(JText::_('Filters have been deleted'));
-             $mainframe->Redirect('index.php?option=com_redproductfinder&task=filters&controller=filters');
-            }
-            else {
-            $mainframe->enqueueMessage(JText::_('Filter has been deleted'));
-             $mainframe->Redirect('index.php?option=com_redproductfinder&task=filters&controller=filters');
-            }
-         }
-      }
-   }
-
-   /**
-    * Reorder tags
-	*/
-	function getSaveOrder() {
-		$mainframe = JFactory::getApplication();
-		$db = JFactory::getDBO();
-		$cid = JRequest::getVar('cid');
-		$order = JRequest::getVar('order');
-		$total = count($cid);
-		$row = $this->getTable();
-
-		if (empty( $cid )) {
-			return JError::raiseWarning( 500, JText::_( 'No items selected' ) );
-		}
-		// update ordering values
-		for ($i = 0; $i < $total; $i++) {
-			$row->load( (int) $cid[$i] );
-			if ($row->ordering != $order[$i]) {
-				$row->ordering = $order[$i];
-				if (!$row->store()) {
-					return JError::raiseError( 500, $db->getErrorMsg() );
-				}
-			}
-		}
-		 $mainframe->Redirect('index.php?option=com_redproductfinder&task=filters&controller=filters');
-	}
 
 	/**
 	 * Get the list of selected types for this tag

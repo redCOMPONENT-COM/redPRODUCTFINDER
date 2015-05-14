@@ -27,13 +27,15 @@ class RedproductfinderControllerAssociations extends RControllerAdmin
 	}
 
 	/**
-	 * Method to get model from table class
+	 * Returns a Table object, always creating it
 	 *
-	 * @param   string  $name    Default value is Association
-	 * @param   string  $prefix  Default value is RedproductfinderModel
-	 * @param   array   $config  Default value is array
+	 * @param   type    $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return object
+	 * @return  JTable  A database object
+	 *
+	 * @since   1.6
 	 */
 	public function getModel($name = 'Association', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
 	{

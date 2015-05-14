@@ -1,24 +1,22 @@
 <?php
 /**
- * @package     Joomla.Administrator
- * @subpackage  com_contact
+ * @package    RedPRODUCTFINDER.Backend
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
-JLoader::register('ContactHelper', JPATH_ADMINISTRATOR . '/components/com_contact/helpers/contact.php');
-
 /**
- * Item Model for a Contact.
+ * RedPRODUCTFINDER Association controller.
  *
- * @since  1.6
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
-class RedproductfinderModelTag extends JModelAdmin
+class RedproductfinderModelTag extends RModelAdmin
 {
 	/**
 	 * Method to test whether a record can be deleted.

@@ -10,9 +10,10 @@
 defined('_JEXEC') or die;
 
 /**
- * Controller for a single contact
+ * RedPRODUCTFINDER Type controller.
  *
- * @since  1.6
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    2.0
  */
 class RedproductfinderControllerType extends RControllerForm
 {
