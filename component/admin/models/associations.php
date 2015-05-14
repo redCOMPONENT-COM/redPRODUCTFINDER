@@ -51,27 +51,6 @@ class RedproductfinderModelAssociations extends RModelList
 	}
 
 	/**
-	 * Show all tags that have been created
-	 *
-	 * @return void
-	 */
-	function getAssociations()
-	{
-		$db = JFactory::getDBO();
-
-		/* Get all the fields based on the limits */
-		$query = "SELECT a.*, p.product_name
-			FROM #__redproductfinder_associations a, #__redshop_product p
-			WHERE a.product_id = p.product_id
-			ORDER BY a.ordering";
-
-		$db->setQuery($query, $this->_limitstart, $this->_limit);
-		$products = $db->loadObjectList();
-
-		return $products;
-	}
-
-	/**
 	 * Method to get the total number of testimonial items for the category
 	 *
 	 * @access public
