@@ -29,14 +29,11 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	{
 		if (!empty($record->id))
 		{
-			if ($record->published != -2)
-			{
-				return;
-			}
-
-			$user = JFactory::getUser();
-
-			return $user->authorise('core.delete', 'com_contact.category.' . (int) $record->catid);
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 

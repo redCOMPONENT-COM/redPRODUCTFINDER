@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * @package  RedPRODUCTFINDER.Administrator
  * @since    2.0
  */
-class RedproductfinderControllerTypes extends RControllerForm
+class RedproductfinderControllerTypes extends RControllerAdmin
 {
 	/**
 	 * Method to display the view

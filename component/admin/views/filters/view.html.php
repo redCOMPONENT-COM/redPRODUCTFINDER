@@ -61,7 +61,7 @@ class RedproductfinderViewFilters extends JViewLegacy
 		JToolbarHelper::editList('filter.edit');
 		JToolbarHelper::publish('filter.publish', 'JTOOLBAR_PUBLISH', true);
 		JToolbarHelper::unpublish('filters.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-		JToolbarHelper::trash('filters.trash');
+		JToolbarHelper::deleteList('Are you sure you want to delete items', 'filters.delete');
 	}
 
 	/**

@@ -62,7 +62,7 @@ class RedproductfinderViewAssociations extends JViewLegacy
 		JToolbarHelper::editList('association.edit');
 		JToolbarHelper::publish('associations.publish', 'JTOOLBAR_PUBLISH', true);
 		JToolbarHelper::unpublish('associations.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-		JToolbarHelper::trash('associations.trash');
+		JToolbarHelper::deleteList('Are you sure you want to delete items', 'associations.delete');
 	}
 
 	/**
