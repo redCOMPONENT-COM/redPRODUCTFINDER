@@ -31,7 +31,33 @@ class RedproductfinderModelTag extends RModelAdmin
 	{
 		if (!empty($record->id))
 		{
-			return true;
+			// Remove related table here
+			$id = $record->id;
+
+			$db = JFactory::getDbo();
+
+			$query = $db->getQuery(true);
+
+			// delete all custom keys for user 1001.
+			$conditions = array(
+				$db->quoteName('tag_id') . ' = ' . $id
+			);
+
+			$query->delete($db->quoteName('#__redproductfinder_tag_type'));
+			$query->where($conditions);
+
+			$db->setQuery($query);
+
+			$result = $db->execute();
+
+			if ($result === true)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		else
 		{

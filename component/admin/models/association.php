@@ -29,7 +29,33 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	{
 		if (!empty($record->id))
 		{
-			return true;
+			// Remove related table here
+			$id = $record->id;
+
+			$db = JFactory::getDbo();
+
+			$query = $db->getQuery(true);
+
+			// Delete all custom keys
+			$conditions = array(
+				$db->quoteName('association_id') . ' = ' . $id
+			);
+
+			$query->delete($db->quoteName('#__redproductfinder_association_tag'));
+			$query->where($conditions);
+
+			$db->setQuery($query);
+
+			$result = $db->execute();
+
+			if ($result === true)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		else
 		{
