@@ -46,7 +46,7 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 
 	   	if ($products === null)
 	   	{
-
+	   		$json = json_encode($products);
 	   		echo $json;
 	   		die;
 	   	}

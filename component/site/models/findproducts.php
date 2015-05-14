@@ -79,35 +79,31 @@ class RedproductfinderModelFindproducts extends RModel
 			$keyTags = array_unique($keyTags);
 			$keyTagString = implode(",", $keyTags);
 			$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
+		}
 
-			$db->setQuery($query);
+		$db->setQuery($query);
 
-			$data = $db->loadAssocList();
+		$data = $db->loadAssocList();
 
-			$dispatcher	= RFactory::getDispatcher();
-			$loaded = JPluginHelper::importPlugin('redproductfinder');
+		$dispatcher	= RFactory::getDispatcher();
+		$loaded = JPluginHelper::importPlugin('redproductfinder');
 
-			if ($loaded)
-			{
-				$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter));
+		if ($loaded)
+		{
+			$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter));
 
-				return $data[0];
-			}
-			else
-			{
-				$temp = array();
-
-				foreach ($data as $k => $value)
-				{
-					$temp[] = $value["product_id"];
-				}
-
-				return $temp;
-			}
+			return $data[0];
 		}
 		else
 		{
-			return array();
+			$temp = array();
+
+			foreach ($data as $k => $value)
+			{
+				$temp[] = $value["product_id"];
+			}
+
+			return $temp;
 		}
 
 	}
