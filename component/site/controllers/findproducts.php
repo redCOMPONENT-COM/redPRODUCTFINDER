@@ -44,12 +44,9 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 	   		$products[] = RedshopHelperProduct::getProductById($value);
 	   	}
 
-	   	$html = $layout->render(
-	   		array(
-	   		)
-	   	);
+	   	$json = json_encode($products);
 
-	   	echo $html;
+	   	echo $json;
 	}
 }
 
