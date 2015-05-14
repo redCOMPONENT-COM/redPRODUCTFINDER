@@ -46,4 +46,3 @@ tests/*/*Tester.php
 !.gitignore
 !index.html
 !index.php
-build.properties

@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
  * @package  RedPRODUCTFINDER.Administrator
  * @since    2.0
  */
+
 class RedproductfinderController extends JControllerLegacy
 {
 	/**
@@ -26,8 +27,6 @@ class RedproductfinderController extends JControllerLegacy
 	 */
 	function display($cachable = false, $urlparams = false)
 	{
-		require_once JPATH_COMPONENT . '/helpers/redproductfinder.php';
-
 		parent::display();
 
 		return $this;
