@@ -21,6 +21,7 @@ defined('_JEXEC') or die;
 JLoader::import('forms', JPATH_SITE . '/components/com_redproductfinder/helpers');
 
 require_once JPATH_SITE . '/components/com_redproductfinder/models/forms.php';
+
 class ModRedproductForms
 {
 	public static function getList(&$params)
@@ -33,5 +34,36 @@ class ModRedproductForms
 		$data = redproductfinderForms::filterForm($data);
 
 		return $data;
+	}
+
+	public static function getRangeMaxMin()
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$min = 0;
+		$max = 0;
+
+		// Query get min value
+		$query->select("MIN(" . $db->qn("product_price") . ")")
+			->from($db->qn("#__redshop_product"));
+
+		echo $query->dump();
+		$db->setQuery($query);
+
+		$min = $db->loadResult();
+
+		// Query get max value
+		$query = $db->getQuery(true);
+		$query->select("MAX(" . $db->qn("product_price") . ")")
+			->from($db->qn("#__redshop_product"));
+
+		$db->setQuery($query);
+
+		$max = $db->loadResult();
+
+		return array(
+			"min" => $min,
+			"max" => $max
+		);
 	}
 }
