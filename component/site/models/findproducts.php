@@ -66,7 +66,6 @@ class RedproductfinderModelFindproducts extends RModel
 
 		if ($keyTags)
 		{
-
 			// Add type id
 			$keyTypes = array_keys($pk);
 
