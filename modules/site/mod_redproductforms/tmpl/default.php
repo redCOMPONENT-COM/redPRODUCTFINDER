@@ -15,17 +15,18 @@ defined('_JEXEC') or die('Restricted access');
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
 					<?php foreach($lists as $k => $type) :?>
-						<div><?php echo $type["typename"];?></div>
-						<ul>
-							<?php foreach ($type["tags"] as $k_t => $tag) :?>
-								<li>
-									<span><input type="checkbox" name="redform[<?php echo $type["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
-									<span><?php echo $tag["tagname"]; ?></span>
-								</li>
-							<?php endforeach; ?>
-
-							<input type="hidden" name="redform[<?php echo $type["typeid"]?>][typeid]" value="<?php echo $type["typeid"]; ?>">
-						</ul>
+						<div id='typename-<?php echo $type["typeid"];?>'>
+							<label><?php echo $type["typename"];?></label>
+							<ul class='taglist'>
+								<?php foreach ($type["tags"] as $k_t => $tag) :?>
+									<li>
+										<span class='taginput' data-aliases='<?php echo $tag["aliases"];?>'><input type="checkbox" name="redform[<?php echo $type["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
+										<span class='tagname'><?php echo $tag["tagname"]; ?></span>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						</div>
+						<input type="hidden" name="redform[<?php echo $type["typeid"]?>][typeid]" value="<?php echo $type["typeid"]; ?>">
 					<?php endforeach;?>
 				</div>
 			</div>
@@ -42,26 +43,67 @@ defined('_JEXEC') or die('Restricted access');
 	<?php echo JHtml::_('form.token'); ?>
 
 </form>
-<script>
-  $(function() {
-    $( "#slider-range" ).slider({
-      range: true,
-      min: 0,
-      max: 500,
-      values: [ 75, 300 ]
-    });
-  });
-  </script>
-  <style>
-  .slide-wrapper #slider-range{
-  	height: 10px!important;
-  	margin-top: 0!important;
-  }
-  .slide-wrapper >div:not(#slider-range){
-  	overflow: auto!important;
-  	height: 10px!important;
-  }
-  </style>
 <div class="slide-wrapper">
 	<div id="slider-range"></div>
 </div>
+
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$('#slider-range').slider({
+			range: true,
+			min: 0,
+			max: 500,
+			values: [ 75, 300 ]
+		});
+		$('#redproductfinder-form').each(function(index, el) {
+			var finder_form = $(this);
+			var parent_suffix = '-parent';
+			var parent_tagname = [];
+			$(this).find('[id*="typename-"]').each(function(index, el) {
+				cur_typename = $(this);
+				$(this).find('.taginput').each(function(index, el) {
+					if ($(this).is('[data-aliases*="'+parent_suffix+'"]')) {
+						parent_tagname.push($(this).attr('data-aliases'));
+					};
+				});
+				$(this).find('>.taglist').each(function(index, el) {
+					//create tabheader
+					$(this).before('<ul class="tabheader-bar"></ul>');
+
+					while(parent_tagname.length > 0){
+						root_tagname = parent_tagname.pop();
+						child_tagname = root_tagname.replace(parent_suffix, "");
+
+						//create selecttab
+						$(this).after('<div id="tab-'+root_tagname+'"><ul></ul></div>');
+
+						// append elemt to created selecttab
+						$(this).find('[data-aliases="'+child_tagname+'"]').each(function(index, el) {
+							var temp_pos = $('div#tab-'+root_tagname).find('>ul');
+							$(this).parent('li').appendTo(temp_pos);
+						});
+
+						$(this).find('[data-aliases="'+root_tagname+'"]').each(function(index, el) {
+							$(this).parent('li').appendTo(cur_typename.find('ul.tabheader-bar'));
+						});
+					}
+					//remove this empty ul
+					$(this).remove();
+				});
+				//change this list into filter filed
+				$(this).find('.tabheader-bar').each(function(index, el) {
+					$(this).find('>li').each(function(index, el) {
+						li_aliases = $(this).find('.taginput').attr('data-aliases');
+						li_title = $(this).find('.tagname').html();
+						li_content = "<a href='#tab-"+li_aliases+"'>"+li_title+"</a>";
+						$(this).html(li_content);
+					});
+				});
+				//add html to tab by jquery UI
+				$(this).tabs();
+			});
+		});
+	});
+</script>
