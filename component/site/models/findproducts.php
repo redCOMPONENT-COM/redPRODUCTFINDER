@@ -51,15 +51,6 @@ class RedproductfinderModelFindproducts extends RModel
 
 		unset($pk["filterprice"]);
 
-		// Add type id
-		$keyTypes = array_keys($pk);
-
-		if ($keyTypes)
-		{
-			$keyTypeString = implode(",", $keyTypes);
-			$query->where($db->qn("at.type_id") . " IN (" . $keyTypeString . ")");
-		}
-
 		// Add tag id
 		$keyTags = array();
 
@@ -75,8 +66,20 @@ class RedproductfinderModelFindproducts extends RModel
 
 		if ($keyTags)
 		{
+
+			// Add type id
+			$keyTypes = array_keys($pk);
+
+			if ($keyTypes)
+			{
+				$keyTypeString = implode(",", $keyTypes);
+				$query->where($db->qn("at.type_id") . " IN (" . $keyTypeString . ")");
+			}
+
 			// Remove duplicate tag id
 			$keyTags = array_unique($keyTags);
+
+			// Add tag id
 			$keyTagString = implode(",", $keyTags);
 			$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
 		}

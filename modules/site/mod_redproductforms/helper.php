@@ -47,7 +47,6 @@ class ModRedproductForms
 		$query->select("MIN(" . $db->qn("product_price") . ")")
 			->from($db->qn("#__redshop_product"));
 
-		echo $query->dump();
 		$db->setQuery($query);
 
 		$min = $db->loadResult();
