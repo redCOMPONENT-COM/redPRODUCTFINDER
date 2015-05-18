@@ -72,6 +72,8 @@ defined('_JEXEC') or die('Restricted access');
 			slide: function(event, ui){
 				$("[name='redform[filterprice][min]']").val(ui.values[ 0 ]);
 				$("[name='redform[filterprice][max]']").val(ui.values[ 1 ]);
+			},
+			change: function(event, ui){
 				//submit form when sliding range
 				$("#redproductfinder-form").submit();
 			}
@@ -138,17 +140,10 @@ defined('_JEXEC') or die('Restricted access');
 					data: frm.serialize(), // serializes the form's elements.
 					success: function(data)
 					{
-						console.log(data);
-// 						ajaxpos.html(content);
-// 						if (data !== false)
-// 						{
-// 							var content = [];
-// 							$.each(data, function(k,v){
-// 								console.log(v);
-// 								content = v['product_name']+'--'+v['product_price']+'-'+v['product_full_image'];
-// 							});
-// 							ajaxpos.html(content);
-// 						}
+						if (data !== false)
+						{
+							ajaxpos.html(data);
+						}
 					}
 		         });
 		    return false; // avoid to execute the actual submit of the form.
@@ -158,9 +153,8 @@ defined('_JEXEC') or die('Restricted access');
 		//submit form when input clicked
 		$("#redproductfinder-form").each(function(index, el) {
 			var submit_frm = $(this);
-			$(this).find('input').on('mouseup', function(event) {
+			$(this).find('input').on('change', function(event) {
 				submit_frm.submit();
-				event.preventDefault();
 			});
 		});
 
