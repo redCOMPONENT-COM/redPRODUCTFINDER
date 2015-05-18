@@ -18,15 +18,6 @@ defined('_JEXEC') or die;
  */
 class RedproductfinderModelForms extends RModelList
 {
-	/** @var integer Total entries */
-	protected $_total = null;
-
-	/** @var integer pagination limit starter */
-	protected $_limitstart = null;
-
-	/** @var integer pagination limit */
-	protected $_limit = null;
-
 	/**
 	 * Method to auto-populate the model state.
 	 *

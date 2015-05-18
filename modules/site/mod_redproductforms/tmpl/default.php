@@ -37,16 +37,29 @@ defined('_JEXEC') or die('Restricted access');
 		</div>
 	</div>
 	<input type="submit" name="submit" value="submit" />
-<!-- 	<input type="hidden" name="view" value="findproducts" /> -->
 	<input type="hidden" name="task" value="findproducts.find" />
-	<input type="hidden" name="formid" value="<?php echo $params->get("form_id");?>" />
+	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
+	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
+	<input type="hidden" name="redform[cid]" value="<?php echo $cid;?>" />
 	<?php echo JHtml::_('form.token'); ?>
 
 </form>
 <div class="slide-wrapper">
 	<div id="slider-range"></div>
 </div>
+<style type="text/css">
+	.slide-wrapper >div:not(#slider-range)
+	{
+		height: 50px!important;
+		overflow: visible!important;
+	}
 
+	#slider-range
+	{
+		margin: 0!important;
+		overflow: visible!important;
+	}
+</style>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script type="text/javascript">
@@ -54,9 +67,18 @@ defined('_JEXEC') or die('Restricted access');
 		$('#slider-range').slider({
 			range: true,
 			min: 0,
-			max: 500,
-			values: [ 75, 300 ]
+			max: <?php echo $range['max'];?>,
+			values: [ <?php echo $range['max']/4;?>, <?php echo $range['max']-($range['max']/4);?> ],
+			slide: function(event, ui){
+				$("[name='redform[filterprice][min]']").val(ui.values[ 0 ]);
+				$("[name='redform[filterprice][max]']").val(ui.values[ 1 ]);
+				//submit form when sliding range
+				$("#redproductfinder-form").submit();
+			}
 		});
+		$("[name='redform[filterprice][min]']").val($('#slider-range').slider( "values", 0 ));
+		$("[name='redform[filterprice][max]']").val($('#slider-range').slider( "values", 1 ));
+
 		$('#redproductfinder-form').each(function(index, el) {
 			var finder_form = $(this);
 			var parent_suffix = '-parent';
@@ -69,28 +91,30 @@ defined('_JEXEC') or die('Restricted access');
 					};
 				});
 				$(this).find('>.taglist').each(function(index, el) {
-					//create tabheader
-					$(this).before('<ul class="tabheader-bar"></ul>');
+					if (parent_tagname.length>0) {
+						//create tabheader
+						$(this).before('<ul class="tabheader-bar"></ul>');
 
-					while(parent_tagname.length > 0){
-						root_tagname = parent_tagname.pop();
-						child_tagname = root_tagname.replace(parent_suffix, "");
+						while(parent_tagname.length > 0){
+							root_tagname = parent_tagname.pop();
+							child_tagname = root_tagname.replace(parent_suffix, "");
 
-						//create selecttab
-						$(this).after('<div id="tab-'+root_tagname+'"><ul></ul></div>');
+							//create selecttab
+							$(this).after('<div id="tab-'+root_tagname+'"><ul></ul></div>');
 
-						// append elemt to created selecttab
-						$(this).find('[data-aliases="'+child_tagname+'"]').each(function(index, el) {
-							var temp_pos = $('div#tab-'+root_tagname).find('>ul');
-							$(this).parent('li').appendTo(temp_pos);
-						});
+							// append elemt to created selecttab
+							$(this).find('[data-aliases="'+child_tagname+'"]').each(function(index, el) {
+								var temp_pos = $('div#tab-'+root_tagname).find('>ul');
+								$(this).parent('li').appendTo(temp_pos);
+							});
 
-						$(this).find('[data-aliases="'+root_tagname+'"]').each(function(index, el) {
-							$(this).parent('li').appendTo(cur_typename.find('ul.tabheader-bar'));
-						});
-					}
-					//remove this empty ul
-					$(this).remove();
+							$(this).find('[data-aliases="'+root_tagname+'"]').each(function(index, el) {
+								$(this).parent('li').appendTo(cur_typename.find('ul.tabheader-bar'));
+							});
+						}
+						//remove this empty ul
+						$(this).remove();
+					};
 				});
 				//change this list into filter filed
 				$(this).find('.tabheader-bar').each(function(index, el) {
@@ -105,5 +129,40 @@ defined('_JEXEC') or die('Restricted access');
 				$(this).tabs();
 			});
 		});
+		var ajaxpos = $(this).find('#main');
+		$("#redproductfinder-form").submit(function(ev) {
+		    var frm = $("#redproductfinder-form");
+		    $.ajax({
+					type: "POST",
+					url: frm.attr('action'),
+					data: frm.serialize(), // serializes the form's elements.
+					success: function(data)
+					{
+						console.log(data);
+// 						ajaxpos.html(content);
+// 						if (data !== false)
+// 						{
+// 							var content = [];
+// 							$.each(data, function(k,v){
+// 								console.log(v);
+// 								content = v['product_name']+'--'+v['product_price']+'-'+v['product_full_image'];
+// 							});
+// 							ajaxpos.html(content);
+// 						}
+					}
+		         });
+		    return false; // avoid to execute the actual submit of the form.
+		    ev.preventDefault();
+		});
+
+		//submit form when input clicked
+		$("#redproductfinder-form").each(function(index, el) {
+			var submit_frm = $(this);
+			$(this).find('input').on('mouseup', function(event) {
+				submit_frm.submit();
+				event.preventDefault();
+			});
+		});
+
 	});
 </script>

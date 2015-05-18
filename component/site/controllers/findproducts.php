@@ -41,10 +41,30 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 	   	// Get all product from here
 	   	foreach ( $list as $k => $value )
 	   	{
-	   		$products[] = RedshopHelperProduct::getProductById($value);
+	   		$products[] = $value;
 	   	}
 
-	   	if ($products === null)
+	   	if (count($products) != 0)
+	   	{
+	   		// Get layout HTML
+	   		$html = $layout->render(
+	   			array(
+	   				"products" => $products,
+	   				"post"	   => $post,
+	   				"template_id" => $post["template_id"]
+	   			)
+	   		);
+
+	   		echo $html;
+	   		die;
+	   	}
+	   	else
+	   	{
+	   		echo false;
+	   		die;
+	   	}
+
+	   	if ($products !== null)
 	   	{
 	   		header('Content-Type: application/json');
 	   		$json = json_encode($products);
