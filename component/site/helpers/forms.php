@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-JLoader::import('form', JPATH_COMPONENT . '/models');
+JLoader::import('form', JPATH_SITE . '/components/com_redproductfinder/models/');
 
 class redproductfinderForms
 {
