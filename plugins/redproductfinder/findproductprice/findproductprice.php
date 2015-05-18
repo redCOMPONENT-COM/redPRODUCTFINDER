@@ -27,7 +27,7 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 	 *
 	 * @return  bool         True on success. False otherwise.
 	 */
-	public function onFilterByPrice($data, $filter)
+	public function onFilterByPrice($data, $filter, $hasKeyTag)
 	{
 		$db = JFactory::getDbo();
 
@@ -57,9 +57,16 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 			$productFromPrice[] = $value["product_id"];
 		}
 
-		// Intersect
-		$intersect = array_intersect($productFromTag, $productFromPrice);
+		if ($hasKeyTag == true)
+		{
+			// Intersect
+			$intersect = array_intersect($productFromTag, $productFromPrice);
 
-		return $intersect;
+			return $intersect;
+		}
+		else
+		{
+			return $productFromPrice;
+		}
 	}
 }

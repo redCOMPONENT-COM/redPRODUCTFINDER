@@ -50,6 +50,8 @@ class RedproductfinderModelFindproducts extends RModel
 		$filter = $pk["filterprice"];
 
 		unset($pk["filterprice"]);
+		unset($pk["template_id"]);
+		unset($pk["cid"]);
 
 		// Add tag id
 		$keyTags = array();
@@ -57,8 +59,6 @@ class RedproductfinderModelFindproducts extends RModel
 		foreach ( $pk as $k => $value )
 		{
 			if (!isset($value["tags"])) continue;
-			if (!isset($value["template_id"])) continue;
-			if (!isset($value["cid"])) continue;
 
 			foreach ( $value["tags"] as $k_t => $tag )
 			{
@@ -66,7 +66,7 @@ class RedproductfinderModelFindproducts extends RModel
 			}
 		}
 
-		if ($keyTags)
+		if (count($keyTags) != 0)
 		{
 			// Add type id
 			$keyTypes = array_keys($pk);
@@ -94,7 +94,14 @@ class RedproductfinderModelFindproducts extends RModel
 
 		if ($loaded)
 		{
-			$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter));
+			if (count($keyTags) != 0)
+			{
+				$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter, true));
+			}
+			else
+			{
+				$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter, false));
+			}
 
 			return $data[0];
 		}
