@@ -1,6 +1,6 @@
-extension.name=redCOOKIE
-www.dir=/var/www/redCOOKIE
-extension.version=1.1
-joomla.version=2.5
-repo.dir=/Applications/XAMPP/xamppfiles/htdocs/redCOMPONENT/redCOOKIE/
-package.dir=/Applications/XAMPP/xamppfiles/htdocs/installers
+comp.name=redproductfinder
+www.dir=/var/www/shoemaniac/
+extension.version=2.0
+joomla.version=3.4
+repo.dir=/home/tuan/git/
+package.dir=/home/tuan/git/package/

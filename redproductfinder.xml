@@ -44,7 +44,7 @@
 		<language tag="da-DK">da-DK/da-DK.com_redproductfinder.ini</language>
 	</languages>
 	
-	<media folder="component/admin/images" destination="com_redproductfinder">
+	<media folder="media" destination="com_redproductfinder">
 		<filename>redproductfinder_association16.png</filename>
 		<filename>redproductfinder_association32.png</filename>
 		<filename>redproductfinder_association48.png</filename>
