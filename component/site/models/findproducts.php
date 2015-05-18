@@ -57,6 +57,8 @@ class RedproductfinderModelFindproducts extends RModel
 		foreach ( $pk as $k => $value )
 		{
 			if (!isset($value["tags"])) continue;
+			if (!isset($value["template_id"])) continue;
+			if (!isset($value["cid"])) continue;
 
 			foreach ( $value["tags"] as $k_t => $tag )
 			{
@@ -94,6 +96,8 @@ class RedproductfinderModelFindproducts extends RModel
 		{
 			$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter));
 
+			echo "<pre>";print_r($data);
+			die;
 			return $data[0];
 		}
 		else
