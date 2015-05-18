@@ -96,8 +96,6 @@ class RedproductfinderModelFindproducts extends RModel
 		{
 			$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter));
 
-			echo "<pre>";print_r($data);
-			die;
 			return $data[0];
 		}
 		else
