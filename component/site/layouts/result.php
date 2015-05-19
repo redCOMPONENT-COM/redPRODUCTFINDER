@@ -108,7 +108,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		// Replace VAT information
 		$data_add = $producthelper->replaceVatinfo($data_add);
 
-		$link = JRoute::_ ( 'index.php?option=redshop&view=product&pid='.$product->product_id.'&cid='.$catid.'&Itemid='.$pItemid );
+		$link = JRoute::_ ( 'index.php?option=com_redshop&view=product&pid='.$product->product_id.'&cid='.$catid.'&Itemid='.$pItemid );
 
 		$pname = $Redconfiguration->maxchar ( $product->product_name, CATEGORY_PRODUCT_TITLE_MAX_CHARS, CATEGORY_PRODUCT_TITLE_END_SUFFIX );
 
