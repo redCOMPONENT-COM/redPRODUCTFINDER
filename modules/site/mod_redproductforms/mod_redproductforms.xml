@@ -24,7 +24,13 @@
 		   	<fieldset name="basic">		 	  
 			  <field name="form_id" type="sql" label="Select form" query="SELECT id, formname FROM #__redproductfinder_forms WHERE published = 1" key_field="id" value_field="formname"/>			 
 			  <field name="template_id" type="sql" label="Select Template" query="SELECT template_id as id, template_name as name FROM #__redshop_template WHERE published = 1" key_field="id" value_field="name"/>			 
+             <field
+               name="moduleclass_sfx"
+               type="text"
+               label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+               description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
 		  	</fieldset>	
+		  	
 		</fields>
     </config >
 </extension>

@@ -9,7 +9,8 @@
 defined('_JEXEC') or die('Restricted access');
 
 ?>
-<form action="<?php echo JRoute::_("index.php?option=com_redproductfinder"); ?>" method="post" name="adminForm" id="redproductfinder-form" class="form-validate">
+<div class="<?php echo $module_class_sfx; ?>">
+	<form action="<?php echo JRoute::_("index.php?option=com_redproductfinder"); ?>" method="post" name="adminForm" id="redproductfinder-form" class="form-validate">
 	<div class="form-horizontal">
 		<div class="row-fluid">
 			<div class="span9">
@@ -44,9 +45,13 @@ defined('_JEXEC') or die('Restricted access');
 	<?php echo JHtml::_('form.token'); ?>
 
 </form>
+
+
 <div class="slide-wrapper">
 	<div id="slider-range"></div>
 </div>
+</div>
+
 <style type="text/css">
 	.slide-wrapper >div:not(#slider-range)
 	{

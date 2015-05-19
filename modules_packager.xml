@@ -22,7 +22,7 @@
 	<property name="mediapath" value="${project.basedir}/media/" override="true" />
 
 	<!-- Target dir where module packages will be created  -->
-	<property name="targetdir" value="${package.dir}/redITEM2-Modules/" override="true" />
+	<property name="targetdir" value="${package.dir}/redPRODUCFINDER-Modules/" override="true" />
 
 	<!-- MAIN -->
 	<target name="main" description="Loops through folders creating module packages">
