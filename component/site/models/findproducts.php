@@ -49,6 +49,9 @@ class RedproductfinderModelFindproducts extends RModel
 		// Delete filter price here
 		$filter = $pk["filterprice"];
 
+		// Filter by cid
+		$cid = $pk["cid"];
+
 		unset($pk["filterprice"]);
 		unset($pk["template_id"]);
 		unset($pk["cid"]);
@@ -101,6 +104,12 @@ class RedproductfinderModelFindproducts extends RModel
 			else
 			{
 				$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter, false));
+			}
+
+			if (intval($cid) !== 0)
+			{
+				// Query and get all product id
+				$data = $dispatcher->trigger('onFilterByCategory',array($data, $cid));
 			}
 
 			return $data[0];

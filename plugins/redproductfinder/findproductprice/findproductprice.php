@@ -69,4 +69,36 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 			return $productFromPrice;
 		}
 	}
+
+	public function onFilterByCategory($data, $cid)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		if (intval($cid) === 0)
+		{
+			return $data[0];
+		}
+		else
+		{
+			$products = $data[0];
+
+			// Query product from xref
+			$query->select($db->qn("product_id"))
+				->from($db->qn("#__redshop_product_category_xref", "cat"))
+				->where($db->qn("category_id") . "=" . $db->q($cid));
+
+			$db->setQuery($query);
+
+			$results = $db->loadAssocList("product_id");
+
+			// Get only keys value
+			$results = array_keys($results);
+
+			// Intersect
+			$intersects = array_intersect($products, $results);
+
+			return $intersects;
+		}
+	}
 }
