@@ -37,7 +37,7 @@ class ModRedproductForms
 		return $data;
 	}
 
-	public static function getRangeMaxMin()
+	public static function getRangeMaxMin($cid = 0, $manufacturer_id = 0)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -45,8 +45,25 @@ class ModRedproductForms
 		$max = 0;
 
 		$query = $db->getQuery(true);
-		$query->select($db->qn("product_id"))
-		->from($db->qn("#__redshop_product"));
+
+		if (intval($cid) != 0)
+		{
+			$query->select($db->qn("cat.product_id"))
+				->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+				->where($db->qn("cat.category_id") . " = " . $db->q($cid));
+
+			// Filter by manufacture
+			if (intval($manufacturer_id) !== 0)
+			{
+				$query->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id));
+			}
+		}
+		else
+		{
+			$query->select($db->qn("product_id"))
+				->from($db->qn("#__redshop_product", "p"));
+		}
 
 		$db->setQuery($query);
 
@@ -61,20 +78,22 @@ class ModRedproductForms
 
 	public static function getRange($pids)
 	{
+		$max = 0;
+		$min = 0;
 		$producthelper = new producthelper();
+		$allProductPrices = array();
 
 		// Get product price
 		foreach($pids as $k => $id)
 		{
 			$productprices = $producthelper->getProductNetPrice($id);
-			$pids[$id] = $productprices['product_price'];
+			$allProductPrices[] = $productprices['product_price'];
 		}
 
-		$max = 0;
-		$min = 0;
+		$max = $min = $allProductPrices[0];
 
 		// Loop to check max min
-		foreach($pids as $k => $value)
+		foreach($allProductPrices as $k => $value)
 		{
 			// Check max
 			if ($value >= $max)
@@ -89,9 +108,11 @@ class ModRedproductForms
 			}
 		}
 
-		return array(
+		$arrays = array(
 			"max" => $max + 100,
 			"min" => $min
 		);
+
+		return $arrays;
 	}
 }

@@ -28,9 +28,6 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 	 * @param   object  $rater   JUser object of rater
 	 *
 	 * @return  bool         True on success. False otherwise.
-
-		echo "<pre>";
-		print_r($allProductPrices);
 	 */
 
 	public function onFilterByPrice($data, $filter, $hasKeyTag)
