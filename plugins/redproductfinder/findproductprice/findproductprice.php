@@ -1,36 +1,34 @@
 <?php
 /**
- * @package     RedITEM
- * @subpackage  Plugin.Reditem
+ * @package    RedPRODUCTFINDER.Plugin
  *
- * @copyright   Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-/**
- * Plugin of Log
- *
- * @package  RedITEM.Plugin
- *
- * @since    2.1.4
- */
-require_once(JPATH_SITE . '/components/com_redshop/helpers/helper.php');
+JLoader::import('helper', JPATH_SITE . '/components/com_redshop/helpers');
 
+/**
+ * Plugin find product price
+ *
+ * @package  RedPRODUCTFINDER.Plugin
+ *
+ * @since    2.0
+ */
 class PlgRedProductfinderFindProductPrice extends JPlugin
 {
 	/**
-	 * event "onAfterItemRated"
+	 * This method will filter data list with min or max value of data
 	 *
-	 * @param   int     $itemId  Id of item
-	 * @param   float   $value   Rate value
-	 * @param   object  $rater   JUser object of rater
+	 * @param   array    $data       Default data is array
+	 * @param   array    $filter     Add data array to filter
+	 * @param   boolean  $hasKeyTag  Default data is false boolean
 	 *
-	 * @return  bool         True on success. False otherwise.
+	 * @return array
 	 */
-
-	public function onFilterByPrice($data, $filter, $hasKeyTag)
+	public function onFilterByPrice($data = array(), $filter = array(), $hasKeyTag = false)
 	{
 		$db = JFactory::getDbo();
 		$producthelper = new producthelper();
@@ -91,7 +89,16 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 		}
 	}
 
-	public function onFilterByCategory($data, $cid, $manufacturer_id)
+	/**
+	 * This method will filter product by category id and manufacturer id
+	 *
+	 * @param   array  $data  value shall be array
+	 * @param unknown $cid
+	 * @param unknown $manufacturer_id
+	 *
+	 * @return unknown
+	 */
+	public function onFilterByCategory($data = array(), $cid = 0, $manufacturer_id = 0)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);

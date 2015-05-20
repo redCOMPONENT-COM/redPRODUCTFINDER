@@ -19,7 +19,9 @@ defined('_JEXEC') or die;
 class RedproductfinderModelRedproductfinder extends RModelList
 {
 	/**
-	 * Load the totals
+	 * Get total information of redproductfinder
+	 *
+	 * @return void
 	 */
 	public function getTotals()
 	{
@@ -39,9 +41,4 @@ class RedproductfinderModelRedproductfinder extends RModelList
 
 		return $totals;
 	}
-
-
-
-
 }
-?>

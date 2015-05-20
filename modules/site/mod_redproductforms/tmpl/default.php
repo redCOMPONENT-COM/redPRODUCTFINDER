@@ -33,8 +33,8 @@ defined('_JEXEC') or die('Restricted access');
 			</div>
 		</div>
 		<div  class="row-fluid">
-			Min: <input type="text" name="redform[filterprice][min]" value="0"/>
-			Max: <input type="text" name="redform[filterprice][max]" value="100"/>
+			Min: <input type="text" name="redform[filterprice][min]" value="<?php echo $range['min'];?>"/>
+			Max: <input type="text" name="redform[filterprice][max]" value="<?php echo $range['max'];?>"/>
 		</div>
 	</div>
 	<input type="submit" name="submit" value="submit" />
@@ -72,7 +72,7 @@ defined('_JEXEC') or die('Restricted access');
 	jQuery(document).ready(function($) {
 		$('#slider-range').slider({
 			range: true,
-			min: 0,
+			min: <?php echo $range['min'];?>,
 			max: <?php echo $range['max'];?>,
 			values: [ <?php echo $range['max']/4;?>, <?php echo $range['max']-($range['max']/4);?> ],
 			slide: function(event, ui){
