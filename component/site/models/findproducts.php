@@ -51,9 +51,11 @@ class RedproductfinderModelFindproducts extends RModel
 
 		// Filter by cid
 		$cid = $pk["cid"];
+		$manufacturer_id = $pk["manufacturer_id"];
 
 		unset($pk["filterprice"]);
 		unset($pk["template_id"]);
+		unset($pk["manufacturer_id"]);
 		unset($pk["cid"]);
 
 		// Add tag id
@@ -106,10 +108,11 @@ class RedproductfinderModelFindproducts extends RModel
 				$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter, false));
 			}
 
+			// Filter by category
 			if (intval($cid) !== 0)
 			{
 				// Query and get all product id
-				$data = $dispatcher->trigger('onFilterByCategory',array($data, $cid));
+				$data = $dispatcher->trigger('onFilterByCategory',array($data, $cid, $manufacturer_id));
 			}
 
 			return $data[0];

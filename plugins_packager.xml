@@ -90,4 +90,43 @@
 		<delete dir="${targetdir}/${group_name}" />
 	</target>
 
+	<target name="dist" depends="main">
+	        <echo msg="Modules build successful!"/>
+	</target>
+	
+	<target name="autopack">
+		<property
+                name="package.dir"
+                value="${package.dir}"
+                override="true"/>
+
+
+	        <property
+	                name="extension"
+	                value="redproductfinder"
+	                override="true"/>
+
+	        <property
+	                name="joomla.version"
+	                value="3"
+	                override="true"/>
+
+	        <property
+	                name="package.delete"
+	                value="true"
+	                override="false"/>
+
+	        <if>
+	            <and>
+	                <available file="${package.dir}" type="dir"/>
+	                <equals arg1="${package.delete}" arg2="1" />
+	            </and>
+	            <then>
+	                <echo msg="Removing old autopack folder"/>
+	                <delete dir="${package.dir}"/>
+	            </then>
+	        </if>
+
+	        <phingcall target="dist" />
+	   </target>
 </project>

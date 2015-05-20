@@ -70,7 +70,7 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 		}
 	}
 
-	public function onFilterByCategory($data, $cid)
+	public function onFilterByCategory($data, $cid, $manufacturer_id)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -84,9 +84,16 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 			$products = $data[0];
 
 			// Query product from xref
-			$query->select($db->qn("product_id"))
-				->from($db->qn("#__redshop_product_category_xref", "cat"))
-				->where($db->qn("category_id") . "=" . $db->q($cid));
+			$query->select($db->qn("cat.product_id"))
+				->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id=cat.product_id")
+				->where($db->qn("cat.category_id") . "=" . $db->q($cid));
+
+			// Filter by manufacture
+			if (intval($manufacturer_id) !== 0)
+			{
+				$query->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id));
+			}
 
 			$db->setQuery($query);
 
