@@ -16,6 +16,8 @@ defined('_JEXEC') or die;
  *
  * @since    2.1.4
  */
+require_once(JPATH_SITE . '/components/com_redshop/helpers/helper.php');
+
 class PlgRedProductfinderFindProductPrice extends JPlugin
 {
 	/**
@@ -26,35 +28,57 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 	 * @param   object  $rater   JUser object of rater
 	 *
 	 * @return  bool         True on success. False otherwise.
+
+		echo "<pre>";
+		print_r($allProductPrices);
 	 */
+
 	public function onFilterByPrice($data, $filter, $hasKeyTag)
 	{
 		$db = JFactory::getDbo();
+		$producthelper = new producthelper();
 
 		$min = $filter["min"];
 		$max = $filter["max"];
 
 		$query = $db->getQuery(true);
 		$query->select("product_id")
-			->from("#__redshop_product")
-			->where($db->qn("product_price") . " >= " . $min)
-			->where($db->qn("product_price") . " <= " . $max);
+			->from("#__redshop_product");
 
 		$db->setQuery($query);
 
-		$results = $db->loadAssocList();
+		// Filter by min max
+		$results = $db->loadAssocList("product_id");
+
+		$allProductOnRange = array();
+		$allProductPrices = array();
+
+		// Get Net price and check min max price
+		foreach($results as $k => $product)
+		{
+			$productprices = $producthelper->getProductNetPrice($k);
+
+			$allProductPrices[$k] = $productprices;
+
+			if ($productprices["product_price"] >= $min && $productprices["product_price"] <= $max)
+			{
+				$allProductOnRange[] = $k;
+			}
+		}
 
 		$productFromTag = array();
 		$productFromPrice = array();
 
+		// Filter and get from data
 		foreach ($data as $k => $value)
 		{
 			$productFromTag[] = $value["product_id"];
 		}
 
-		foreach ($results as $k => $value)
+		// Filter and get from Range price
+		foreach ($allProductOnRange as $k => $value)
 		{
-			$productFromPrice[] = $value["product_id"];
+			$productFromPrice[] = $value;
 		}
 
 		if ($hasKeyTag == true)

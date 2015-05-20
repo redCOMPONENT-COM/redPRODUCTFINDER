@@ -21,6 +21,7 @@ defined('_JEXEC') or die;
 JLoader::import('forms', JPATH_SITE . '/components/com_redproductfinder/helpers');
 
 require_once JPATH_SITE . '/components/com_redproductfinder/models/forms.php';
+require_once(JPATH_SITE . '/components/com_redshop/helpers/helper.php');
 
 class ModRedproductForms
 {
@@ -43,26 +44,54 @@ class ModRedproductForms
 		$min = 0;
 		$max = 0;
 
-		// Query get min value
-		$query->select("MIN(" . $db->qn("product_price") . ")")
-			->from($db->qn("#__redshop_product"));
-
-		$db->setQuery($query);
-
-		$min = $db->loadResult();
-
-		// Query get max value
 		$query = $db->getQuery(true);
-		$query->select("MAX(" . $db->qn("product_price") . ")")
-			->from($db->qn("#__redshop_product"));
+		$query->select($db->qn("product_id"))
+		->from($db->qn("#__redshop_product"));
 
 		$db->setQuery($query);
 
-		$max = $db->loadResult();
+		$pids = $db->loadAssocList("product_id");
+
+		// Get only productid key
+		$pids = array_keys($pids);
+		$range = self::getRange($pids);
+
+		return $range;
+	}
+
+	public static function getRange($pids)
+	{
+		$producthelper = new producthelper();
+
+		// Get product price
+		foreach($pids as $k => $id)
+		{
+			$productprices = $producthelper->getProductNetPrice($id);
+			$pids[$id] = $productprices['product_price'];
+		}
+
+		$max = 0;
+		$min = 0;
+
+		// Loop to check max min
+		foreach($pids as $k => $value)
+		{
+			// Check max
+			if ($value >= $max)
+			{
+				$max = $value;
+			}
+
+			// Check min
+			if ($value <= $min)
+			{
+				$min = $value;
+			}
+		}
 
 		return array(
-			"min" => $min,
-			"max" => $max
+			"max" => $max + 100,
+			"min" => $min
 		);
 	}
 }
