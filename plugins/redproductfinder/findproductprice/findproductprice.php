@@ -125,10 +125,7 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 
 			$db->setQuery($query);
 
-			$results = $db->loadAssocList("product_id");
-
-			// Get only keys value
-			$results = array_keys($results);
+			$results = $db->loadColumn();
 
 			// Intersect
 			$intersects = array_intersect($products, $results);
@@ -165,10 +162,7 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 
 			$db->setQuery($query);
 
-			$results = $db->loadAssocList("product_id");
-
-			// Get only keys value
-			$results = array_keys($results);
+			$results = $db->loadColumn();
 
 			// Intersect
 			$intersects = array_intersect($products, $results);
