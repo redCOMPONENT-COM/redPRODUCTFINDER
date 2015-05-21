@@ -12,6 +12,7 @@
 	<files>
 		<filename module="mod_redproductforms">mod_redproductforms.php</filename>
 		<folder>tmpl</folder>
+		<filename>helper.php</filename>
 	</files>
 	
 	<languages>
