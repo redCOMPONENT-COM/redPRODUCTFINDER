@@ -17,18 +17,6 @@ defined('_JEXEC') or die;
 class RedproductfinderControllerFilters extends RControllerAdmin
 {
 	/**
-	 * Method to display the view
-	 *
-	 * @access	public
-	 */
-	function __construct()
-	{
-		parent::__construct();
-
-		$this->registerTask('apply', 'edit');
-	}
-
-	/**
 	 * Returns a Table object, always creating it
 	 *
 	 * @param   type    $type    The table type to instantiate
