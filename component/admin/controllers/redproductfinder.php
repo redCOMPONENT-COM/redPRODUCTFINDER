@@ -25,8 +25,9 @@ class RedproductfinderControllerRedproductfinder extends RControllerForm
 	{
 		parent::__construct();
 
-		JRequest::setVar('view', 'redproductfinder');
-		JRequest::setVar('layout', 'redproductfinder');
+		$input = JFactory::getApplication()->input;
+		$input->set('view', 'redproductfinder');
+		$input->set('layout', 'redproductfinder');
 
 		parent::display();
 	}

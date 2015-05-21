@@ -30,13 +30,12 @@
 
 		<field name="classname"
 			type="text"
-			label="CSS Classname"
+			label="COM_REDPRODUCTFINDER_MODELS_FORMS_FORM_CLASSNAME_LABEL"
 		/>
 
 		<field name="dependency"
 			type="list"
-			label="Dependancies"
-			description="COM_CONTACT_FIELD_LINKED_USER_DESC">
+			label="COM_REDPRODUCTFINDER_MODELS_FORMS_FORM_DEPENDANCIES_LABEL">
 			<option value="1">
 				JYES</option>
 			<option value="0">
@@ -46,7 +45,7 @@
 		<field id="showname"
 			name="showname"
 			type="list"
-			label="Show form name"
+			label="COM_REDPRODUCTFINDER_MODELS_FORMS_FORM_SHOWNAME_LABEL"
 			class="chzn-color-state"
 			size="1"
 			default="1">
@@ -56,13 +55,11 @@
 		
 		<field name="checked_out"
 			type="text"
-			label="COM_CONTACT_FIELD_LINKED_USER_LABEL"
-			description="COM_CONTACT_FIELD_LINKED_USER_DESC"
+			label="COM_REDPRODUCTFINDER_MODELS_FORMS_FORM_CHECKED_OUT_LABEL"
 		/>
 		<field name="checked_out_time"
 			type="text"
-			label="COM_CONTACT_FIELD_LINKED_USER_LABEL"
-			description="COM_CONTACT_FIELD_LINKED_USER_DESC"
+			label="COM_REDPRODUCTFINDER_MODELS_FORMS_FORM_CHECKED_OUT_TIME_LABEL"
 		/>
 	</fieldset>
 </form>

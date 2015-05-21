@@ -57,6 +57,6 @@ else
 		</div>
 		<?php endforeach;?>
 	<?php else : ?>
-		<?php echo JText::_("No Type to select"); ?>
+		<?php echo JText::_("COM_REDPRODUCTFINDER_LAYOUTS_FILTER_NO_TYPE_SELECT"); ?>
 	<?php endif;?>
 </div>

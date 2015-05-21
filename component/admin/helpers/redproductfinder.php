@@ -28,32 +28,32 @@ class RedproductfinderHelper
 	public static function addSubmenu($vName)
 	{
 		JSubMenuHelper::addEntry(
-			JText::_('Redproductfinder'),
+			JText::_('COM_REDPRODUCTFINDER_HELPERS_SUBMENU_REDPRODUCTFINDER'),
 			'index.php?option=com_redproductfinder&view=redproductfinder',
 			$vName == 'redproductfinder'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('Forms'),
+			JText::_('COM_REDPRODUCTFINDER_HELPERS_SUBMENU_FORMS'),
 			'index.php?option=com_redproductfinder&view=forms',
 			$vName == 'forms'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('Types'),
+			JText::_('COM_REDPRODUCTFINDER_HELPERS_SUBMENU_TYPES'),
 			'index.php?option=com_redproductfinder&view=types',
 			$vName == 'types'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('Tags'),
+			JText::_('COM_REDPRODUCTFINDER_HELPERS_SUBMENU_TAGS'),
 			'index.php?option=com_redproductfinder&view=tags',
 			$vName == 'tags'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('Associations'),
+			JText::_('COM_REDPRODUCTFINDER_HELPERS_SUBMENU_ASSOCIATIONS'),
 			'index.php?option=com_redproductfinder&view=associations',
 			$vName == 'associations'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('Filters'),
+			JText::_('COM_REDPRODUCTFINDER_HELPERS_SUBMENU_FILTERS'),
 			'index.php?option=com_redproductfinder&view=filters',
 			$vName == 'filters'
 		);
