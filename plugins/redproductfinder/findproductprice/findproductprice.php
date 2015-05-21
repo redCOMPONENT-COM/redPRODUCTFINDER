@@ -31,7 +31,7 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 	public function onFilterByPrice($data = array(), $filter = array(), $hasKeyTag = false)
 	{
 		$db = JFactory::getDbo();
-		$producthelper = new producthelper();
+		$producthelper = new producthelper;
 
 		$min = $filter["min"];
 		$max = $filter["max"];
@@ -49,7 +49,7 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 		$allProductPrices = array();
 
 		// Get Net price and check min max price
-		foreach($results as $k => $product)
+		foreach ($results as $k => $product)
 		{
 			$productprices = $producthelper->getProductNetPrice($k);
 
@@ -92,9 +92,9 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 	/**
 	 * This method will filter product by category id and manufacturer id
 	 *
-	 * @param   array  $data  value shall be array
-	 * @param unknown $cid
-	 * @param unknown $manufacturer_id
+	 * @param   array   $data             value shall be array
+	 * @param   number  $cid              default value is 0
+	 * @param   number  $manufacturer_id  default value is 0
 	 *
 	 * @return unknown
 	 */
@@ -122,6 +122,46 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 			{
 				$query->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id));
 			}
+
+			$db->setQuery($query);
+
+			$results = $db->loadAssocList("product_id");
+
+			// Get only keys value
+			$results = array_keys($results);
+
+			// Intersect
+			$intersects = array_intersect($products, $results);
+
+			return $intersects;
+		}
+	}
+
+	/**
+	 * This method only filter product by manufacturer id
+	 *
+	 * @param   array   $data             default value is array
+	 * @param   number  $manufacturer_id  default value is number
+	 *
+	 * @return array
+	 */
+	public function onFilterByManufacturers($data = array(), $manufacturer_id = 0)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		if (intval($manufacturer_id) == 0)
+		{
+			return $data[0];
+		}
+		else
+		{
+			$products = $data[0];
+
+			// Query product from xref
+			$query->select($db->qn("p.product_id"))
+				->from($db->qn("#__redshop_product", "p"))
+				->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id));
 
 			$db->setQuery($query);
 

@@ -1,23 +1,39 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Frontend
  *
- * redPRODUCTFINDER model
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die;
 
+/**
+ * Findproducts Model.
+ *
+ * @package     RedPRODUCTFINDER.Frontend
+ * @subpackage  Controller
+ * @since       2.0
+ */
 class RedproductfinderModelFindproducts extends RModel
 {
 	protected $data = array();
 
 	protected $_results = array();
 
-	protected function populateState()
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = JFactory::getApplication('site');
 
@@ -31,14 +47,18 @@ class RedproductfinderModelFindproducts extends RModel
 		$this->setState('params', $params);
 	}
 
+	/**
+	 * Get Item from category view
+	 *
+	 * @param   array  $pk  default value is null
+	 *
+	 * @return array
+	 */
 	public function getItem($pk = null)
 	{
-		$user	= JFactory::getUser();
-
 		$pk = (!empty($pk)) ? $pk : $this->getState('redform.data');
-
+		$view = $this->getState("redform.view");
 		$db = JFactory::getDbo();
-
 		$query = $db->getQuery(true);
 
 		$query->select("DISTINCT a.product_id")
@@ -63,7 +83,10 @@ class RedproductfinderModelFindproducts extends RModel
 
 		foreach ( $pk as $k => $value )
 		{
-			if (!isset($value["tags"])) continue;
+			if (!isset($value["tags"]))
+			{
+				continue;
+			}
 
 			foreach ( $value["tags"] as $k_t => $tag )
 			{
@@ -101,18 +124,28 @@ class RedproductfinderModelFindproducts extends RModel
 		{
 			if (count($keyTags) != 0)
 			{
-				$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter, true));
+				$data = $dispatcher->trigger('onFilterByPrice', array($data, $filter, true));
 			}
 			else
 			{
-				$data = $dispatcher->trigger('onFilterByPrice',array($data, $filter, false));
+				$data = $dispatcher->trigger('onFilterByPrice', array($data, $filter, false));
 			}
 
-			// Filter by category
-			if (intval($cid) !== 0)
+			switch ($view)
 			{
-				// Query and get all product id
-				$data = $dispatcher->trigger('onFilterByCategory',array($data, $cid, $manufacturer_id));
+				case "category":
+
+					// Filter by category
+					if (intval($cid) !== 0)
+					{
+						// Query and get all product id
+						$data = $dispatcher->trigger('onFilterByCategory', array($data, $cid, $manufacturer_id));
+					}
+					break;
+				case "manufacturers":
+						// Query and get all product id
+						$data = $dispatcher->trigger('onFilterByManufacturers', array($data, $manufacturer_id));
+					break;
 			}
 
 			return $data[0];
@@ -128,7 +161,5 @@ class RedproductfinderModelFindproducts extends RModel
 
 			return $temp;
 		}
-
 	}
 }
-?>

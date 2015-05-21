@@ -1,10 +1,29 @@
 <?php
-defined('_JEXEC') or die('Restricted access');
+/**
+ * @package    RedPRODUCTFINDER.Frontend
+ *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
+ */
+
+defined('_JEXEC') or die;
 
 JLoader::import('form', JPATH_SITE . '/components/com_redproductfinder/models/');
 
-class redproductfinderForms
+/**
+ * Redproductfinder Component Form Helper
+ *
+ * @since  3.0
+ */
+class RedproductfinderForms
 {
+	/**
+	 * This method will filter type and tag to array
+	 *
+	 * @param   array  $data  value is array type
+	 *
+	 * @return array
+	 */
 	static function filterForm($data)
 	{
 		$types = array();
@@ -19,12 +38,12 @@ class redproductfinderForms
 		}
 
 		// Get unique types
-		$types = array_unique ($types);
+		$types = array_unique($types);
 
 		// Find tag and add them to form
 		foreach ($data as $key => $record)
 		{
-			foreach($types as $k => $r)
+			foreach ($types as $k => $r)
 			{
 				if (!isset($forms[$r]))
 				{
@@ -53,8 +72,13 @@ class redproductfinderForms
 		return $forms;
 	}
 
+	/**
+	 * This method will get form from model
+	 *
+	 * @return void
+	 */
 	public static function getModelForm()
 	{
-		return JModelLegacy::getInstance( 'forms', 'RedproducfinderModel' );
+		return JModelLegacy::getInstance('forms', 'RedproducfinderModel');
 	}
 }

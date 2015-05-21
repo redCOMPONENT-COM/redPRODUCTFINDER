@@ -10,10 +10,7 @@
 
 JLoader::import('forms', JPATH_COMPONENT . '/helpers');
 
-$data = redproductfinderForms::filterForm($this->item);
-
-echo "<pre>";
-print_r($data);
+$data = RedproductfinderForms::filterForm($this->item);
 
 ?>
 

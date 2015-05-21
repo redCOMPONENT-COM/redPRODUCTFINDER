@@ -40,6 +40,7 @@ defined('_JEXEC') or die('Restricted access');
 	<input type="submit" name="submit" value="submit" />
 	<input type="hidden" name="task" value="findproducts.find" />
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
+	<input type="hidden" name="view" value="<?php echo $view; ?>" />
 	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
 	<input type="hidden" name="redform[cid]" value="<?php echo $cid;?>" />
 	<input type="hidden" name="redform[manufacturer_id]" value="<?php echo $manufacturer_id;?>" />

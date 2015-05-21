@@ -35,7 +35,7 @@ class ModRedproductForms
 		$modelForms = new RedproductfinderModelForms;
 
 		$data = $modelForms->getItem($id);
-		$data = redproductfinderForms::filterForm($data);
+		$data = RedproductfinderForms::filterForm($data);
 
 		return $data;
 	}
@@ -74,6 +74,12 @@ class ModRedproductForms
 		{
 			$query->select($db->qn("product_id"))
 				->from($db->qn("#__redshop_product", "p"));
+
+			// Filter by manufacture
+			if (intval($manufacturer_id) !== 0)
+			{
+				$query->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id));
+			}
 		}
 
 		$db->setQuery($query);
