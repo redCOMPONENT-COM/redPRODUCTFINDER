@@ -27,7 +27,6 @@ JLoader::import('joomla.html.parameter');
 $option = $input->getCmd('option');
 $view   = $input->getCmd('view');
 
-// Loading helper
 JLoader::import('joomla.html.pagination');
 
 $controller = JControllerLegacy::getInstance('Redproductfinder');

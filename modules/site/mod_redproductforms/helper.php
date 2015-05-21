@@ -141,7 +141,17 @@ class ModRedproductForms
 		return $arrays;
 	}
 
-	static function getProductTotal($type_id, $tag_id, $catid = 0, $mid = 0)
+	/**
+	 * This method will get total product that current tag had
+	 *
+	 * @param   number  $type_id  default value is 0
+	 * @param   number  $tag_id   default value is 0
+	 * @param   number  $catid    default value is 0
+	 * @param   number  $mid      default value is 0
+	 *
+	 * @return array
+	 */
+	static function getProductTotal($type_id = 0, $tag_id = 0, $catid = 0, $mid = 0)
 	{
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -159,12 +169,12 @@ class ModRedproductForms
 			->where("p.published = '1'")
 			->group("ta.association_id");
 
-		if($mid > 0)
+		if ($mid > 0)
 		{
 			$query->where("p.manufacturer_id = '" . $mid . "'");
 		}
 
-		if($catid > 0)
+		if ($catid > 0)
 		{
 			$query->where("c.category_id = '" . $catid . "'");
 		}

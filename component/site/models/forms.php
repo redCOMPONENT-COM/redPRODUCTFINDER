@@ -1,25 +1,33 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Frontend
  *
- * redPRODUCTFINDER model
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die;
 
+/**
+ * Forms Model.
+ *
+ * @package     RedPRODUCTFINDER.Frontend
+ * @subpackage  Model
+ * @since       2.0
+ */
 class RedproductfinderModelForms extends RModel
 {
-	protected $data = array();
-
-	protected $_results = array();
-
-	protected $_item = null;
-
-	protected function populateState()
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 */
+	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = JFactory::getApplication('site');
 
@@ -36,6 +44,13 @@ class RedproductfinderModelForms extends RModel
 		$this->setState('params', $params);
 	}
 
+	/**
+	 * This method will get all item data
+	 *
+	 * @param   array  $pk  default value is null
+	 *
+	 * @return array
+	 */
 	public function getItem($pk = null)
 	{
 		$user	= JFactory::getUser();
@@ -63,4 +78,3 @@ class RedproductfinderModelForms extends RModel
 		return $data;
 	}
 }
-?>

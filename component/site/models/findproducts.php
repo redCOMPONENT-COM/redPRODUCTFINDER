@@ -12,15 +12,11 @@ defined('_JEXEC') or die;
  * Findproducts Model.
  *
  * @package     RedPRODUCTFINDER.Frontend
- * @subpackage  Controller
+ * @subpackage  Model
  * @since       2.0
  */
 class RedproductfinderModelFindproducts extends RModel
 {
-	protected $data = array();
-
-	protected $_results = array();
-
 	/**
 	 * Method to auto-populate the model state.
 	 *

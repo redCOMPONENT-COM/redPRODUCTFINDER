@@ -1,14 +1,12 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Frontend
  *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die;
 
 require_once JPATH_SITE . "/administrator/components/com_redshop/helpers/redshop.cfg.php";
 JLoader::import('redshop.library');
@@ -16,9 +14,21 @@ JLoader::load('RedshopHelperUser');
 JLoader::import('product', JPATH_SITE . '/libraries/redshop/helper');
 
 /**
+ * Findproducts View.
+ *
+ * @package     RedPRODUCTFINDER.Frontend
+ * @subpackage  View
+ * @since       2.0
  */
 class RedproductfinderViewFindProducts extends RViewSite
 {
+	/**
+	 * Display the template list
+	 *
+	 * @param   string  $tpl  The template file to use
+	 *
+	 * @return   string
+	 */
 	function display($tpl = null)
 	{
 		$app        = JFactory::getApplication();
@@ -45,4 +55,3 @@ class RedproductfinderViewFindProducts extends RViewSite
 		parent::display($tpl);
 	}
 }
-?>

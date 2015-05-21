@@ -34,4 +34,4 @@ switch ($view)
 
 $range = ModRedproductForms::getRangeMaxMin($cid, $manufacturer_id);
 
-require(JModuleHelper::getLayoutPath('mod_redproductforms'));
+require JModuleHelper::getLayoutPath('mod_redproductforms');
