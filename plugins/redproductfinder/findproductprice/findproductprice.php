@@ -37,8 +37,9 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 		$max = $filter["max"];
 
 		$query = $db->getQuery(true);
-		$query->select("product_id")
-			->from("#__redshop_product");
+		$query->select($db->qn("product_id"))
+			->from($db->qn("#__redshop_product"))
+			->where($db->qn("published") . "=1");
 
 		$db->setQuery($query);
 
@@ -115,7 +116,8 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 			$query->select($db->qn("cat.product_id"))
 				->from($db->qn("#__redshop_product", "p"))
 				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id=cat.product_id")
-				->where($db->qn("cat.category_id") . "=" . $db->q($cid));
+				->where($db->qn("cat.category_id") . "=" . $db->q($cid))
+				->where($db->qn("p.published") . "=1");
 
 			// Filter by manufacture
 			if (intval($manufacturer_id) !== 0)
@@ -158,7 +160,8 @@ class PlgRedProductfinderFindProductPrice extends JPlugin
 			// Query product from xref
 			$query->select($db->qn("p.product_id"))
 				->from($db->qn("#__redshop_product", "p"))
-				->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id));
+				->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id))
+				->where($db->qn("p.published") . "=1");
 
 			$db->setQuery($query);
 
