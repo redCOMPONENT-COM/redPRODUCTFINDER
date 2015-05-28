@@ -35,7 +35,6 @@ require_once(JPATH_ADMINISTRATOR . '/components/com_redshop/helpers/stockroom.ph
 
 require_once($redshop_site_path . '/helpers/helper.php');
 require_once($redshop_admin_path . '/helpers/text_library.php');
-require_once($redshop_site_path . '/helpers/pagination.php');
 require_once($redshop_site_path . '/models/category.php');
 require_once($redshop_site_path . '/models/manufacturers.php');
 require_once($redshop_site_path . '/models/search.php');
@@ -398,7 +397,8 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_desc = str_replace("{redproductfinderfilter_formend}", "", $template_desc);
 	$template_desc = str_replace("{redproductfinderfilter:rp_myfilter}", "", $template_desc);
 
-	$template_desc = $redTemplate->parseredSHOPplugin($template_desc);
+	/** todo: trigger plugin for content redshop**/
+	// $template_desc = $redTemplate->parseredSHOPplugin($template_desc);
 
 	$template_desc = $texts->replace_texts($template_desc);
 }
