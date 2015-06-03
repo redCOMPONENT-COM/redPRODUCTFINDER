@@ -397,6 +397,19 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 	$product_tmpl = $product_data;
 
+	$db    = JFactory::getDbo();
+	$query = 'SELECT category_name'
+	. ' FROM #__redshop_category  '
+	. 'WHERE category_id=' . $catid;
+	$db->setQuery($query);
+
+	$cat_name = null;
+
+	if ($catname_array = $db->loadObjectList())
+	{
+		$cat_name = $catname_array[0]->category_name;
+	}
+
 	// Order By
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='index.php?option=com_redproductfinder&view=findproducts' method='post' >";
@@ -448,6 +461,8 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_desc = str_replace("{order_by}", $orderby_form, $template_desc);
 	$template_desc = str_replace("{product_loop_start}", "", $template_desc);
 	$template_desc = str_replace("{product_loop_end}", "", $template_desc);
+	$template_desc = str_replace("{category_main_name}", $cat_name, $template_desc);
+	$template_desc = str_replace("{category_main_description}", '', $template_desc);
 	$template_desc = str_replace($template_product, $product_tmpl, $template_desc);
 	$template_desc = str_replace("{with_vat}", "", $template_desc);
 	$template_desc = str_replace("{without_vat}", "", $template_desc);
