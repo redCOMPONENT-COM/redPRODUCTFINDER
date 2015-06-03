@@ -250,7 +250,9 @@ class RedproductfinderModelFindproducts extends RModel
 		$query = $db->getQuery(true);
 		$query->select("a.product_id")
 			->from($db->qn("#__redproductfinder_associations") . " AS a")
+			->join("LEFT", $db->qn("#__redproductfinder_association_tag") . " AS at ON a.id = at.association_id")
 			->join("LEFT", $db->qn("#__redshop_product") . " AS p ON a.product_id = p.product_id")
+			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
 			->where("a.published=1");
 
 		// Condition min max
