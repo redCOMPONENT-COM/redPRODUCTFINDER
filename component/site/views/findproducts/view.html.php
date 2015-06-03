@@ -42,6 +42,20 @@ class RedproductfinderViewFindProducts extends RViewSite
 		$this->option 		= $input->getString('option', 'com_redshop');
 		$this->dispatcher	= $dispatcher;
 
+		$data = $input->post->get("redform", array(), "filter");
+
+		if ($data)
+		{
+			$pk = $data;
+		}
+		else
+		{
+			$decode = $input->post->get('jsondata', "", "filter");
+			$pk = json_decode($decode, true);
+		}
+
+		$this->json = json_encode($pk);
+
 		$products = array();
 
 		// Get all product from here

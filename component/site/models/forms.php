@@ -57,11 +57,6 @@ class RedproductfinderModelForms extends RModel
 
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('form.id');
 
-		if ($this->_item === null)
-		{
-			$this->_item = array();
-		}
-
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select("f.id as formid,t.*, t.id as typeid,tg.*, tg.id as tagid");

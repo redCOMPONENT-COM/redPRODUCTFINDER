@@ -10,9 +10,15 @@ defined('_JEXEC') or die;
 
 // Add helper of site
 JLoader::import('forms', JPATH_SITE . '/components/com_redproductfinder/helpers');
+JLoader::import('product', JPATH_SITE . '/components/com_redshop/helpers');
 JLoader::import('helper', JPATH_SITE . '/components/com_redshop/helpers');
+JLoader::import('user', JPATH_SITE . '/components/com_redshop/helpers');
+JLoader::import('stockroom', JPATH_SITE . '/administrator/components/com_redshop/helpers');
 
 require_once JPATH_SITE . '/components/com_redproductfinder/models/forms.php';
+require_once JPATH_SITE . '/libraries/redshop/helper/product.php';
+require_once JPATH_SITE . '/libraries/redshop/helper/user.php';
+require_once JPATH_SITE . '/administrator/components/com_redshop/helpers/configuration.php';
 
 /**
  * Show form helper
