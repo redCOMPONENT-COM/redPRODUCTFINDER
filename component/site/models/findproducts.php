@@ -51,6 +51,8 @@ class RedproductfinderModelFindproducts extends RModel
 			$pk = json_decode($decode, true);
 		}
 
+		$this->setState('catid', $pk['cid']);
+
 		$this->setState('redform.data', $pk);
 
 		$order_by = $app->input->getString('order_by', '');

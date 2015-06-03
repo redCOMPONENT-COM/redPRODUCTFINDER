@@ -10,7 +10,6 @@ defined('_JEXEC') or die;
 $param = JComponentHelper::getParams('com_redproductfinder');
 $template_id = $param->get('prod_template');
 $input = JFactory::getApplication()->input;
-$catid = $input->post->get('cid', array(), 'array');
 $isredshop = JComponentHelper::isEnabled('com_redshop');
 $app = JFactory::getApplication();
 
@@ -58,6 +57,7 @@ $option = 'com_redshop';
 $loadCategorytemplate = '';
 $layout = JRequest::getCmd('layout', '');
 $model  = $this->getModel('findproducts');
+$catid = $model->getState('catid');
 $attribute_template = '';
 $userfieldArr = '';
 $count_no_user_field = '';
@@ -403,6 +403,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$orderby_form .= $lists['order_select'];
 	$orderby_form .= "<input type='hidden' name='view' value='findproducts'>
 	<input type='hidden' name='limitstart' value='$start'>
+	<input type='hidden' name='redform[cid]' value='$catid'>
 	<input type='hidden' name='jsondata' value='" . $this->json . "'></form>";
 
 	if (strstr($template_desc, '{order_by}'))
@@ -436,6 +437,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		{
 			$limitBox = "<form action='index.php?option=com_redproductfinder&view=findproducts' method='post'>
 				<input type='hidden' name='view' value='findproducts'>
+				<input type='hidden' name='redform[cid]' value='$catid'>
 				<input type='hidden' name='jsondata' value='" . $this->json . "'>"
 				. $pagination->getLimitBox() . "</form>";
 		}
