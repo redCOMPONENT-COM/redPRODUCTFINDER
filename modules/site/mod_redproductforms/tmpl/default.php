@@ -7,7 +7,37 @@
  */
 
 defined('_JEXEC') or die('Restricted access');
+$input = JFactory::getApplication()->input;
+$redform = $input->post->get('redform', array(), "filter");
 
+if ($redform)
+{
+	$pk = $redform;
+}
+else
+{
+	$json = $input->post->get('jsondata', "", "filter");
+	$pk = json_decode($json, true);
+}
+
+$catid = $pk['cid'];
+$manufacturerid = $pk['manufacturer_id'];
+$filter = $pk['filterprice'];
+$min = $filter['min'];
+$max = $filter['max'];
+
+foreach ( $pk as $k => $value )
+{
+	if (!isset($value["tags"]))
+	{
+		continue;
+	}
+
+	foreach ( $value["tags"] as $k_t => $tag )
+	{
+		$keyTags[] = $tag;
+	}
+}
 ?>
 <div class="<?php echo $module_class_sfx; ?>">
 	<form action="<?php echo JRoute::_("index.php?option=com_redproductfinder"); ?>" method="post" name="adminForm" id="redproductfinder-form" class="form-validate">
@@ -21,7 +51,10 @@ defined('_JEXEC') or die('Restricted access');
 							<ul class='taglist'>
 								<?php foreach ($type["tags"] as $k_t => $tag) :?>
 									<li>
-										<span class='taginput' data-aliases='<?php echo $tag["aliases"];?>'><input type="checkbox" name="redform[<?php echo $type["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
+										<span class='taginput' data-aliases='<?php echo $tag["aliases"];?>'>
+										<input <?php foreach ($keyTags as $key => $keyTag) {
+											if ($keyTag == $tag["tagid"]) echo 'checked="checked"'; else echo ''; } ?>
+										 type="checkbox" name="redform[<?php echo $type["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
 										<span class='tagname'><?php echo $tag["tagname"]; ?></span>
 									</li>
 								<?php endforeach; ?>
@@ -40,11 +73,10 @@ defined('_JEXEC') or die('Restricted access');
 	<input type="submit" name="submit" value="submit" />
 	<input type="hidden" name="task" value="findproducts.find" />
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
-	<input type="hidden" name="view" value="<?php echo $view; ?>" />
+	<input type="hidden" name="view" value="findproducts" />
 	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
-	<input type="hidden" name="redform[cid]" value="<?php echo $cid;?>" />
-	<input type="hidden" name="redform[manufacturer_id]" value="<?php echo $manufacturer_id;?>" />
-	<?php echo JHtml::_('form.token'); ?>
+	<input type="hidden" name="redform[cid]" value="<?php if ($cid) echo $cid; else echo $catid;?>" />
+	<input type="hidden" name="redform[manufacturer_id]" value="<?php if ($manufacturer_id) echo $manufacturer_id; else echo $manufacturerid;?>" />
 
 </form>
 
@@ -75,7 +107,7 @@ defined('_JEXEC') or die('Restricted access');
 			range: true,
 			min: <?php echo $range['min'];?>,
 			max: <?php echo $range['max'];?>,
-			values: [ <?php echo $range['max']/4;?>, <?php echo $range['max']-($range['max']/4);?> ],
+			values: [ <?php if ($min) echo $min; else echo $range['max']/4;?>, <?php if ($min) echo $max; else echo $range['max']-($range['max']/4);?> ],
 			slide: function(event, ui){
 				$("[name='redform[filterprice][min]']").val(ui.values[ 0 ]);
 				$("[name='redform[filterprice][max]']").val(ui.values[ 1 ]);

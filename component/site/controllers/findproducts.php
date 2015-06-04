@@ -51,6 +51,8 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 			$products[] = $value;
 		}
 
+		$pagination = $model->getPagination();
+
 		if (count($products) != 0)
 		{
 			// Get layout HTML
@@ -58,7 +60,8 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 				array(
 					"products" => $products,
 					"post"	   => $post,
-					"template_id" => $post["template_id"]
+					"template_id" => $post["template_id"],
+					"getPagination" => $pagination
 			)
 			);
 

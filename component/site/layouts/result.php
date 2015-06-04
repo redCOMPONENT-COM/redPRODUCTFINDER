@@ -8,9 +8,13 @@
 defined('JPATH_REDCORE') or die;
 
 $products = $displayData["products"];
-$template_id = $displayData["template_id"];
+$param = JComponentHelper::getParams('com_redproductfinder');
+$template_id = $param->get('prod_template');
 $post = $displayData["post"];
 $catid = $post["cid"];
+$input = JFactory::getApplication()->input;
+$redform = $input->post->get('redform', array(), "filter");
+$jsondata = json_encode($redform);
 $isredshop = JComponentHelper::isEnabled('com_redshop');
 $app = JFactory::getApplication();
 
@@ -51,7 +55,9 @@ $redTemplate = new Redtemplate;
 $texts = new text_library;
 
 // $url = JURI::base();
-
+$order_data            = $objhelper->getOrderByList();
+$getorderby            = JRequest::getString('order_by', DEFAULT_PRODUCT_ORDERING_METHOD);
+$lists['order_select'] = JHTML::_('select.genericlist', $order_data, 'order_by', 'class="inputbox" size="1" onchange="document.orderby_form.submit();" ', 'value', 'text', $getorderby);
 $option = 'com_redshop';
 $loadCategorytemplate = '';
 $attribute_template = '';
@@ -393,8 +399,68 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 	$product_tmpl = $product_data;
 
+	$db    = JFactory::getDbo();
+	$query = 'SELECT category_name'
+	. ' FROM #__redshop_category  '
+	. 'WHERE category_id=' . $catid;
+	$db->setQuery($query);
+
+	$cat_name = null;
+
+	if ($catid)
+	{
+		if ($catname_array = $db->loadObjectList())
+		{
+			$cat_name = $catname_array[0]->category_name;
+		}
+	}
+
+	// Order By
+	$order_by     = "";
+	$orderby_form = "<form name='orderby_form' action='index.php?option=com_redproductfinder&view=findproducts' method='post' >";
+	$orderby_form .= $lists['order_select'];
+	$orderby_form .= "<input type='hidden' name='view' value='findproducts'>
+	<input type='hidden' name='limitstart' value='$start'>
+	<input type='hidden' name='jsondata' value='$jsondata'></form>";
+
+	if (strstr($template_desc, "{pagination}"))
+	{
+		$pagination  = $displayData["getPagination"];
+		$template_desc = str_replace("{pagination}", $pagination->getPagesLinks(), $template_desc);
+	}
+
+	$usePerPageLimit = false;
+
+	if (strstr($template_desc, "perpagelimit:"))
+	{
+		$usePerPageLimit = true;
+		$perpage       = explode('{perpagelimit:', $template_desc);
+		$perpage       = explode('}', $perpage[1]);
+		$template_desc = str_replace("{perpagelimit:" . intval($perpage[0]) . "}", "", $template_desc);
+	}
+
+	if (strstr($template_desc, "{product_display_limit}"))
+	{
+		if ($usePerPageLimit == false)
+		{
+			$limitBox = '';
+		}
+		else
+		{
+			$limitBox = "<form action='index.php?option=com_redproductfinder&view=findproducts' method='post'>
+				<input type='hidden' name='view' value='findproducts'>
+				<input type='hidden' name='jsondata' value='$jsondata'>"
+				. $pagination->getLimitBox() . "</form>";
+		}
+
+		$template_desc = str_replace("{product_display_limit}", $limitBox, $template_desc);
+	}
+
+	$template_desc = str_replace("{order_by}", $orderby_form, $template_desc);
 	$template_desc = str_replace("{product_loop_start}", "", $template_desc);
 	$template_desc = str_replace("{product_loop_end}", "", $template_desc);
+	$template_desc = str_replace("{category_main_name}", $cat_name, $template_desc);
+	$template_desc = str_replace("{category_main_description}", '', $template_desc);
 	$template_desc = str_replace($template_product, $product_tmpl, $template_desc);
 	$template_desc = str_replace("{with_vat}", "", $template_desc);
 	$template_desc = str_replace("{without_vat}", "", $template_desc);

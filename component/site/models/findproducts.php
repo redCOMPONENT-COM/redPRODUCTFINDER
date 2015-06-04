@@ -253,9 +253,13 @@ class RedproductfinderModelFindproducts extends RModel
 		$query->select("a.product_id")
 			->from($db->qn("#__redproductfinder_associations") . " AS a")
 			->join("LEFT", $db->qn("#__redproductfinder_association_tag") . " AS at ON a.id = at.association_id")
+			->join("LEFT", $db->qn("#__redproductfinder_types") . " AS tp ON tp.id = at.type_id")
+			->join("LEFT", $db->qn("#__redproductfinder_tags") . " AS tg ON tg.id = at.tag_id")
+			->join("INNER", $db->qn("#__redproductfinder_tag_type") . " AS tt ON tt.tag_id = tg.id and tt.type_id = tp.id")
 			->join("LEFT", $db->qn("#__redshop_product") . " AS p ON a.product_id = p.product_id")
 			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
-			->where("a.published=1");
+			->where("a.published=1")
+			->group($db->qn("a.product_id"));
 
 		// Condition min max
 		$filter = $pk["filterprice"];

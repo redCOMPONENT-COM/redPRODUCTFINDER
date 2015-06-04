@@ -10,6 +10,7 @@ defined('_JEXEC') or die;
 $param = JComponentHelper::getParams('com_redproductfinder');
 $template_id = $param->get('prod_template');
 $input = JFactory::getApplication()->input;
+$redform = $input->post->get('redform', array(), "filter");
 $isredshop = JComponentHelper::isEnabled('com_redshop');
 $app = JFactory::getApplication();
 
@@ -405,9 +406,12 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 	$cat_name = null;
 
-	if ($catname_array = $db->loadObjectList())
+	if ($catid)
 	{
-		$cat_name = $catname_array[0]->category_name;
+		if ($catname_array = $db->loadObjectList())
+		{
+			$cat_name = $catname_array[0]->category_name;
+		}
 	}
 
 	// Order By
@@ -416,7 +420,6 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$orderby_form .= $lists['order_select'];
 	$orderby_form .= "<input type='hidden' name='view' value='findproducts'>
 	<input type='hidden' name='limitstart' value='$start'>
-	<input type='hidden' name='redform[cid]' value='$catid'>
 	<input type='hidden' name='jsondata' value='" . $this->json . "'></form>";
 
 	if (strstr($template_desc, '{order_by}'))
@@ -450,7 +453,6 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		{
 			$limitBox = "<form action='index.php?option=com_redproductfinder&view=findproducts' method='post'>
 				<input type='hidden' name='view' value='findproducts'>
-				<input type='hidden' name='redform[cid]' value='$catid'>
 				<input type='hidden' name='jsondata' value='" . $this->json . "'>"
 				. $pagination->getLimitBox() . "</form>";
 		}
