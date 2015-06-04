@@ -414,6 +414,36 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		}
 	}
 
+	$db    = JFactory::getDbo();
+	$query = 'SELECT category_name, category_id'
+	. ' FROM #__redshop_category AS c '
+	. ' INNER JOIN #__redshop_category_xref AS cx ON cx.category_parent_id = c.category_id'
+	. ' WHERE cx.category_child_id = ' . $catid;
+	$db->setQuery($query);
+
+	$cat_parent_name = null;
+
+	if ($catid)
+	{
+		if ($catparentname_array = $db->loadObjectList())
+		{
+			$cat_parent_name = $catparentname_array[0]->category_name;
+			$cat_parent_id = $catparentname_array[0]->category_id;
+		}
+	}
+
+	// Breadcrumbs
+	$forside = $objhelper->getItemid("", 0);
+	$parentItemid = $objhelper->getItemid("", $cat_parent_id);
+	$breadcrumb = "<div id='breadcrumbs'><div class='module'><ul class='breadcrumb'>";
+	$breadcrumb .= "<li class='active'><span class='divider icon-map-marker'></span></li>";
+	$breadcrumb .= "<li><a class='pathway' href='/product_test/index.php?option=com_content&amp;view=featured&amp;Itemid=101'>Forside</a>";
+	$breadcrumb .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
+	$breadcrumb .= "<li><a class='pathway' href='/product_test/index.php?option=com_redshop&amp;view=category&amp;layout=detail&amp;cid=" . $cat_parent_id . "&amp;Itemid=" . $parentItemid . "'>" . $cat_parent_name . "</a>";
+	$breadcrumb .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
+	$breadcrumb .= "<li class='active'><span>" . $cat_name . "</span></li>";
+	$breadcrumb .= "</ul></div></div>";
+
 	// Order By
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='index.php?option=com_redproductfinder&view=findproducts' method='post' >";
@@ -464,6 +494,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_desc = str_replace("{product_loop_start}", "", $template_desc);
 	$template_desc = str_replace("{product_loop_end}", "", $template_desc);
 	$template_desc = str_replace("{category_main_name}", $cat_name, $template_desc);
+	$template_desc = str_replace("{breadcrumbs}", $breadcrumb, $template_desc);
 	$template_desc = str_replace("{category_main_description}", '', $template_desc);
 	$template_desc = str_replace($template_product, $product_tmpl, $template_desc);
 	$template_desc = str_replace("{with_vat}", "", $template_desc);
