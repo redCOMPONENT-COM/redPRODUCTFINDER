@@ -73,7 +73,7 @@ foreach ( $pk as $k => $value )
 	<input type="submit" name="submit" value="submit" />
 	<input type="hidden" name="task" value="findproducts.find" />
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
-	<input type="hidden" name="view" value="findproducts" />
+	<input type="hidden" name="view" value="<?php echo $view; ?>" />
 	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
 	<input type="hidden" name="redform[cid]" value="<?php if ($cid) echo $cid; else echo $catid;?>" />
 	<input type="hidden" name="redform[manufacturer_id]" value="<?php if ($manufacturer_id) echo $manufacturer_id; else echo $manufacturerid;?>" />
@@ -170,7 +170,7 @@ foreach ( $pk as $k => $value )
 				$(this).tabs();
 			});
 		});
-		var ajaxpos = $(this).find('#main');
+		var ajaxpos = $(this).find('#productlist');
 		$("#redproductfinder-form").submit(function(ev) {
 		    var frm = $("#redproductfinder-form");
 		    $.ajax({
