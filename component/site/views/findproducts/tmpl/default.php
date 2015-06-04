@@ -13,6 +13,11 @@ $input = JFactory::getApplication()->input;
 $redform = $input->post->get('redform', array(), "filter");
 $isredshop = JComponentHelper::isEnabled('com_redshop');
 $app = JFactory::getApplication();
+$menu = $app->getMenu();
+$menuname = $menu->getItems();
+$home = $menuname[0];
+$id_home = $home->id;
+$title_home = $home->title;
 
 if (!$isredshop)
 {
@@ -437,7 +442,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$parentItemid = $objhelper->getItemid("", $cat_parent_id);
 	$breadcrumb = "<div id='breadcrumbs'><div class='module'><ul class='breadcrumb'>";
 	$breadcrumb .= "<li class='active'><span class='divider icon-map-marker'></span></li>";
-	$breadcrumb .= "<li><a class='pathway' href='/product_test/index.php?option=com_content&amp;view=featured&amp;Itemid=101'>Forside</a>";
+	$breadcrumb .= "<li><a class='pathway' href='/product_test/index.php?option=com_content&amp;view=featured&amp;Itemid=" . $id_home . "'>" . $title_home . "</a>";
 	$breadcrumb .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
 	$breadcrumb .= "<li><a class='pathway' href='/product_test/index.php?option=com_redshop&amp;view=category&amp;layout=detail&amp;cid=" . $cat_parent_id . "&amp;Itemid=" . $parentItemid . "'>" . $cat_parent_name . "</a>";
 	$breadcrumb .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
