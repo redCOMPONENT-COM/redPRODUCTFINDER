@@ -18,6 +18,7 @@ $menuname = $menu->getItems();
 $home = $menuname[0];
 $id_home = $home->id;
 $title_home = $home->title;
+$link_home = $home->link;
 
 if (!$isredshop)
 {
@@ -434,18 +435,23 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		{
 			$cat_parent_name = $catparentname_array[0]->category_name;
 			$cat_parent_id = $catparentname_array[0]->category_id;
+			$parentItemid = $objhelper->getItemid("", $cat_parent_id);
+			$cat_bread = "<li><a class='pathway' href='" . JURI::root() . "index.php?option=com_redshop&amp;view=category&amp;layout=detail&amp;cid=" . $cat_parent_id . "&amp;Itemid=" . $parentItemid . "'>" . $cat_parent_name . "</a>";
+			$cat_bread .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
 		}
 	}
 
 	// Breadcrumbs
-	$forside = $objhelper->getItemid("", 0);
-	$parentItemid = $objhelper->getItemid("", $cat_parent_id);
 	$breadcrumb = "<div id='breadcrumbs'><div class='module'><ul class='breadcrumb'>";
 	$breadcrumb .= "<li class='active'><span class='divider icon-map-marker'></span></li>";
-	$breadcrumb .= "<li><a class='pathway' href='/product_test/index.php?option=com_content&amp;view=featured&amp;Itemid=" . $id_home . "'>" . $title_home . "</a>";
+	$breadcrumb .= "<li><a class='pathway' href='" . JURI::root() . $link_home . "&amp;Itemid=" . $id_home . "'>" . $title_home . "</a>";
 	$breadcrumb .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
-	$breadcrumb .= "<li><a class='pathway' href='/product_test/index.php?option=com_redshop&amp;view=category&amp;layout=detail&amp;cid=" . $cat_parent_id . "&amp;Itemid=" . $parentItemid . "'>" . $cat_parent_name . "</a>";
-	$breadcrumb .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
+
+	if ($parentItemid)
+	{
+		$breadcrumb .= $cat_bread;
+	}
+
 	$breadcrumb .= "<li class='active'><span>" . $cat_name . "</span></li>";
 	$breadcrumb .= "</ul></div></div>";
 
