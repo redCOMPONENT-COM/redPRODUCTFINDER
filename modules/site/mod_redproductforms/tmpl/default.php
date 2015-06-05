@@ -44,6 +44,7 @@ foreach ( $pk as $k => $value )
 	<div class="form-horizontal">
 		<div class="row-fluid">
 			<div class="span9">
+			<?php if ($search_by == 0) { ?>
 				<div class="row-fluid form-horizontal-desktop">
 					<?php foreach($lists as $k => $type) :?>
 						<div id='typename-<?php echo $type["typeid"];?>'>
@@ -63,6 +64,27 @@ foreach ( $pk as $k => $value )
 						<input type="hidden" name="redform[<?php echo $type["typeid"]?>][typeid]" value="<?php echo $type["typeid"]; ?>">
 					<?php endforeach;?>
 				</div>
+			<?php } else { ?>
+				<div class="row-fluid form-horizontal-desktop">
+					<?php foreach($attributes as $k_a => $attribute) :?>
+						<div id='typename-<?php echo $attribute->attribute_id;?>'>
+							<label><?php echo $attribute->attribute_name;?></label>
+							<ul class='taglist'>
+								<?php foreach($attribute_properties as $k_p => $property) :?>
+									<?php
+									$attname = $model->getAttributeName($property->attribute_id);
+									if ($attname[0] == $attribute->attribute_name) { ?>
+										<li>
+											<span class='taginput' data-aliases='<?php echo $property_name->property_name;?>'><input type="checkbox" name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
+											<span class='tagname'><?php echo $property->property_name; ?></span>
+										</li>
+									<?php } ?>
+								<?php endforeach;?>
+							</ul>
+						</div>
+					<?php endforeach;?>
+				</div>
+			<?php } ?>
 			</div>
 		</div>
 		<div  class="row-fluid">
@@ -170,7 +192,7 @@ foreach ( $pk as $k => $value )
 				$(this).tabs();
 			});
 		});
-		var ajaxpos = $(this).find('#productlist');
+		var ajaxpos = $(this).find('#main');
 		$("#redproductfinder-form").submit(function(ev) {
 		    var frm = $("#redproductfinder-form");
 		    $.ajax({

@@ -29,6 +29,10 @@
                type="text"
                label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
                description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+             <field name="search_by" type="radio" default="0" label="COM_REDPRODUCTFINDER_SEARCH_BY" description="COM_REDPRODUCTFINDER_SEARCH_BY_TIP">
+				<option value="0">COM_REDPRODUCTFINDER_TAG_TYPE</option>
+		    	<option value="1">COM_REDPRODUCTFINDER_ATTRIBUTE</option>
+			</field>
 		  	</fieldset>
 
 		</fields>

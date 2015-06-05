@@ -11,11 +11,15 @@ defined('_JEXEC') or die;
 JLoader::import('helper', JPATH_SITE . '/modules/mod_redproductforms');
 
 $lists = ModRedproductForms::getList($params);
+$model = new RedproductfinderModelForms;
+$attributes = $model->getAttribute();
+$attribute_properties = $model->getAttributeProperty();
 $template_id = $params->get("template_id");
 $view = JFactory::getApplication()->input->get("view");
 $formid = $params->get("form_id");
 $module_class_sfx = $params->get("moduleclass_sfx");
 $app = JFactory::getApplication();
+$search_by = $params->get('search_by');
 
 $cid = 0;
 $manufacturer_id = 0;
