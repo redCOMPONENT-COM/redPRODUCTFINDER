@@ -79,7 +79,7 @@ foreach ( $pk as $k => $value )
 											<span class='taginput' data-aliases='<?php echo $attribute->attribute_name;?>'>
 											<input type="checkbox" <?php foreach ($properties as $ppt) {
 											if ($ppt == $property->property_name) echo 'checked="checked"'; else echo ''; } ?>
-											 name="redform[subproperties][]" value="<?php echo $property->property_name; ?>"></span>
+											 name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
 											<ul class='taglist'>
 											<?php foreach($attribute_subproperties as $k_sp => $subproperty) :?>
