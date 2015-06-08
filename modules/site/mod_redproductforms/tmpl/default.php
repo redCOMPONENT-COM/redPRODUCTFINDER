@@ -23,6 +23,7 @@ else
 $catid = $pk['cid'];
 $manufacturerid = $pk['manufacturer_id'];
 $filter = $pk['filterprice'];
+$properties = $pk['properties'];
 $min = $filter['min'];
 $max = $filter['max'];
 
@@ -75,8 +76,24 @@ foreach ( $pk as $k => $value )
 									$attname = $model->getAttributeName($property->attribute_id);
 									if ($attname[0] == $attribute->attribute_name) { ?>
 										<li>
-											<span class='taginput' data-aliases='<?php echo $property_name->property_name;?>'><input type="checkbox" name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
+											<span class='taginput' data-aliases='<?php echo $attribute->attribute_name;?>'>
+											<input type="checkbox" <?php foreach ($properties as $ppt) {
+											if ($ppt == $property->property_name) echo 'checked="checked"'; else echo ''; } ?>
+											 name="redform[subproperties][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
+											<ul class='taglist'>
+											<?php foreach($attribute_subproperties as $k_sp => $subproperty) :?>
+												<?php
+													$proname = $model->getPropertyName($subproperty->subattribute_id);
+													if ($proname[0] == $property->property_name) { ?>
+												<li>
+													<span class='taginput'>
+													<input type="checkbox" name="redform[properties][]" value="<?php echo $subproperty->subattribute_color_name; ?>"></span>
+													<span class='tagname'><?php echo $subproperty->subattribute_color_name; ?></span>
+												</li>
+												<?php } ?>
+											<?php endforeach;?>
+											</ul>
 										</li>
 									<?php } ?>
 								<?php endforeach;?>

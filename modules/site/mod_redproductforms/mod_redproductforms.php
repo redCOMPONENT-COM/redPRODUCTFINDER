@@ -14,6 +14,7 @@ $lists = ModRedproductForms::getList($params);
 $model = new RedproductfinderModelForms;
 $attributes = $model->getAttribute();
 $attribute_properties = $model->getAttributeProperty();
+$attribute_subproperties = $model->getAttributeSubProperty();
 $template_id = $params->get("template_id");
 $view = JFactory::getApplication()->input->get("view");
 $formid = $params->get("form_id");

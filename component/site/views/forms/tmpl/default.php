@@ -14,6 +14,7 @@ $data = RedproductfinderForms::filterForm($this->item);
 $model = $this->getModel('forms');
 $attributes = $model->getAttribute();
 $attribute_properties = $model->getAttributeProperty();
+$attribute_subproperties = $model->getAttributeSubProperty();
 $param = JComponentHelper::getParams('com_redproductfinder');
 $search_by = $param->get('search_by');
 ?>
@@ -52,6 +53,19 @@ $search_by = $param->get('search_by');
 										<li>
 											<span class='taginput'><input type="checkbox" name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
+											<ul class='taglist'>
+											<?php foreach($attribute_subproperties as $k_sp => $subproperty) :?>
+												<?php
+													$proname = $model->getPropertyName($subproperty->subattribute_id);
+													if ($proname[0] == $property->property_name) { ?>
+												<li>
+													<span class='taginput'>
+													<input type="checkbox" name="redform[properties][]" value="<?php echo $subproperty->subattribute_color_name; ?>"></span>
+													<span class='tagname'><?php echo $subproperty->subattribute_color_name; ?></span>
+												</li>
+												<?php } ?>
+											<?php endforeach;?>
+											</ul>
 										</li>
 									<?php } ?>
 								<?php endforeach;?>
