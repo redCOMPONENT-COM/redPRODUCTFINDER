@@ -1,26 +1,30 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @package    RedPRODUCTFINDER.Backend
  *
- * redPRODUCTFINDER model
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-
-jimport( 'joomla.application.component.model' );
+defined('_JEXEC') or die;
 
 /**
- * redPRODUCTFINDER Model
+ * RedPRODUCTFINDER Association controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
-class RedproductfinderModelRedproductfinder extends JModel {
-	
+class RedproductfinderModelRedproductfinder extends RModelList
+{
 	/**
-	 * Load the totals
+	 * Get total information of redproductfinder
+	 *
+	 * @return void
 	 */
-	public function getTotals() {
+	public function getTotals()
+	{
 		$db = JFactory::getDBO();
 		$totals = array();
 		/* Type totals */
@@ -34,12 +38,7 @@ class RedproductfinderModelRedproductfinder extends JModel {
 		$q = "SELECT COUNT(id) AS total FROM #__redproductfinder_associations";
 		$db->setQuery($q);
 		$totals['associations']['total'] = $db->loadResult();
-		
+
 		return $totals;
 	}
-
-	
-	
-	
 }
-?>

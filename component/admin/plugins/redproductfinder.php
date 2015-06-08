@@ -178,42 +178,42 @@ function redProductfinderPage ($matches) {
 			}
 			elseif($type->type_select == "Productfinder datepicker")
 			{
-			
+
 				if($type->picker==0)
 				{
 					$sdate=JRequest::getVar('from_startdate');
 					$edate=JRequest::getVar('to_enddate');
-				 
-					$html .= "From : ".JHTML::_('calendar',$sdate , 'from_startdate', 'from_startdate',$format = '%d-%m-%Y',array('class'=>'inputbox', 'size'=>'15',  'maxlength'=>'19')); 
-					$html .= " To : ".JHTML::_('calendar',$edate , 'to_enddate', 'to_enddate',$format = '%d-%m-%Y',array('class'=>'inputbox', 'size'=>'15',  'maxlength'=>'19')); 
+
+					$html .= "From : ".JHTML::_('calendar',$sdate , 'from_startdate', 'from_startdate',$format = '%d-%m-%Y',array('class'=>'inputbox', 'size'=>'15',  'maxlength'=>'19'));
+					$html .= " To : ".JHTML::_('calendar',$edate , 'to_enddate', 'to_enddate',$format = '%d-%m-%Y',array('class'=>'inputbox', 'size'=>'15',  'maxlength'=>'19'));
 				}else{
 					$m = array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 					$currMonth = date("M");
 					$currYear = date("Y");
 					$fullyear = date("Y");
 					$finalmnth = array();
-					
+
 					$getmonth=JRequest::getVar('month');
-					
+
 					if($getmonth!='')
 					{
 						$finalmnth=explode(",",$getmonth);
 					}
 					$html .=  "<select multiple name='month[]' size='5'>\n";
-					for ($i=0; $i <= 1; $i++) 
+					for ($i=0; $i <= 1; $i++)
 					{
-						foreach ($m as $value) 
+						foreach ($m as $value)
 						{
 							$mval=$value."-".$fullyear;
-							
+
 							if(in_array(trim($mval),$finalmnth))
 							{
 								$sel="selected='selected'";
-							
+
 							}else{
 								$sel="";
 							}
-							
+
 							if(($value == $currMonth)&&($currYear == $fullyear))
 							{
 								$html .= "<option ".$sel." value='".$mval."' >$value $fullyear</option>";
@@ -223,9 +223,9 @@ function redProductfinderPage ($matches) {
 						}
 					$fullyear++;
 					};
-					$html .="</select>\n";				
+					$html .="</select>\n";
 				}
-			
+
 			}
 
 			$j++;

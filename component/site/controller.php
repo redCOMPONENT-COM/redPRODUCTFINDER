@@ -1,11 +1,9 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @package    RedPRODUCTFINDER.Frontend
  *
- * Front-end controller
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 // Check to ensure this file is included in Joomla!
@@ -14,22 +12,37 @@ defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.application.component.controller');
 
 /**
- * Front-end Controller
+ * Base Controller.
+ *
+ * @package     RedPRODUCTFINDER.Frontend
+ * @subpackage  Controller
+ * @since       2.0
  */
-class RedproductfinderController extends JController {
+class RedproductfinderController  extends JControllerLegacy
+{
 	/**
-	 * Method to show a weblinks view
+	 * This method will call display view
 	 *
-	 * @access	public
+	 * @param   boolean  $cachable   default variable is false
+	 * @param   array    $urlparams  default variableis array
+	 *
+	 * @return RedproductfinderController
 	 */
-	function display() {
-		
+	function display($cachable = false, $urlparams = array())
+	{
+		$cachable = true;
+		$input = JFactory::getApplication()->input;
+		$view = $input->get("view", null);
+
 		// Set a default view if none exists
-		if ( ! JRequest::getCmd( 'view' ) ) {
-			JRequest::setVar('view', 'redproductfinder' );
-			JRequest::setVar('layout', 'redproductfinder' );
+		if ($view == null)
+		{
+			$input->set('view', 'redproductfinder');
+			$input->set('layout', 'redproductfinder');
 		}
-		parent::display();
+
+		parent::display($cachable, $urlparams);
+
+		return $this;
 	}
 }
-?>

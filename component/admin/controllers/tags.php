@@ -1,68 +1,36 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @package    RedPRODUCTFINDER.Backend
  *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-
-jimport('joomla.application.component.controller');
+defined('_JEXEC') or die;
 
 /**
- * Tags Controller
+ * RedPRODUCTFINDER Filters controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    2.0
  */
-class RedproductfinderControllerTags extends JController {
+class RedproductfinderControllerTags extends RControllerAdmin
+{
 	/**
-	 * Method to display the view
+	 * Returns a Table object, always creating it
 	 *
-	 * @access	public
+	 * @param   type    $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A database object
+	 *
+	 * @since   1.6
 	 */
-	function __construct() {
-		parent::__construct();
-		
-		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('apply','edit');
-		$this->registerTask('add','edit');
-		$this->registerTask('save','tags');
-		$this->registerTask('cancel','tags');
-		$this->registerTask('remove','tags');
-		$this->registerTask('saveorder','tags');
-		$this->registerTask('publish','tags');
-		$this->registerTask('unpublish','tags');
-	}
-	
-	/**
-	 * Get the default layout
-	 */
-	function Tags() {
-		JRequest::setVar('view', 'tags');
-		JRequest::setVar('layout', 'tags');
-		
-		parent::display();
-	}
-	
-	/**
-	 * Get the edit layout
-	 */
-	function Edit() {
-		/* Create the view */
-		$view = $this->getView('tags', 'html');
-					
-		/* Add the main model */
-		$view->setModel( $this->getModel( 'tags', 'RedproductfinderModel' ), true );
-		
-		/* Add extra models */
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redproductfinder' . DS . 'models' );
-		$view->setModel( $this->getModel( 'types', 'RedproductfinderModel' ));
-		
-		/* Add the layout */
-		$view->setLayout('edittag');
-		
-		/* Display it all */
-		$view->display();
+	public function getModel($name = 'Tag', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }
-?>

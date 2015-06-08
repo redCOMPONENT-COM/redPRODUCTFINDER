@@ -1,27 +1,34 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @package    RedPRODUCTFINDER.Backend
  *
- * redPRODUCTFINDER default controller
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-jimport('joomla.application.component.controller');
+defined('_JEXEC') or die;
 
 /**
- * redPRODUCTFINDER Component Controller
+ * RedPRODUCTFINDER master controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    2.0
  */
-class RedproductfinderController extends JController
+
+class RedproductfinderController extends JControllerLegacy
 {
 	/**
-	 * Method to display the view
+	 * Method display sub controller
 	 *
-	 * @access	public
+	 * @param   string  $cachable   Default variable is false
+	 * @param   string  $urlparams  Default variable is false
+	 *
+	 * @return object
 	 */
-	function display() {
+	function display($cachable = false, $urlparams = false)
+	{
 		parent::display();
+
+		return $this;
 	}
 }
-?>

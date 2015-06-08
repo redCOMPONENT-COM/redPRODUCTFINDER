@@ -11,7 +11,7 @@
 defined('_JEXEC') or die('Restricted access');
 JHTML::_('behavior.tooltip');
 $component = JComponentHelper::getComponent( 'com_redproductfinder' );
-$config = new JParameter( $component->params );
+$config = new JRegistry( $component->params );
 $db = JFactory::getDBO();
 $form=$config->get('form');
 $query = "SELECT f.dependency,f.id FROM  #__redproductfinder_forms f
@@ -84,7 +84,7 @@ $formname = JRequest::getVar('formname');
 				{
 					$extras = "onChange='javascript:getDependent(".$j.");' id='finder_sel_".$type->id."'";
 					$getmyid=JRequest::getVar('myid');
-					
+
 					if($j!=0 && $getmyid==''){
 						$extras .= " disabled='disabled'";
 					}else{
@@ -157,25 +157,25 @@ $formname = JRequest::getVar('formname');
 				{
 					$sdate=JRequest::getVar('from_startdate');
 					$edate=JRequest::getVar('to_enddate');
-				 
-					echo "From : ".JHTML::_('calendar',$sdate , 'from_startdate', 'from_startdate',$format = '%d-%m-%Y',array('class'=>'inputbox', 'size'=>'15',  'maxlength'=>'19')); 
-					echo " To : ".JHTML::_('calendar',$edate , 'to_enddate', 'to_enddate',$format = '%d-%m-%Y',array('class'=>'inputbox', 'size'=>'15',  'maxlength'=>'19')); 
+
+					echo "From : ".JHTML::_('calendar',$sdate , 'from_startdate', 'from_startdate',$format = '%d-%m-%Y',array('class'=>'inputbox', 'size'=>'15',  'maxlength'=>'19'));
+					echo " To : ".JHTML::_('calendar',$edate , 'to_enddate', 'to_enddate',$format = '%d-%m-%Y',array('class'=>'inputbox', 'size'=>'15',  'maxlength'=>'19'));
 				}else{
 					$m = array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 					$currMonth = date("M");
 					$currYear = date("Y");
 					$fullyear = date("Y");
-					
+
 					$getmonth=JRequest::getVar('month');
 					if($getmonth!='')
 					{
 						$finalmnth=explode(",",$getmonth);
 					}
-						
+
 					echo "<select multiple name='month[]' size='5'>\n";
-					for ($i=0; $i <= 1; $i++) 
+					for ($i=0; $i <= 1; $i++)
 					{
-						foreach ($m as $value) 
+						foreach ($m as $value)
 						{
 							$mval=$value."-".$fullyear;
 							if(in_array(trim($mval),$finalmnth))
@@ -185,7 +185,7 @@ $formname = JRequest::getVar('formname');
 							}else{
 								$sel="";
 							}
-							
+
 							if(($value == $currMonth)&&($currYear == $fullyear))
 							{
 								echo "<option ".$sel." value='".$mval."' >$value $fullyear</option>";
@@ -195,9 +195,9 @@ $formname = JRequest::getVar('formname');
 						}
 					$fullyear++;
 					};
-					echo "</select>\n";				
+					echo "</select>\n";
 				}
-			
+
 			}
 			if($type->form_id==$form)
 			{
@@ -216,7 +216,7 @@ $formname = JRequest::getVar('formname');
 	<div class="button">
 	    <input type="submit" value="<?php echo JText::_('SEARCH'); ?>" />
 	</div>
-	
+
 	<input type="hidden" name="formname" value="<?php echo $formname;?>" />
 	<input type="hidden" name="option" value="com_redproductfinder" />
 	<input type="hidden" name="task" value="findproducts" />
