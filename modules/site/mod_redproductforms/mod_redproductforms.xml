@@ -14,24 +14,27 @@
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 	</files>
-	
+
 	<languages>
     	<language tag="en-GB">language/en-GB/en-GB.mod_redproductforms.ini</language>
-    	<language tag="da-DK">language/da-DK/da-DK.mod_redproductforms.ini</language>		
+    	<language tag="da-DK">language/da-DK/da-DK.mod_redproductforms.ini</language>
   	</languages>
-	
+
 	<config >
  	 	<fields name="params" >
-		   	<fieldset name="basic">		 	  
-			  <field name="form_id" type="sql" label="Select form" query="SELECT id, formname FROM #__redproductfinder_forms WHERE published = 1" key_field="id" value_field="formname"/>			 
-			  <field name="template_id" type="sql" label="Select Template" query="SELECT template_id as id, template_name as name FROM #__redshop_template WHERE published = 1" key_field="id" value_field="name"/>			 
+		   	<fieldset name="basic">
+			  <field name="form_id" type="sql" label="Select form" query="SELECT id, formname FROM #__redproductfinder_forms WHERE published = 1" key_field="id" value_field="formname"/>
              <field
                name="moduleclass_sfx"
                type="text"
                label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
                description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+             <field name="search_by" type="radio" default="0" label="COM_REDPRODUCTFINDER_SEARCH_BY" description="COM_REDPRODUCTFINDER_SEARCH_BY_TIP">
+				<option value="0">COM_REDPRODUCTFINDER_TAG_TYPE</option>
+		    	<option value="1">COM_REDPRODUCTFINDER_ATTRIBUTE</option>
+			</field>
 		  	</fieldset>
-		  	
+
 		</fields>
     </config >
 </extension>

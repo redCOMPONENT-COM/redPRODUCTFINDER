@@ -37,4 +37,3 @@ class RedproductfinderViewForms extends RViewSite
 		parent::display($tpl);
 	}
 }
-?>
