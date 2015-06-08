@@ -60,7 +60,7 @@
 		<copy todir="${tmpdir}/${extension}">
 			<fileset dir="${project.basedir}/">
 				<include name="LICENSE.txt"/>
-				<include name="redproducfinder.xml"/>
+				<include name="redproductfinder.xml"/>
 				<include name="component/install.redproductfinder.php"/>
 			</fileset>
 		</copy>
