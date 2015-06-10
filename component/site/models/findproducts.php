@@ -51,6 +51,10 @@ class RedproductfinderModelFindproducts extends RModelList
 			$pk = json_decode($decode, true);
 		}
 
+		echo '<pre>';
+		print_r($pk);
+		echo '</pre>';
+
 		$this->setState('catid', $pk['cid']);
 
 		$this->setState('redform.data', $pk);
@@ -111,7 +115,12 @@ class RedproductfinderModelFindproducts extends RModelList
 		}
 
 		$attribute = $pk["properties"];
-		$properties = implode("','", $attribute);
+
+		if ($attribute != 0)
+		{
+			$properties = implode("','", $attribute);
+		}
+
 		$view = $this->getState("redform.view");
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -281,7 +290,12 @@ class RedproductfinderModelFindproducts extends RModelList
 		}
 
 		$attribute = $pk["properties"];
-		$properties = implode("','", $attribute);
+
+		if ($attribute != 0)
+		{
+			$properties = implode("','", $attribute);
+		}
+
 		$view = $this->getState("redform.view");
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
