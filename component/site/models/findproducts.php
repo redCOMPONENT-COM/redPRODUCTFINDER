@@ -51,10 +51,6 @@ class RedproductfinderModelFindproducts extends RModelList
 			$pk = json_decode($decode, true);
 		}
 
-		echo '<pre>';
-		print_r($pk);
-		echo '</pre>';
-
 		$this->setState('catid', $pk['cid']);
 
 		$this->setState('redform.data', $pk);
