@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * @subpackage  Model
  * @since       2.0
  */
-class RedproductfinderModelFindproducts extends RModel
+class RedproductfinderModelFindproducts extends RModelList
 {
 	protected $limitField = 'limit';
 
