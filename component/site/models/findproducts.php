@@ -80,11 +80,22 @@ class RedproductfinderModelFindproducts extends RModel
 
 		$this->setState('templateDesc', $templateDesc);
 
-		$value = $app->getUserStateFromRequest('global.list.limit', $this->paginationPrefix . 'limit', $app->getCfg('list_limit'), 'uint');
-		$limit = $value;
+		$limit = $input->get("limit", null);
+		
+		if ($limit == null)
+		{
+			$cat = RedshopHelperCategory::getCategoryById($pk['cid']);
+			$limit = $cat->products_per_page;
+		}
+		else
+		{
+			$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+			$limit = $value;
+		}
+		
 		$this->setState('list.limit', $limit);
 
-		$value = $app->getUserStateFromRequest($this->context . '.limitstart', $this->paginationPrefix . 'limitstart', 0);
+		$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
 		$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
 		$this->setState('list.start', $limitstart);
 	}
