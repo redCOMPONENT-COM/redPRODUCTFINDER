@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `#__redproductfinder_forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `formname` varchar(100) NOT NULL DEFAULT 'NoName',
   `published` int(1) NOT NULL DEFAULT '0',
-  `checked_out` int(11) DEFAULT NULL,
+  `checked_out` int(11) DEFAULT 0,
   `checked_out_time` datetime DEFAULT '0000-00-00 00:00:00',
   `showname` int(1) NOT NULL DEFAULT '0',
   `classname` varchar(45) DEFAULT NULL,

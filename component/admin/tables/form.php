@@ -39,7 +39,15 @@ class RedproductfinderTableForm extends JTable
 
 	/** @var string Whether or not the entry is dependency */
 	var $dependency = 0;
-
+	
+	var $checked_out = null;
+	
+	var $checked_out_time = null;
+	
+	var $formexpires = 0;
+	
+	var $created = null;
+	
 	/**
 	* @param database A database connector object
 	*/
