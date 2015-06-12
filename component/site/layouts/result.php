@@ -17,6 +17,12 @@ $redform = $input->post->get('redform', array(), "filter");
 $jsondata = json_encode($redform);
 $isredshop = JComponentHelper::isEnabled('com_redshop');
 $app = JFactory::getApplication();
+$menu = $app->getMenu();
+$menuname = $menu->getItems();
+$home = $menuname[0];
+$id_home = $home->id;
+$title_home = $home->title;
+$link_home = $home->link;
 
 if (!$isredshop)
 {
@@ -399,14 +405,15 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 	$product_tmpl = $product_data;
 
-	$db    = JFactory::getDbo();
-	$query = 'SELECT category_name'
-	. ' FROM #__redshop_category  '
-	. 'WHERE category_id=' . $catid;
-	$db->setQuery($query);
-
 	$cat_name = null;
 
+
+	$db    = JFactory::getDbo();
+	$query = 'SELECT category_name'
+			. ' FROM #__redshop_category  '
+			. 'WHERE category_id=' . $catid;
+	$db->setQuery($query);
+	
 	if ($catid)
 	{
 		if ($catname_array = $db->loadObjectList())
@@ -415,6 +422,35 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		}
 	}
 
+	$cat_parent_name = null;
+
+	if ($catid)
+	{
+		if ($catparentname_array = $db->loadObjectList())
+		{
+			$cat_parent_name = $catparentname_array[0]->category_name;
+			$cat_parent_id = $catparentname_array[0]->category_id;
+			$parentItemid = $objhelper->getItemid("", $cat_parent_id);
+			$cat_bread = "<li><a class='pathway' href='" . JURI::root() . "index.php?option=com_redshop&amp;view=category&amp;layout=detail&amp;cid=" . $cat_parent_id . "&amp;Itemid=" . $parentItemid . "'>" . $cat_parent_name . "</a>";
+			$cat_bread .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
+		}
+	}
+	
+
+	// Breadcrumbs
+	$breadcrumb = "<div id='breadcrumbs'><div class='module'><ul class='breadcrumb'>";
+	$breadcrumb .= "<li class='active'><span class='divider icon-map-marker'></span></li>";
+	$breadcrumb .= "<li><a class='pathway' href='" . JURI::root() . $link_home . "&amp;Itemid=" . $id_home . "'>" . $title_home . "</a>";
+	$breadcrumb .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
+	
+	if ($parentItemid)
+	{
+		$breadcrumb .= $cat_bread;
+	}
+	
+	$breadcrumb .= "<li class='active'><span>" . $cat_name . "</span></li>";
+	$breadcrumb .= "</ul></div></div>";
+	
 	// Order By
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='index.php?option=com_redproductfinder&view=findproducts' method='post' >";
@@ -460,6 +496,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_desc = str_replace("{product_loop_start}", "", $template_desc);
 	$template_desc = str_replace("{product_loop_end}", "", $template_desc);
 	$template_desc = str_replace("{category_main_name}", $cat_name, $template_desc);
+	$template_desc = str_replace("{breadcrumbs}", $breadcrumb, $template_desc);
 	$template_desc = str_replace("{category_main_description}", '', $template_desc);
 	$template_desc = str_replace($template_product, $product_tmpl, $template_desc);
 	$template_desc = str_replace("{with_vat}", "", $template_desc);
@@ -472,7 +509,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_desc = str_replace("{redproductfinderfilter:rp_myfilter}", "", $template_desc);
 
 	/** todo: trigger plugin for content redshop**/
-	// $template_desc = $redTemplate->parseredSHOPplugin($template_desc);
+	$template_desc = $redTemplate->parseredSHOPplugin($template_desc);
 
 	$template_desc = $texts->replace_texts($template_desc);
 }
