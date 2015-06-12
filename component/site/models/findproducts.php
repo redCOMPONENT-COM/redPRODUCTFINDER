@@ -377,6 +377,15 @@ class RedproductfinderModelFindproducts extends RModel
 			$keyTagString = implode(",", $keyTags);
 			$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
 		}
+		else
+		{
+			$query = $db->getQuery(true);
+				$query->select("DISTINCT p.product_id")
+				->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
+				->where("p.published=1")
+				->group($db->qn("p.product_id"));
+		}
 
 		if ($cid)
 		{
