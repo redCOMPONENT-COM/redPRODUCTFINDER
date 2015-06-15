@@ -452,8 +452,9 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$breadcrumb .= "</ul></div></div>";
 
 	// Order By
+	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $catid . "&limitstart=" . $start);
 	$order_by     = "";
-	$orderby_form = "<form name='orderby_form' action='index.php?option=com_redproductfinder&view=findproducts' method='post' >";
+	$orderby_form = "<form name='orderby_form' action='" . $linkOrderBy . "' method='post' >";
 	$orderby_form .= $lists['order_select'];
 	$orderby_form .= "<input type='hidden' name='view' value='findproducts'>
 	<input type='hidden' name='limitstart' value='$start'>
