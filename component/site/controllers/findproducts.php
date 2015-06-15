@@ -52,6 +52,7 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 		}
 
 		$pagination = $model->getPagination();
+		$orderby = $model->getState('order_by');
 
 		if (count($products) != 0)
 		{
@@ -61,7 +62,8 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 					"products" => $products,
 					"post"	   => $post,
 					"template_id" => $post["template_id"],
-					"getPagination" => $pagination
+					"getPagination" => $pagination,
+					"orderby" => $orderby
 			)
 			);
 

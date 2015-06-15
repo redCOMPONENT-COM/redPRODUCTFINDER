@@ -457,7 +457,8 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 	// Order By
 	$limitstart = $model->getState("list.start");
-	
+	$orderby = $model->getState("order_by");
+
 	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $catid . "&limitstart=" . $limitstart);
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='" . $linkOrderBy . "' method='post' >";
@@ -474,8 +475,9 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	if (strstr($template_desc, "{pagination}"))
 	{
 		$pagination = $model->getPagination();
-		$link = JURI::root() . substr(JRoute::_('index.php?option=com_redproductfinder&cid=' . $catid . '&view=findproducts', false), strlen(JURI::base(true)) + 1);
-		
+		$link = JURI::root()
+		. substr(JRoute::_('index.php?option=com_redproductfinder&cid=' . $catid . '&view=findproducts', false), strlen(JURI::base(true)) + 1);
+
 		$pagination->setAdditionalUrlParam('', $link);
 		$template_desc = str_replace("{pagination}", $pagination->getPagesLinks(), $template_desc);
 	}
@@ -500,6 +502,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		{
 			$limitBox = "<form action='index.php?option=com_redproductfinder&view=findproducts' method='post'>
 				<input type='hidden' name='view' value='findproducts'>
+				<input type='hidden' name='order_by' value='$orderby'>
 				<input type='hidden' name='jsondata' value='" . $this->json . "'>"
 				. $pagination->getLimitBox() . "</form>";
 		}
