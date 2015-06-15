@@ -464,7 +464,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	if (strstr($template_desc, "{pagination}"))
 	{
 		$pagination  = $displayData["getPagination"];
-		$link = JURI::root() . substr(JRoute::_('index.php?option=com_redproductfinder&cid=' . $catid . '&view=findproducts', false), strlen(JURI::base(true)) + 1);
+		$link = JURI::root() . substr(JRoute::_('index.php?option=com_redproductfinder&cid=' . $catid . '&view=findproducts&order_by=' . $orderby, false), strlen(JURI::base(true)) + 1);
 		$pagination->setAdditionalUrlParam('', $link);
 		$template_desc = str_replace("{pagination}", $pagination-> getPagesLinks(), $template_desc);
 	}
