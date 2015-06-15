@@ -463,7 +463,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$orderby_form = "<form name='orderby_form' action='" . $linkOrderBy . "' method='post' >";
 	$orderby_form .= $lists['order_select'];
 	$orderby_form .= "<input type='hidden' name='view' value='findproducts'>
-	<input type='hidden' name='limitstart' value=' . $limitstart . '>
+	<input type='hidden' name='limitstart' value=" . $limitstart . ">
 	<input type='hidden' name='jsondata' value='" . $this->json . "'></form>";
 
 	if (strstr($template_desc, '{order_by}'))
