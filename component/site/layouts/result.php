@@ -413,7 +413,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 			. ' FROM #__redshop_category  '
 			. 'WHERE category_id=' . $catid;
 	$db->setQuery($query);
-	
+
 	if ($catid)
 	{
 		if ($catname_array = $db->loadObjectList())
@@ -435,22 +435,22 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 			$cat_bread .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
 		}
 	}
-	
+
 
 	// Breadcrumbs
 	$breadcrumb = "<div id='breadcrumbs'><div class='module'><ul class='breadcrumb'>";
 	$breadcrumb .= "<li class='active'><span class='divider icon-map-marker'></span></li>";
 	$breadcrumb .= "<li><a class='pathway' href='" . JURI::root() . $link_home . "&amp;Itemid=" . $id_home . "'>" . $title_home . "</a>";
 	$breadcrumb .= "<span class='divider'><i class='icon-caret-right'></i></span></li>";
-	
+
 	if ($parentItemid)
 	{
 		$breadcrumb .= $cat_bread;
 	}
-	
+
 	$breadcrumb .= "<li class='active'><span>" . $cat_name . "</span></li>";
 	$breadcrumb .= "</ul></div></div>";
-	
+
 	// Order By
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='index.php?option=com_redproductfinder&view=findproducts' method='post' >";
@@ -462,7 +462,10 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	if (strstr($template_desc, "{pagination}"))
 	{
 		$pagination  = $displayData["getPagination"];
-		$template_desc = str_replace("{pagination}", $pagination->getPagesLinks(), $template_desc);
+		$link = JURI::root()
+. substr(JRoute::_('index.php?option=com_redproductfinder&view=findproducts'), strlen(JURI::base(true)) + 1);
+		$pagination->setAdditionalUrlParam('', $link);
+		$template_desc = str_replace("{pagination}", $pagination-> getPagesLinks(), $template_desc);
 	}
 
 	$usePerPageLimit = false;

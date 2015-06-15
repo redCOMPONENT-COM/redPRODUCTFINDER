@@ -81,7 +81,7 @@ class RedproductfinderModelFindproducts extends RModelList
 		$this->setState('templateDesc', $templateDesc);
 
 		$limit = $input->get("limit", null);
-		
+
 		if ($limit == null)
 		{
 			$cat = RedshopHelperCategory::getCategoryById($pk['cid']);
@@ -92,7 +92,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
 			$limit = $value;
 		}
-		
+
 		$this->setState('list.limit', $limit);
 
 		$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
