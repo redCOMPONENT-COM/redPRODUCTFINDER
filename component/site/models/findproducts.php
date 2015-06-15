@@ -55,7 +55,7 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			$this->setState('catid', $pk['cid']);
 		}
-		else 
+		else
 		{
 			$cid = $input->get("cid", 0, "int");
 			$this->setState('catid', $cid);
@@ -95,7 +95,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			if ($pk['cid'] == null)
 			{
 				$cid = $input->get("cid", 0, "int");
-					
+
 				if ($cid !== 0)
 				{
 					$cat = RedshopHelperCategory::getCategoryById($cid);
@@ -103,14 +103,15 @@ class RedproductfinderModelFindproducts extends RModelList
 				}
 				else
 				{
-					$limit =  $app->getCfg('list_limit');
+					$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+					$limit = $value;
 				}
 			}
-			else 
+			else
 			{
 				$cat = RedshopHelperCategory::getCategoryById($pk['cid']);
 				$limit = $cat->products_per_page;
-			}	
+			}
 		}
 		else
 		{
@@ -123,7 +124,7 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			$limit = MAXCATEGORY;
 		}
-		
+
 		$this->setState('list.limit', $limit);
 
 		$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
@@ -252,12 +253,15 @@ class RedproductfinderModelFindproducts extends RModelList
 		}
 		else
 		{
-			$query = $db->getQuery(true);
-			$query->select("p.product_id")
-			->from($db->qn("#__redshop_product", "p"))
-			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
-			->where("p.published=1")
-			->group($db->qn("p.product_id"));
+			if (!$filter)
+			{
+				$query = $db->getQuery(true);
+				$query->select("p.product_id")
+				->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
+				->where("p.published=1")
+				->group($db->qn("p.product_id"));
+			}
 		}
 
 		if ($cid)

@@ -452,6 +452,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$breadcrumb .= "</ul></div></div>";
 
 	// Order By
+	$orderby = $displayData['orderby'];
 	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $catid . "&limitstart=" . $start);
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='" . $linkOrderBy . "' method='post' >";
@@ -488,6 +489,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		{
 			$limitBox = "<form action='index.php?option=com_redproductfinder&view=findproducts' method='post'>
 				<input type='hidden' name='view' value='findproducts'>
+				<input type='hidden' name='order_by' value='$orderby'>
 				<input type='hidden' name='jsondata' value='$jsondata'>"
 				. $pagination->getLimitBox() . "</form>";
 		}
