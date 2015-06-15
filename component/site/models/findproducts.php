@@ -199,7 +199,10 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		if ($filter)
 		{
-			$query->where($db->qn("p.product_price") . " BETWEEN $min AND $max");
+			$priceNormal = $db->qn("p.product_price") . " BETWEEN $min AND $max";
+			$priceDiscount = $db->qn("p.discount_price") . " BETWEEN $min AND $max";
+			$saleTime = $db->qn('p.discount_stratdate') . ' AND ' . $db->qn('p.discount_enddate');
+			$query->where('IF(' . $query->qn('product_on_sale') . ' = 1 && UNIX_TIMESTAMP() BETWEEN ' . $saleTime . ', ' . $priceDiscount . ', ' . $priceNormal . ')');
 		}
 
 		// Filter by cid
