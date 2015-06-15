@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * @subpackage  Model
  * @since       2.0
  */
-class RedproductfinderModelFindproducts extends RModel
+class RedproductfinderModelFindproducts extends RModelList
 {
 	protected $limitField = 'limit';
 
@@ -81,7 +81,7 @@ class RedproductfinderModelFindproducts extends RModel
 		$this->setState('templateDesc', $templateDesc);
 
 		$limit = $input->get("limit", null);
-		
+
 		if ($limit == null)
 		{
 			$cat = RedshopHelperCategory::getCategoryById($pk['cid']);
@@ -92,7 +92,7 @@ class RedproductfinderModelFindproducts extends RModel
 			$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
 			$limit = $value;
 		}
-		
+
 		$this->setState('list.limit', $limit);
 
 		$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
@@ -122,7 +122,12 @@ class RedproductfinderModelFindproducts extends RModel
 		}
 
 		$attribute = $pk["properties"];
-		$properties = implode("','", $attribute);
+
+		if ($attribute != 0)
+		{
+			$properties = implode("','", $attribute);
+		}
+
 		$view = $this->getState("redform.view");
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -300,7 +305,12 @@ class RedproductfinderModelFindproducts extends RModel
 		}
 
 		$attribute = $pk["properties"];
-		$properties = implode("','", $attribute);
+
+		if ($attribute != 0)
+		{
+			$properties = implode("','", $attribute);
+		}
+
 		$view = $this->getState("redform.view");
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);

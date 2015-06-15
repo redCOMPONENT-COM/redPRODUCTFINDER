@@ -19,24 +19,28 @@ else
 	$json = $input->post->get('jsondata', "", "filter");
 	$pk = json_decode($json, true);
 }
+$count = count($pk);
 
-$catid = $pk['cid'];
-$manufacturerid = $pk['manufacturer_id'];
-$filter = $pk['filterprice'];
-$properties = $pk['properties'];
-$min = $filter['min'];
-$max = $filter['max'];
-
-foreach ( $pk as $k => $value )
+if ($count > 0)
 {
-	if (!isset($value["tags"]))
-	{
-		continue;
-	}
+	$catid = $pk['cid'];
+	$manufacturerid = $pk['manufacturer_id'];
+	$filter = $pk['filterprice'];
+	$properties = $pk['properties'];
+	$min = $filter['min'];
+	$max = $filter['max'];
 
-	foreach ( $value["tags"] as $k_t => $tag )
+	foreach ( $pk as $k => $value )
 	{
-		$keyTags[] = $tag;
+		if (!isset($value["tags"]))
+		{
+			continue;
+		}
+
+		foreach ( $value["tags"] as $k_t => $tag )
+		{
+			$keyTags[] = $tag;
+		}
 	}
 }
 ?>
@@ -77,8 +81,8 @@ foreach ( $pk as $k => $value )
 									if ($attname[0] == $attribute->attribute_name) { ?>
 										<li>
 											<span class='taginput' data-aliases='<?php echo $attribute->attribute_name;?>'>
-											<input type="checkbox" <?php foreach ($properties as $ppt) {
-											if ($ppt == $property->property_name) echo 'checked="checked"'; else echo ''; } ?>
+											<input type="checkbox" <?php if ($count > 0) { foreach ($properties as $ppt) {
+											if ($ppt == $property->property_name) echo 'checked="checked"'; else echo ''; } } ?>
 											 name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
 											<ul class='taglist'>
@@ -87,7 +91,7 @@ foreach ( $pk as $k => $value )
 													$proname = $model->getPropertyName($subproperty->subattribute_id);
 													if ($proname[0] == $property->property_name) { ?>
 												<li>
-													<span class='taginput'>
+													<span class='taginput' data-aliases='<?php echo $property->property_name;?>'>
 													<input type="checkbox" name="redform[properties][]" value="<?php echo $subproperty->subattribute_color_name; ?>"></span>
 													<span class='tagname'><?php echo $subproperty->subattribute_color_name; ?></span>
 												</li>
@@ -114,8 +118,8 @@ foreach ( $pk as $k => $value )
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
 	<input type="hidden" name="view" value="<?php echo $view; ?>" />
 	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
-	<input type="hidden" name="redform[cid]" value="<?php if ($cid) echo $cid; else echo $catid;?>" />
-	<input type="hidden" name="redform[manufacturer_id]" value="<?php if ($manufacturer_id) echo $manufacturer_id; else echo $manufacturerid;?>" />
+	<input type="hidden" name="redform[cid]" value="<?php if ($cid) echo $cid; elseif ($count > 0) echo $catid;?>" />
+	<input type="hidden" name="redform[manufacturer_id]" value="<?php if ($manufacturer_id) echo $manufacturer_id; elseif ($count > 0) echo $manufacturerid;?>" />
 
 </form>
 
@@ -146,7 +150,7 @@ foreach ( $pk as $k => $value )
 			range: true,
 			min: <?php echo $range['min'];?>,
 			max: <?php echo $range['max'];?>,
-			values: [ <?php if ($min) echo $min; else echo $range['max']/4;?>, <?php if ($min) echo $max; else echo $range['max']-($range['max']/4);?> ],
+			values: [ <?php if ($count > 0) echo $min; else echo $range['max']/4;?>, <?php if ($count > 0) echo $max; else echo $range['max']-($range['max']/4);?> ],
 			slide: function(event, ui){
 				$("[name='redform[filterprice][min]']").val(ui.values[ 0 ]);
 				$("[name='redform[filterprice][max]']").val(ui.values[ 1 ]);
