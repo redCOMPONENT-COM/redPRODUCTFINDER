@@ -118,6 +118,12 @@ class RedproductfinderModelFindproducts extends RModelList
 			$limit = $value;
 		}
 
+		// If limit = 0, set limit by configuration, from redshop, see redshop to get more detail
+		if (!$limit)
+		{
+			$limit = MAXCATEGORY;
+		}
+		
 		$this->setState('list.limit', $limit);
 
 		$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
