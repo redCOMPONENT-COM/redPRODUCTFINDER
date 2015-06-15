@@ -51,7 +51,15 @@ class RedproductfinderModelFindproducts extends RModelList
 			$pk = json_decode($decode, true);
 		}
 
-		$this->setState('catid', $pk['cid']);
+		if (isset($pk['cid']))
+		{
+			$this->setState('catid', $pk['cid']);
+		}
+		else 
+		{
+			$cid = $input->get("cid", 0, "int");
+			$this->setState('catid', $cid);
+		}
 
 		$this->setState('redform.data', $pk);
 
@@ -84,8 +92,25 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		if ($limit == null)
 		{
-			$cat = RedshopHelperCategory::getCategoryById($pk['cid']);
-			$limit = $cat->products_per_page;
+			if ($pk['cid'] == null)
+			{
+				$cid = $input->get("cid", 0, "int");
+					
+				if ($cid !== 0)
+				{
+					$cat = RedshopHelperCategory::getCategoryById($cid);
+					$limit = $cat->products_per_page;
+				}
+				else
+				{
+					$limit =  $app->getCfg('list_limit');
+				}
+			}
+			else 
+			{
+				$cat = RedshopHelperCategory::getCategoryById($pk['cid']);
+				$limit = $cat->products_per_page;
+			}	
 		}
 		else
 		{
