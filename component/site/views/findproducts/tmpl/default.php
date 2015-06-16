@@ -70,7 +70,10 @@ $userfieldArr = '';
 $count_no_user_field = '';
 $product_data = '';
 $extraFieldName = '';
-$Itemid = JRequest::getInt('Itemid');
+
+// Check Itemid on pagination
+$Itemid = $input->get('Itemid', 0, "int");
+
 $fieldArray = $extraField->getSectionFieldList(17, 0, 0);
 
 $template_array = $redTemplate->getTemplate("redproductfinder", $template_id);
@@ -460,12 +463,15 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$orderby = $model->getState("order_by");
 
 	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $catid . "&limitstart=" . $limitstart);
+	
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='" . $linkOrderBy . "' method='post' >";
 	$orderby_form .= $lists['order_select'];
 	$orderby_form .= "<input type='hidden' name='view' value='findproducts'>
-	<input type='hidden' name='limitstart' value=" . $limitstart . ">
-	<input type='hidden' name='jsondata' value='" . $this->json . "'></form>";
+						<input type='hidden' name='limitstart' value='" . $start . "'>
+						<input type='hidden' name='jsondata' value='" . $jsondata . "'>
+						<input type='hidden' name='Itemid' value='" . $Itemid . "'>";
+	$orderby_form .= "</form>";
 
 	if (strstr($template_desc, '{order_by}'))
 	{
@@ -475,11 +481,8 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	if (strstr($template_desc, "{pagination}"))
 	{
 		$pagination = $model->getPagination();
-		$link = JURI::root()
-		. substr(JRoute::_('index.php?option=com_redproductfinder&cid=' . $catid . '&view=findproducts&order_by=' . $orderby, false), strlen(JURI::base(true)) + 1);
 
-		$pagination->setAdditionalUrlParam('', $link);
-		$template_desc = str_replace("{pagination}", $pagination->getPagesLinks(), $template_desc);
+		$template_desc = str_replace("{pagination}", $pagination->getListFooter(), $template_desc);
 	}
 
 	$usePerPageLimit = false;
