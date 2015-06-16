@@ -120,7 +120,7 @@ if ($count > 0)
 	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
 	<input type="hidden" name="redform[cid]" value="<?php if ($cid) echo $cid; elseif ($count > 0) echo $catid;?>" />
 	<input type="hidden" name="redform[manufacturer_id]" value="<?php if ($manufacturer_id) echo $manufacturer_id; elseif ($count > 0) echo $manufacturerid;?>" />
-
+	<input type="hidden" name="Itemid" value="<?php echo $Itemid; ?>" >
 </form>
 
 
