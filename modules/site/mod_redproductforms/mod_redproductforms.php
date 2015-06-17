@@ -17,23 +17,39 @@ $attribute_properties = $model->getAttributeProperty();
 $attribute_subproperties = $model->getAttributeSubProperty();
 $template_id = $params->get("template_id");
 $view = JFactory::getApplication()->input->get("view");
+$option = JFactory::getApplication()->input->get("option");
 $formid = $params->get("form_id");
 $module_class_sfx = $params->get("moduleclass_sfx");
 $app = JFactory::getApplication();
 $search_by = $params->get('search_by');
-$cid = 0;
-$manufacturer_id = 0;
 $Itemid = $app->input->get("Itemid", 0);
 
-switch ($view)
+$cid = 0;
+$manufacturer_id = 0;
+
+switch($option)
 {
-	case "category":
-			$cid = $app->input->get("cid", 0, "INT");
-			$manufacturer_id = $app->input->get("manufacturer_id", 0, "INT");
+	case "com_redproductfinder":
+			switch ($view)
+			{
+				case "findproducts":
+					$cid = $app->input->get("cid", 0, "INT");
+					$manufacturer_id = $app->input->get("manufacturer_id", 0, "INT");
+				break;
+			}
 		break;
-	case "manufacturers":
-			$params = $app->getParams('com_redshop');
-			$manufacturer_id = $params->get("manufacturerid");
+	case "com_redshop":
+			switch ($view)
+			{
+				case "category":
+					$cid = $app->input->get("cid", 0, "INT");
+					$manufacturer_id = $app->input->get("manufacturer_id", 0, "INT");
+					break;
+				case "manufacturers":
+					$params = $app->getParams('com_redshop');
+					$manufacturer_id = $params->get("manufacturerid");
+					break;
+			}
 		break;
 }
 
