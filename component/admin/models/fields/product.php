@@ -17,7 +17,7 @@ jimport('joomla.form.formfield');
  * @since  1.6
  */
 
-class JFormFieldFilter extends JFormField
+class JFormFieldProduct extends JFormField
 {
 	/**
 	 * A flexible category list that respects access controls
@@ -25,31 +25,46 @@ class JFormFieldFilter extends JFormField
 	 * @var        string
 	 * @since   1.6
 	 */
-	public $type = 'filter';
+	public $type = 'product';
 
 	public function getInput()
 	{
 		$input = JFactory::getApplication()->input;
 		$id = $input->get("id", 0, "INT");
-
+		$catid = $input->get("catid", 0, "INT");
 		$modelAssociations = JModelLegacy::getInstance("Associations", "RedproductfinderModel");
-		$modelFilter = JModelLegacy::getInstance("Filters", "RedproductfinderModel");
 
-		$types = $modelAssociations->getTypeTagList();
-		$getData = $modelFilter->getFilter($id);
-		$tag_id = "";
-
-		if (count($getData) > 0)
+		if ($id)
 		{
-			$tag_id = $getData["tag_id"];
+			$products = $modelAssociations->getProducts();
+		}
+		else
+		{
+			$products = $modelAssociations->getProductByCategory($catid);
 		}
 
-		$layout = new JLayoutFile('filter');
+
+		$layout = new JLayoutFile('product');
+		$selected = array();
+
+		// Get association ID
+		if ($id != 0)
+		{
+			$proSelected = $modelAssociations->getAssociationProduct($id);
+
+			if (count($proSelected) > 0)
+			{
+				foreach ($proSelected as $k => $pro)
+				{
+					$selected[] = $pro["product_id"];
+				}
+			}
+		}
 
 		$html = $layout->render(
 			array(
-				"types" => $types,
-				"tag_id" => $tag_id
+				"selected" => $selected,
+				"products" => $products
 			)
 		);
 

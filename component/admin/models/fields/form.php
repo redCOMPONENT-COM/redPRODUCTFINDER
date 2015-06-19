@@ -36,7 +36,7 @@ class JFormFieldForm extends JFormField
 
 		$types = $modelAssociations->getTypeTagList();
 
-		$layout = new JLayoutFile('form', JPATH_ADMINISTRATOR . '/components/com_redproductfinder/layouts');
+		$layout = new JLayoutFile('form');
 		$checked = array();
 
 		// Get association ID
