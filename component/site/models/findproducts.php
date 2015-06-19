@@ -441,11 +441,6 @@ class RedproductfinderModelFindproducts extends RModelList
 			$query->order($db->escape($order_by));
 		}
 		
-		echo $query->dump();
-		
-		var_dump($tables);
-		var_dump($pk);
-		
 		return $query;
 	}
 	
