@@ -372,19 +372,27 @@ class RedproductfinderModelFindproducts extends RModelList
 			}
 		}
 		
+		// Main query
+		$query = $db->getQuery(true);
+
+		$query->select("p.product_id");
+		$query->from("#__redshop_product as p");
+		$query->join("LEFT", "#__redshop_product_category_xref as cat ON p.product_id = cat.product_id");
+		
+		// If has subTable then begin query by subtable
 		if (count($tables) > 0)
 		{
 			// Create subtable
 			$subTable = " ( ";
-			
+				
 			// Begin merger
 			if (count($tables) > 1)
 			{
 				$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
 				$subTable .= " FROM  ";
-			
+					
 				$subTable .= $tables[0]["select"];
-			
+					
 				for($i = 1; $i < count($tables); $i++)
 				{
 					$subTable .= " INNER JOIN ";
@@ -399,63 +407,44 @@ class RedproductfinderModelFindproducts extends RModelList
 					
 				$subTable .= $tables[0]["select"];
 			}
-			
+				
 			$subTable .= " ) ";
 			$subTable .= " AS `table`";
+			// End subtable intersect
 			
-			// Main query
-			$query = $db->getQuery(true);
-			
-			$query->select("p.product_id");
-			$query->from("#__redshop_product as p");
-			$query->join("LEFT", "#__redshop_product_category_xref as cat ON p.product_id = cat.product_id");
 			$query->join("INNER", $subTable . " ON `p`.`product_id` = `table`.`product_id` ");
-			$query->where("p.published=1");
-			$query->group("p.product_id");
-			
-			if ($filter)
-			{
-				$priceNormal = $db->qn("p.product_price") . " BETWEEN $min AND $max";
-				$priceDiscount = $db->qn("p.discount_price") . " BETWEEN $min AND $max";
-				$saleTime = $db->qn('p.discount_stratdate') . ' AND ' . $db->qn('p.discount_enddate');
-				$query->where('IF(' . $query->qn('product_on_sale') . ' = 1 && UNIX_TIMESTAMP() BETWEEN ' . $saleTime . ', ' . $priceDiscount . ', ' . $priceNormal . ')');
-			}
-			
-			if ($cid)
-			{
-				$query->where($db->qn("cat.category_id") . "=" . $db->q($cid));
-			}
-			
-			if ($manufacturer_id)
-			{
-				$query->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id));
-			}
-			
-			if ($order_by)
-			{
-				$query->order($db->escape($order_by));
-			}
-			
-			echo $query->dump();
-			
-			var_dump($tables);
-			var_dump($pk);
 		}
-		else
+		
+		$query->where("p.published=1");
+		$query->group("p.product_id");
+		
+		if ($filter)
 		{
-			$query = $db->getQuery(true);
-			
-			$query->select("p.product_id")
-			->from($db->qn("#__redshop_product", "p"))
-			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
-			->where("p.published=1")
-			->group($db->qn("p.product_id"));
-			
-			if ($cid)
-			{
-				$query->where($db->qn("cat.category_id") . "=" . $db->q($cid));
-			}
+			$priceNormal = $db->qn("p.product_price") . " BETWEEN $min AND $max";
+			$priceDiscount = $db->qn("p.discount_price") . " BETWEEN $min AND $max";
+			$saleTime = $db->qn('p.discount_stratdate') . ' AND ' . $db->qn('p.discount_enddate');
+			$query->where('IF(' . $query->qn('product_on_sale') . ' = 1 && UNIX_TIMESTAMP() BETWEEN ' . $saleTime . ', ' . $priceDiscount . ', ' . $priceNormal . ')');
 		}
+		
+		if ($cid)
+		{
+			$query->where($db->qn("cat.category_id") . "=" . $db->q($cid));
+		}
+		
+		if ($manufacturer_id)
+		{
+			$query->where($db->qn("p.manufacturer_id") . "=" . $db->q($manufacturer_id));
+		}
+		
+		if ($order_by)
+		{
+			$query->order($db->escape($order_by));
+		}
+		
+		echo $query->dump();
+		
+		var_dump($tables);
+		var_dump($pk);
 		
 		return $query;
 	}
