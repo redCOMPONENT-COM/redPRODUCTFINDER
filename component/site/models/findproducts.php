@@ -8,6 +8,8 @@
 
 defined('_JEXEC') or die;
 
+JLoader::import('findproducts', JPATH_SITE . '/components/com_redproductfinder/helpers');
+
 /**
  * Findproducts Model.
  *
@@ -36,6 +38,7 @@ class RedproductfinderModelFindproducts extends RModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = JFactory::getApplication('site');
+		$param = JComponentHelper::getParams('com_redproductfinder');
 		$input = $app->input;
 
 		// Load state from the request.
@@ -71,20 +74,8 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		$this->setState('params', $params);
 
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select('t.*')
-			->from($db->qn('#__redshop_template', 't'))
-			->where('t.template_section = ' . $db->q('redproductfinder'))
-			->where('t.published = 1');
-
-		$templateDesc = null;
-
-		if ($template = $db->setQuery($query)->loadObject())
-		{
-			$redTemplate = new Redtemplate;
-			$templateDesc = $redTemplate->readtemplateFile($template->template_section, $template->template_name);
-		}
+		$templateId = $param->get('prod_template');
+		$templateDesc = RedproductfinderFindProducts::getTemplate($templateId);
 
 		$this->setState('templateDesc', $templateDesc);
 
@@ -502,7 +493,7 @@ class RedproductfinderModelFindproducts extends RModelList
 	}
 
 	/**
-	 * get total.
+	 * Get total.
 	 *
 	 * @return total
 	 */
