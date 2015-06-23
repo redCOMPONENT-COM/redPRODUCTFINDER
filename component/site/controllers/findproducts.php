@@ -43,7 +43,7 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 
 		$model->setState("redform.data", $post);
 		$model->setState("redform.view", $view);
-		
+
 		$list = $model->getItem();
 
 		// Get all product from here
@@ -53,8 +53,8 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 		}
 
 		$pagination = $model->getPagination();
-		$orderby = $model->getState('order_by');
-		
+		$orderBy = $model->getState('order_by');
+
 		// Get layout HTML
 		$html = $layout->render(
 			array(
@@ -63,7 +63,7 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 				"post"	   => $post,
 				"template_id" => $post["template_id"],
 				"getPagination" => $pagination,
-				"orderby" => $orderby
+				"orderby" => $orderBy
 			)
 		);
 

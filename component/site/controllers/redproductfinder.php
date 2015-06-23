@@ -1,10 +1,9 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Frontend
  *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 // Check to ensure this file is included in Joomla!
@@ -13,29 +12,29 @@ defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.application.component.controller');
 
 /**
- * redPRODUCTFINDER Controller
+ * RedPRODUCTFINDER controller.
+ *
+ * @package     RedPRODUCTFINDER.Frontend
+ * @subpackage  Controller
+ * @since       2.0
  */
 class RedproductfinderControllerRedproductfinder extends JControllerForm
 {
 	/**
-    * Method to display the view
-    *
-    * @access   public
-    */
-   function __construct()
-   {
-      parent::__construct();
-
-      /* Redirect templates to templates as this is the standard call */
-      // $this->registerTask('findproducts','redproductfinder');
-   }
-
+	 * Method to display the view
+	 *
+	 * @access   public
+	 */
+	function __construct()
+	{
+		parent::__construct();
+	}
 
 	/**
 	 * Method to show the Redproductfinder view
 	 *
 	 * @access	public
-	 * @todo rename duplicate model name redproductfinder
+	 * @return void
 	 */
 	public function Redproductfinder()
 	{
@@ -43,16 +42,16 @@ class RedproductfinderControllerRedproductfinder extends JControllerForm
 		$view = $this->getView('redproductfinder', 'html');
 
 		/* Set model paths */
-		$this->addModelPath(JPATH_COMPONENT.DS.'models');
+		$this->addModelPath(JPATH_COMPONENT . DS . 'models');
 
 		/* Standard model */
-		$view->setModel( $this->getModel( 'Redproductfinder', 'RedproductfinderModel' ), true );
+		$view->setModel($this->getModel('Redproductfinder', 'RedproductfinderModel'), true);
 
 		/* Backend models */
-		$this->addModelPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'models');
-		$view->setModel( $this->getModel( 'types', 'RedproductfinderModel' ));
-		$view->setModel( $this->getModel( 'tags', 'RedproductfinderModel' ));
-		$view->setModel( $this->getModel( 'associations', 'RedproductfinderModel' ));
+		$this->addModelPath(JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
+		$view->setModel($this->getModel('types', 'RedproductfinderModel'));
+		$view->setModel($this->getModel('tags', 'RedproductfinderModel'));
+		$view->setModel($this->getModel('associations', 'RedproductfinderModel'));
 
 		/* Set the layout */
 		$view->setLayout('redproductfinder');
@@ -60,11 +59,12 @@ class RedproductfinderControllerRedproductfinder extends JControllerForm
 		/* Now display the view */
 		$view->display();
 	}
+
 	/**
 	 * Method to show the Redproductfinder view for ajax call
 	 *
 	 * @access	public
-	 * @todo rename duplicate model name redproductfinder
+	 * @return void
 	 */
 	public function Redproductfinder_ajax()
 	{
@@ -72,16 +72,16 @@ class RedproductfinderControllerRedproductfinder extends JControllerForm
 		$view = $this->getView('redproductfinder', 'html');
 
 		/* Set model paths */
-		$this->addModelPath(JPATH_COMPONENT.DS.'models');
+		$this->addModelPath(JPATH_COMPONENT . DS . 'models');
 
 		/* Standard model */
-		$view->setModel( $this->getModel( 'Redproductfinder', 'RedproductfinderModel' ), true );
+		$view->setModel($this->getModel('Redproductfinder', 'RedproductfinderModel'), true);
 
 		/* Backend models */
-		$this->addModelPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'models');
-		$view->setModel( $this->getModel( 'types', 'RedproductfinderModel' ));
-		$view->setModel( $this->getModel( 'tags', 'RedproductfinderModel' ));
-		$view->setModel( $this->getModel( 'associations', 'RedproductfinderModel' ));
+		$this->addModelPath(JPATH_COMPONENT_ADMINISTRATOR . DS . 'models');
+		$view->setModel($this->getModel('types', 'RedproductfinderModel'));
+		$view->setModel($this->getModel('tags', 'RedproductfinderModel'));
+		$view->setModel($this->getModel('associations', 'RedproductfinderModel'));
 
 		/* Set the layout */
 		$view->setLayout('redproductfinder_ajax');
@@ -89,14 +89,18 @@ class RedproductfinderControllerRedproductfinder extends JControllerForm
 		/* Now display the view */
 		$view->display();
 	}
+
+	/**
+	 * Method to display product
+	 *
+	 * @return void
+	 */
 	public function Findproducts()
 	{
 		/* Set a default view if none exists */
-		JRequest::setVar('view', 'redproductfinder' );
-		JRequest::setVar('layout', 'searchresult' );
+		JRequest::setVar('view', 'redproductfinder');
+		JRequest::setVar('layout', 'searchresult');
 
 		parent::display();
 	}
 }
-
-?>

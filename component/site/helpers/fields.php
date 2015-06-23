@@ -1,7 +1,7 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
+ * @copyright  Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
+ * @license    can be read in this package of software in the file license.txt or
  * read on http://redcomponent.com/license.txt
  * Developed by email@recomponent.com - redCOMPONENT.com
  *
@@ -12,16 +12,27 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.helper');
 
-class redPRODUCTFINDERHelperFields
+/**
+ * Redproductfinder Component Form Helper
+ *
+ * @since  3.0
+ */
+class RedPRODUCTFINDERHelperFields
 {
+    /**
+     * Redproductfinder Component Form Helper
+     *
+     * @since  3.0
+     */
     function generateSelectBox($data, $data_row, $name, $id, $selected_item, $object,$extras="")
     {
+        $name_attribute = 'name = "' . $name . '"';
 
-        $name_attribute = ' name="'.$name.'"';
+     	$selectbox  = "<select" . $name_attribute . " " . $extras . " class=\"selectbox\">
+                       <option value=\"0\">" . JTEXT::_("ALL") . "</option>";
 
-     	 $selectbox  = "<select".$name_attribute." ".$extras." class=\"selectbox\">
-                       <option value=\"0\">".JTEXT::_("ALL")."</option>";
-        if ($object) //True or false
+        // True or false
+        if ($object)
         {
             //Iterate through object
             foreach($data as $row)
