@@ -1,9 +1,11 @@
 <?php
 /**
- * @package    RedPRODUCTFINDER.Frontend
+ * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
+ * @license can be read in this package of software in the file license.txt or
+ * read on http://redcomponent.com/license.txt
+ * Developed by email@recomponent.com - redCOMPONENT.com
  *
- * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * redPRODUCTFINDER model
  */
 
 // Check to ensure this file is included in Joomla!
@@ -13,31 +15,25 @@ jimport('joomla.application.component.model');
 jimport( 'joomla.application.module.helper' );
 jimport( 'joomla.html.parameter' );
 
-/**
- * Redproductfinder Model.
- *
- * @package     RedPRODUCTFINDER.Frontend
- * @subpackage  Model
- * @since       2.0
- */
 class RedproductfinderModelRedproductfinder extends JModelForm
 {
 	private $_results = array();
 
 	public function __construct()
 	{
+
 		$config = JComponentHelper::getParams('com_redproductfinder');
 
 		$db = JFactory::getDBO();
-		$module = JModuleHelper::getModule('redproductfinder');
+		$module = JModuleHelper::getModule( 'redproductfinder' );
 
-		if ($module != '')
+		if($module!='')
 		{
 			$params = new JParameter($module->params);
-			$form = $params->get('form');
+			$form=$params->get('form');
 
 			$query = "SELECT f.dependency,f.id FROM  #__redproductfinder_forms f
-	         where id = '" . $form . "'
+	         where id='".$form."'
 	          ORDER BY id";
 			$db->setQuery($query);
 			$frmdependancy = $db->loadObject();
@@ -752,7 +748,7 @@ class RedproductfinderModelRedproductfinder extends JModelForm
 
 							if (count($condition) > 0)
 							{
-								$conditions[] = '(' . implode(' OR ', $condition) . ')';
+								$conditions[] = '(' . implode(' AND ', $condition) . ')';
 							}
 						}
 						elseif ($type)
