@@ -33,16 +33,26 @@ class JFormFieldProduct extends JFormField
 		$id = $input->get("id", 0, "INT");
 		$catid = $input->get("catid", 0, "INT");
 		$modelAssociations = JModelLegacy::getInstance("Associations", "RedproductfinderModel");
+		$products = 0;
 
-		if ($id)
+		if ($id != 0)
 		{
-			$products = $modelAssociations->getProducts();
+			$productId = $modelAssociations->getProductByAssociation($id);
+
+			if ($catid)
+			{
+				$products = $modelAssociations->getProductByCategory($catid);
+			}
+			else
+			{
+				$catid = $modelAssociations->getCategoryById($productId);
+				$products = $modelAssociations->getProductByCategory($catid);
+			}
 		}
 		else
 		{
 			$products = $modelAssociations->getProductByCategory($catid);
 		}
-
 
 		$layout = new JLayoutFile('product');
 		$selected = array();

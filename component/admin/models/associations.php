@@ -121,6 +121,53 @@ class RedproductfinderModelAssociations extends RModelList
 	}
 
 	/**
+	 * Get category
+	 *
+	 * @param   int  $id  product id
+	 *
+	 * @return object
+	 */
+
+	public function getCategoryById($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select($db->qn("c.category_id"))
+		->from("#__redshop_category c")
+		->join("LEFT", "#__redshop_product_category_xref pc ON pc.category_id = c.category_id")
+		->where($db->qn("pc.product_id") . " = " . $id);
+
+		$db->setQuery($query);
+		$row = $db->loadAssoc();
+
+		return $row['category_id'];
+	}
+
+	/**
+	 * Get category
+	 *
+	 * @param   int  $id  association id
+	 *
+	 * @return object
+	 */
+
+	public function getProductByAssociation($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select($db->qn("a.product_id"))
+		->from("#__redproductfinder_associations a")
+		->where($db->qn("a.id") . " = " . $id);
+
+		$db->setQuery($query);
+		$row = $db->loadAssoc();
+
+		return $row['product_id'];
+	}
+
+	/**
 	 * Retrieve a list of categories from Redshop
 	 *
 	 * @return void

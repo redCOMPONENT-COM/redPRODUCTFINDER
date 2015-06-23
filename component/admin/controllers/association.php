@@ -26,6 +26,6 @@ class RedproductfinderControllerAssociation extends RControllerForm
 		$app = JFactory::getApplication();
 		$data     = $app->input->get_Array('jform', null);
 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . '&catid=' . $data['category_id'] . $this->getRedirectToItemAppend($recordId), false));
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . '&catid=' . $data['category_id'] . '&id=' . $data['id'] . $this->getRedirectToItemAppend($recordId), false));
 	}
 }
