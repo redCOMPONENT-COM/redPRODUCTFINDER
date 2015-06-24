@@ -1,24 +1,13 @@
 <?php
-/**
- * @copyright  Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license    can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
- *
- * redPRODUCTFINDER helpers
- */
+
 defined('_JEXEC') or die('Restricted access');
 
-/**
- * Redproductfinder Component Template
- *
- * @since  3.0
- */
-class RedproductfinderTemplates
+class redproductfinderTemplates
 {
 	/**
 	 * Method to get Template file path
 	 *
+	 * @param   string   $section   Template Section
 	 * @param   string   $filename  Template File Name
 	 * @param   boolean  $is_admin  Check for administrator call
 	 *
@@ -30,7 +19,7 @@ class RedproductfinderTemplates
 		$filename      = str_replace(array('/', '\\'), '', $filename);
 		$section       = str_replace(array('/', '\\'), '', $section);
 		$tempate_file  = "";
-		$template_view = self::getTemplateView($section);
+		$template_view = $this->getTemplateView($section);
 		$layout        = JRequest::getVar('layout');
 
 		if (!$is_admin && $section != 'categoryproduct')
@@ -73,3 +62,4 @@ class RedproductfinderTemplates
 		return $tempate_file;
 	}
 }
+
