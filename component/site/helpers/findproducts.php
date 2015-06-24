@@ -35,8 +35,5 @@ class RedproductfinderFindProducts
 		$query->where("template_id = " . $db->q($templateId));
 
 		$db->setQuery($query);
-
-		// Get template name
-		return $db->loadResult();
 	}
 }
