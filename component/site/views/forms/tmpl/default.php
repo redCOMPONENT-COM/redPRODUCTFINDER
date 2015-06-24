@@ -13,20 +13,25 @@ JLoader::import('forms', JPATH_SITE . '/components/com_redproductfinder/helpers'
 $data = RedproductfinderForms::filterForm($this->item);
 $model = $this->getModel('forms');
 $attributes = $model->getAttribute();
-$attribute_properties = $model->getAttributeProperty();
-$attribute_subproperties = $model->getAttributeSubProperty();
+$attributeProperties = $model->getAttributeProperty();
+$attributeSubProperties = $model->getAttributeSubProperty();
 $param = JComponentHelper::getParams('com_redproductfinder');
-$search_by = $param->get('search_by');
+$searchBy = $param->get('search_by');
+$cid = 0;
+$manufacturer_id = 0;
+$template_id = $param->get('prod_template');
+$formid = $param->get('form');
+$range = 0;
 ?>
-<div class="<?php echo $module_class_sfx; ?>">
+<div class="">
 	<form action="<?php echo JRoute::_("index.php?option=com_redproductfinder&view=findproducts"); ?>" method="post" name="adminForm" id="redproductfinder-form" class="form-validate">
 	<div class="form-horizontal">
 		<div class="row-fluid">
 			<div class="span9">
-			<?php if ($search_by == 0) { ?>
+			<?php if ($searchBy == 0) : ?>
 				<div class="row-fluid form-horizontal-desktop">
 					<?php foreach($data as $key => $value) :?>
-						<div id='typename-<?php echo $type["typeid"];?>'>
+						<div id='typename-<?php echo $value["typeid"];?>'>
 							<label><?php echo $value["typename"];?></label>
 							<ul class='taglist'>
 								<?php foreach ($value["tags"] as $k_t => $tag) :?>
@@ -40,40 +45,40 @@ $search_by = $param->get('search_by');
 						<input type="hidden" name="redform[<?php echo $value["typeid"]?>][typeid]" value="<?php echo $value["typeid"]; ?>">
 					<?php endforeach;?>
 				</div>
-			<?php } else { ?>
+			<?php else : ?>
 				<div  class="row-fluid form-horizontal-desktop">
 					<?php foreach($attributes as $k_a => $attribute) :?>
 						<div id='typename-<?php echo $attribute->attribute_id;?>'>
 							<label><?php echo $attribute->attribute_name;?></label>
 							<ul class='taglist'>
-								<?php foreach($attribute_properties as $k_p => $property) :?>
+								<?php foreach($attributeProperties as $k_p => $property) :?>
 									<?php
 									$attname = $model->getAttributeName($property->attribute_id);
-									if ($attname[0] == $attribute->attribute_name) { ?>
+									if ($attname[0] == $attribute->attribute_name) : ?>
 										<li>
 											<span class='taginput'><input type="checkbox" name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
 											<ul class='taglist'>
-											<?php foreach($attribute_subproperties as $k_sp => $subproperty) :?>
+											<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 												<?php
-													$proname = $model->getPropertyName($subproperty->subattribute_id);
-													if ($proname[0] == $property->property_name) { ?>
+													$proName = $model->getPropertyName($subProperty->subattribute_id);
+													if ($proName[0] == $property->property_name) : ?>
 												<li>
 													<span class='taginput'>
-													<input type="checkbox" name="redform[properties][]" value="<?php echo $subproperty->subattribute_color_name; ?>"></span>
-													<span class='tagname'><?php echo $subproperty->subattribute_color_name; ?></span>
+													<input type="checkbox" name="redform[properties][]" value="<?php echo $subProperty->subattribute_color_name; ?>"></span>
+													<span class='tagname'><?php echo $subProperty->subattribute_color_name; ?></span>
 												</li>
-												<?php } ?>
+												<?php endif; ?>
 											<?php endforeach;?>
 											</ul>
 										</li>
-									<?php } ?>
-								<?php endforeach;?>
+									<?php endif; ?>
+								<?php endforeach; ?>
 							</ul>
 						</div>
-					<?php endforeach;?>
+					<?php endforeach; ?>
 				</div>
-			<?php } ?>
+			<?php endif; ?>
 			</div>
 		</div>
 		<div  class="row-fluid">

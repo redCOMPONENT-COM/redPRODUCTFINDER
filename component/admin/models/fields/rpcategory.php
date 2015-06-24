@@ -17,7 +17,7 @@ jimport('joomla.form.formfield');
  * @since  1.6
  */
 
-class JFormFieldFilter extends JFormField
+class JFormFieldRPCategory extends JFormField
 {
 	/**
 	 * A flexible category list that respects access controls
@@ -25,31 +25,39 @@ class JFormFieldFilter extends JFormField
 	 * @var        string
 	 * @since   1.6
 	 */
-	public $type = 'filter';
+	public $type = 'rpcategory';
 
 	public function getInput()
 	{
 		$input = JFactory::getApplication()->input;
 		$id = $input->get("id", 0, "INT");
-
+		$catid = $input->get("catid", 0, "INT");
 		$modelAssociations = JModelLegacy::getInstance("Associations", "RedproductfinderModel");
-		$modelFilter = JModelLegacy::getInstance("Filters", "RedproductfinderModel");
 
-		$types = $modelAssociations->getTypeTagList();
-		$getData = $modelFilter->getFilter($id);
-		$tag_id = "";
+		$categories = $modelAssociations->getCategories();
 
-		if (count($getData) > 0)
+		$layout = new JLayoutFile('rpcategory');
+		$selected = array();
+
+		// Get association ID
+		if ($id != 0)
 		{
-			$tag_id = $getData["tag_id"];
-		}
+			$catSelected = $modelAssociations->getAssociationCategory($id);
 
-		$layout = new JLayoutFile('filter');
+			if (count($catSelected) > 0)
+			{
+				foreach ($catSelected as $k => $cat)
+				{
+					$selected[] = $cat["category_id"];
+				}
+			}
+		}
 
 		$html = $layout->render(
 			array(
-				"types" => $types,
-				"tag_id" => $tag_id
+				"selected" => $selected,
+				"catid" => $catid,
+				"categories" => $categories
 			)
 		);
 

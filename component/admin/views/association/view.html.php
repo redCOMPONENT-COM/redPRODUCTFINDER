@@ -1,7 +1,7 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
+ * @copyright  Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
+ * @license    can be read in this package of software in the file license.txt or
  * read on http://redcomponent.com/license.txt
  * Developed by email@recomponent.com - redCOMPONENT.com
  *
@@ -13,13 +13,24 @@ defined('_JEXEC') or die('Restricted access');
 
 /**
  * redFORM View
+ *
+ * @package     RedProductfinder
+ * @subpackage  View
+ * @since       0.9.1
  */
 class RedproductfinderViewAssociation extends JViewLegacy
 {
 	/**
-	 * redFORM view display method
-	 * @return void
-	 **/
+	 * Display edit page
+	 *
+	 * @param   string  $tpl  The template file to use
+	 *
+	 * @return   string
+	 *
+	 * @todo Check the extra fields once implemented
+	 *
+	 * @since   0.9.1
+	 */
 	function display($tpl = null)
 	{
 		$this->form		= $this->get('Form');
@@ -32,6 +43,13 @@ class RedproductfinderViewAssociation extends JViewLegacy
 		parent::display($tpl);
 	}
 
+	/**
+	 * Get the toolbar to render.
+	 *
+	 * @todo	We have setup ACL requirements for redITEM
+	 *
+	 * @return  RToolbar
+	 */
 	function toolbar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
@@ -44,4 +62,3 @@ class RedproductfinderViewAssociation extends JViewLegacy
 		JToolbarHelper::divider();
 	}
 }
-?>

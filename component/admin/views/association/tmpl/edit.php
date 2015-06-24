@@ -11,26 +11,32 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-JHTML::_('behavior.tooltip');
+JHtml::_('behavior.keepalive');
+JHtml::_('rbootstrap.tooltip');
+JHtml::_('rjquery.chosen', 'select');
+JHtml::_('behavior.modal', 'a.modal-thumb');
 JHtml::_('behavior.formvalidator');
 
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
 	{
-		if (task == "association.cancel" || document.formvalidator.isValid(document.getElementById("redproductfinder-form")))
+		if (task == "association.cancel" || document.formvalidator.isValid(document.getElementById("adminForm")))
 		{
-			Joomla.submitform(task, document.getElementById("redproductfinder-form"));
+			Joomla.submitform(task, document.getElementById("adminForm"));
 		}
 	};
 ');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="redproductfinder-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" class="form-validate" id="adminForm">
 
 	<div class="form-horizontal">
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
+					<div>
+						<?php echo $this->form->renderField("category_id"); ?>
+					</div>
 					<div>
 						<?php echo $this->form->renderField("product_id"); ?>
 					</div>
@@ -51,6 +57,6 @@ JFactory::getDocument()->addScriptDeclaration('
 		</div>
 	</div>
 
-	<input type="hidden" name="task" value="associations" />
+	<input type="hidden" name="task" value="" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>
