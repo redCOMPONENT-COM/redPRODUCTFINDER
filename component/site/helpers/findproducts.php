@@ -17,23 +17,19 @@ JLoader::import('template', JPATH_SITE . '/components/com_redshop/helpers');
  */
 class RedproductfinderFindProducts
 {
-	/**
-	 * This method will filter type and tag to array
-	 *
-	 * @param   int  $templateId  template id
-	 *
-	 * @return array
-	 */
 	public static function getTemplate($templateId)
 	{
 		$db = JFactory::getDbo();
-
+		
 		$query = $db->getQuery(true);
-
+		
 		$query->select("template_desc");
 		$query->from("#__redshop_template");
 		$query->where("template_id = " . $db->q($templateId));
-
+		
 		$db->setQuery($query);
+		
+		// Get template name
+		return $db->loadResult();
 	}
 }
