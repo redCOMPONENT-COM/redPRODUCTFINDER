@@ -17,7 +17,7 @@ jimport('joomla.form.formfield');
  * @since  1.6
  */
 
-class JFormFieldForm extends JFormField
+class JFormFieldProduct extends JFormField
 {
 	/**
 	 * A flexible category list that respects access controls
@@ -25,38 +25,56 @@ class JFormFieldForm extends JFormField
 	 * @var        string
 	 * @since   1.6
 	 */
-	public $type = 'form';
+	public $type = 'product';
 
 	public function getInput()
 	{
 		$input = JFactory::getApplication()->input;
 		$id = $input->get("id", 0, "INT");
-
+		$catid = $input->get("catid", 0, "INT");
 		$modelAssociations = JModelLegacy::getInstance("Associations", "RedproductfinderModel");
+		$products = 0;
 
-		$types = $modelAssociations->getTypeTagList();
+		if ($id != 0)
+		{
+			$productId = $modelAssociations->getProductByAssociation($id);
 
-		$layout = new JLayoutFile('form');
-		$checked = array();
+			if ($catid)
+			{
+				$products = $modelAssociations->getProductByCategory($catid);
+			}
+			else
+			{
+				$catid = $modelAssociations->getCategoryById($productId);
+				$products = $modelAssociations->getProductByCategory($catid);
+			}
+		}
+		else
+		{
+			$products = $modelAssociations->getProductByCategory($catid);
+		}
+
+		$layout = new JLayoutFile('product');
+		$selected = array();
 
 		// Get association ID
 		if ($id != 0)
 		{
-			$tagChecked = $modelAssociations->getAssociationTags($id);
+			$proSelected = $modelAssociations->getAssociationProduct($id);
 
-			if (count($tagChecked) > 0)
+			if (count($proSelected) > 0)
 			{
-				foreach ($tagChecked as $k => $value)
+				foreach ($proSelected as $k => $pro)
 				{
-					$checked[] = $value["tag_type"];
+					$selected[] = $pro["product_id"];
 				}
 			}
 		}
 
 		$html = $layout->render(
 			array(
-				"types" => $types,
-				"checked" => $checked
+				"selected" => $selected,
+				"products" => $products
 			)
 		);
 

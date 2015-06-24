@@ -31,11 +31,12 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 	{
 		$app = JFactory::getApplication();
 		$document = JFactory::getDocument();
+		$param = JComponentHelper::getParams('com_redproductfinder');
 		$input = $app->input;
 
 		$model = JModelLegacy::getInstance("FindProducts", "RedproductfinderModel");
 
-		$layout = new JLayoutFile('result', JPATH_COMPONENT . '/layouts');
+		$layout = new JLayoutFile('result');
 
 		$post = $input->post->get('redform', array(), 'filter');
 		$view = $input->post->get("view", "", 'filter');
@@ -52,16 +53,17 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 		}
 
 		$pagination = $model->getPagination();
-		$orderby = $model->getState('order_by');
-		
+		$orderBy = $model->getState('order_by');
+
 		// Get layout HTML
 		$html = $layout->render(
 			array(
 				"products" => $products,
+				"model" => $model,
 				"post"	   => $post,
 				"template_id" => $post["template_id"],
 				"getPagination" => $pagination,
-				"orderby" => $orderby
+				"orderby" => $orderBy
 			)
 		);
 

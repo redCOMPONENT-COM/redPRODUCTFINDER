@@ -98,6 +98,94 @@ class RedproductfinderModelAssociations extends RModelList
 	}
 
 	/**
+	 * Get the list of selected category
+	 *
+	 * @param   int  $id  Id should be int variable
+	 *
+	 * @return object
+	 */
+
+	public function getProductByCategory($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select($db->qn("p.product_id") . ", CONCAT(product_number, '::', product_name) AS full_product_name")
+		->from("#__redshop_product p")
+		->join("LEFT", "#__redshop_product_category_xref pc ON pc.product_id = p.product_id")
+		->where($db->qn("pc.category_id") . " = " . $id);
+
+		$db->setQuery($query);
+
+		return $db->loadAssocList();
+	}
+
+	/**
+	 * Get category
+	 *
+	 * @param   int  $id  product id
+	 *
+	 * @return object
+	 */
+
+	public function getCategoryById($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select($db->qn("c.category_id"))
+		->from("#__redshop_category c")
+		->join("LEFT", "#__redshop_product_category_xref pc ON pc.category_id = c.category_id")
+		->where($db->qn("pc.product_id") . " = " . $id);
+
+		$db->setQuery($query);
+		$row = $db->loadAssoc();
+
+		return $row['category_id'];
+	}
+
+	/**
+	 * Get category
+	 *
+	 * @param   int  $id  association id
+	 *
+	 * @return object
+	 */
+
+	public function getProductByAssociation($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select($db->qn("a.product_id"))
+		->from("#__redproductfinder_associations a")
+		->where($db->qn("a.id") . " = " . $id);
+
+		$db->setQuery($query);
+		$row = $db->loadAssoc();
+
+		return $row['product_id'];
+	}
+
+	/**
+	 * Retrieve a list of categories from Redshop
+	 *
+	 * @return void
+	 */
+	public function getCategories()
+	{
+		$db = JFactory::getDBO();
+
+		$q = "SELECT category_id, category_name
+	   		FROM #__redshop_category
+			ORDER BY category_name";
+
+		$db->setQuery($q);
+
+		return $db->loadAssocList();
+	}
+
+	/**
 	 * Retrieve a list of products from Redshop
 	 *
 	 * @return void
@@ -112,7 +200,55 @@ class RedproductfinderModelAssociations extends RModelList
 
 		$db->setQuery($q);
 
-		return $db->loadObjectList();
+		return $db->loadAssocList();
+	}
+
+	/**
+	 * Get the list of selected category
+	 *
+	 * @param   int  $id  Id should be int variable
+	 *
+	 * @return object
+	 */
+
+	public function getAssociationCategory($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select($db->qn("c.category_id"))
+		->from("#__redproductfinder_associations a")
+		->join("LEFT", "#__redshop_product_category_xref pc ON pc.product_id = a.product_id")
+		->join("LEFT", "#__redshop_category c ON c.category_id = pc.category_id")
+		->where($db->qn("a.id") . " = " . $id);
+
+		$db->setQuery($query);
+
+		return $db->loadAssocList();
+	}
+
+	/**
+	 * Get the list of selected product
+	 *
+	 * @param   int  $id  Id should be int variable
+	 *
+	 * @return object
+	 */
+
+	public function getAssociationProduct($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select($db->qn("p.product_id"))
+		->from("#__redproductfinder_associations a")
+		->join("LEFT", "#__redshop_product_category_xref pc ON pc.product_id = a.product_id")
+		->join("LEFT", "#__redshop_product p ON p.product_id = pc.product_id")
+		->where($db->qn("a.id") . " = " . $id);
+
+		$db->setQuery($query);
+
+		return $db->loadAssocList();
 	}
 
 	/**

@@ -19,14 +19,21 @@ else
 	$json = $input->post->get('jsondata', "", "filter");
 	$pk = json_decode($json, true);
 }
+
 $count = count($pk);
+$keyTags = array();
 
 if ($count > 0)
 {
 	$catid = $pk['cid'];
-	$manufacturerid = $pk['manufacturer_id'];
+	$manufacturerId = $pk['manufacturer_id'];
 	$filter = $pk['filterprice'];
-	$properties = $pk['properties'];
+
+	if ($searchBy == 1)
+	{
+		$properties = $pk['properties'];
+	}
+
 	$min = $filter['min'];
 	$max = $filter['max'];
 
@@ -49,7 +56,7 @@ if ($count > 0)
 	<div class="form-horizontal">
 		<div class="row-fluid">
 			<div class="span9">
-			<?php if ($search_by == 0) { ?>
+			<?php if ($searchBy == 0) : ?>
 				<div class="row-fluid form-horizontal-desktop">
 					<?php foreach($lists as $k => $type) :?>
 						<div id='typename-<?php echo $type["typeid"];?>'>
@@ -69,33 +76,40 @@ if ($count > 0)
 						<input type="hidden" name="redform[<?php echo $type["typeid"]?>][typeid]" value="<?php echo $type["typeid"]; ?>">
 					<?php endforeach;?>
 				</div>
-			<?php } else { ?>
+			<?php else : ?>
 				<div class="row-fluid form-horizontal-desktop">
 					<?php foreach($attributes as $k_a => $attribute) :?>
 						<div id='typename-<?php echo $attribute->attribute_id;?>'>
 							<label><?php echo $attribute->attribute_name;?></label>
 							<ul class='taglist'>
-								<?php foreach($attribute_properties as $k_p => $property) :?>
+								<?php foreach($attributeProperties as $k_p => $property) :?>
 									<?php
 									$attname = $model->getAttributeName($property->attribute_id);
 									if ($attname[0] == $attribute->attribute_name) { ?>
 										<li>
 											<span class='taginput' data-aliases='<?php echo $attribute->attribute_name;?>'>
-											<input type="checkbox" <?php if ($count > 0) { foreach ($properties as $ppt) {
-											if ($ppt == $property->property_name) echo 'checked="checked"'; else echo ''; } } ?>
+											<input type="checkbox"
+										<?php if ($count > 0) :
+												foreach ($properties as $ppt) :
+													if ($ppt == $property->property_name)
+														echo 'checked="checked"';
+													else
+														echo '';
+												endforeach;
+											endif;?>
 											 name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
 											<ul class='taglist'>
-											<?php foreach($attribute_subproperties as $k_sp => $subproperty) :?>
+											<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 												<?php
-													$proname = $model->getPropertyName($subproperty->subattribute_id);
-													if ($proname[0] == $property->property_name) { ?>
+													$proName = $model->getPropertyName($subProperty->subattribute_id);
+													if ($proName[0] == $property->property_name) : ?>
 												<li>
 													<span class='taginput' data-aliases='<?php echo $property->property_name;?>'>
-													<input type="checkbox" name="redform[properties][]" value="<?php echo $subproperty->subattribute_color_name; ?>"></span>
-													<span class='tagname'><?php echo $subproperty->subattribute_color_name; ?></span>
+													<input type="checkbox" name="redform[properties][]" value="<?php echo $subProperty->subattribute_color_name; ?>"></span>
+													<span class='tagname'><?php echo $subProperty->subattribute_color_name; ?></span>
 												</li>
-												<?php } ?>
+												<?php endif; ?>
 											<?php endforeach;?>
 											</ul>
 										</li>
@@ -105,7 +119,7 @@ if ($count > 0)
 						</div>
 					<?php endforeach;?>
 				</div>
-			<?php } ?>
+			<?php endif; ?>
 			</div>
 		</div>
 		<div  class="row-fluid">
@@ -117,7 +131,7 @@ if ($count > 0)
 	<input type="hidden" name="task" value="findproducts.find" />
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
 	<input type="hidden" name="view" value="<?php echo $view; ?>" />
-	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
+	<input type="hidden" name="redform[template_id]" value="<?php echo $templateId;?>" />
 	<input type="hidden" name="redform[cid]" value="<?php if ($cid) echo $cid; elseif ($count > 0) echo $catid;?>" />
 	<input type="hidden" name="redform[manufacturer_id]" value="<?php if ($manufacturer_id) echo $manufacturer_id; elseif ($count > 0) echo $manufacturerid;?>" />
 	<input type="hidden" name="limitstart" value="0" />
