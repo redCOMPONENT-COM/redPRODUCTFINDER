@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 <form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm">
 	<div class="span12">
-		<div><?php echo JHTML::_('image', JURI::root().'media/com_redproductfinder/redproductfinder_logo_400width.png', JText::_('redPRODUCTFINDER')); ?></div>
+		<div><?php echo JHTML::_('image', JURI::root().'media/com_redproductfinder/images/redproductfinder_logo_400width.png', JText::_('redPRODUCTFINDER')); ?></div>
 
 		<table class="table table-striped" id="typeslist" class="adminlist">
 		<thead>

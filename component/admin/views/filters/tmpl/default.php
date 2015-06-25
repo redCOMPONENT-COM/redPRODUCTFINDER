@@ -6,54 +6,50 @@
  * Developed by email@recomponent.com - redCOMPONENT.com
  */
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-if ($this->countfilters == 0) {
-	echo JText::_('No filters found');
-}
-else
-{
-	$model = JModelLegacy::getInstance("Filters", "RedproductfinderModel");
 
-	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+$model = JModelLegacy::getInstance("Filters", "RedproductfinderModel");
 
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('behavior.multiselect');
-	JHtml::_('formbehavior.chosen', 'select');
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-	$app       = JFactory::getApplication();
-	$user      = JFactory::getUser();
-	$userId    = $user->get('id');
-	$listOrder = $this->escape($this->state->get('list.ordering'));
-	$listDirn  = $this->escape($this->state->get('list.direction'));
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('formbehavior.chosen', 'select');
 
-	$sortFields = $this->getSortFields();
+$app       = JFactory::getApplication();
+$user      = JFactory::getUser();
+$userId    = $user->get('id');
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
 
-	JFactory::getDocument()->addScriptDeclaration('
-		Joomla.orderTable = function()
+$sortFields = $this->getSortFields();
+
+JFactory::getDocument()->addScriptDeclaration('
+	Joomla.orderTable = function()
+	{
+		table = document.getElementById("sortTable");
+		direction = document.getElementById("directionTable");
+
+		order = table.options[table.selectedIndex].value;
+
+		if (order != "' . $listOrder . '")
 		{
-			table = document.getElementById("sortTable");
-			direction = document.getElementById("directionTable");
+			dirn = "asc";
+		}
+		else
+		{
+			dirn = direction.options[direction.selectedIndex].value;
+		}
 
-			order = table.options[table.selectedIndex].value;
-
-			if (order != "' . $listOrder . '")
-			{
-				dirn = "asc";
-			}
-			else
-			{
-				dirn = direction.options[direction.selectedIndex].value;
-			}
-
-			Joomla.tableOrdering(order, dirn, "");
-		};
-	');
+		Joomla.tableOrdering(order, dirn, "");
+	};
+');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
 				<label for="filter_search" class="element-invisible"><?php echo JText::_('COM_CONTACT_FILTER_SEARCH_DESC');?></label>
-				<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('COM_CONTACT_SEARCH_IN_NAME'); ?>" />
+				<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('COM_REDPRODUCTFINDER_FILTER_SEARCH_DESC'); ?>" />
 			</div>
 			<div class="btn-group pull-left">
 				<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
@@ -172,4 +168,3 @@ else
 	<?php echo JHtml::_('form.token'); ?>
 
 </form>
-<?php } ?>

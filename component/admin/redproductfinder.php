@@ -21,10 +21,6 @@ include_once $redcoreLoader;
 // Bootstraps redCORE
 RBootstrap::bootstrap();
 
-$app   = JFactory::getApplication();
-$user  = JFactory::getUser();
-$input = $app->input;
-
 require_once JPATH_COMPONENT . '/helpers/redproductfinder.php';
 
 if (!JFactory::getUser()->authorise('core.manage', 'com_redproductfinder'))

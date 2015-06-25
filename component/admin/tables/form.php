@@ -23,7 +23,7 @@ class RedproductfinderTableForm extends JTable
 	var $formname = null;
 
 	/** @var string Whether or not the entry is published */
-	var $published = 0;
+	var $published = null;
 
 	/** @var string Whether or not the entry is published */
 	var $publish_up = 0;

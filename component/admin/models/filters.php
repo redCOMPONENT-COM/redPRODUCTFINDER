@@ -18,62 +18,6 @@ defined('_JEXEC') or die;
  */
 class RedproductfinderModelFilters extends RModelList
 {
-	/**
-	 * Show all Filter that have been created
-	 */
-	function getFilters()
-	{
-		$db = JFactory::getDBO();
-		//$filtertype = JRequest::getInt('filtertype', false);
-
-		/* Get all the fields based on the limits */
-		$query = "SELECT f.* FROM #__redproductfinder_filters f";
-		//if ($filtertype) $query .= "WHERE y.type_id = ".$filtertype." ";
-		$query .= " GROUP BY f.id
-					ORDER BY f.ordering";
-
-		$db->setQuery($query, $this->_limitstart, $this->_limit);
-		return $db->loadObjectList();
-	}
-
-	function getPagination()
-	{
-		global $mainframe, $option;
-		$mainframe = JFactory::getApplication();
-		/* Lets load the pagination if it doesn't already exist */
-		if (empty($this->_pagination)) {
-		jimport('joomla.html.pagination');
-		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-		$this->_limitstart = JRequest::getVar('limitstart', 0, '', 'int');
-
-		// In case limit has been changed, adjust it
-		$this->_limitstart = ($this->_limit != 0 ? (floor($this->_limitstart / $this->_limit) * $this->_limit) : 0);
-
-			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
-				//$mainframe->Redirect('index.php');
-		}
-
-		return $this->_pagination;
-	}
-
-	/**
-	 * Method to get the total number of testimonial items for the category
-	 *
-	 * @access public
-	 * @return integer
-	 */
-	function getTotal() {
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_total))
-		{
-			$query = "SELECT COUNT(*) AS total"
-			. "\n FROM #__redproductfinder_filters";
-			$this->_total = $this->_getListCount($query);
-		}
-
-		return $this->_total;
-	}
-
    /**
     * Retrieve a Filter to edit
     */
@@ -90,19 +34,6 @@ class RedproductfinderModelFilters extends RModelList
 
     	return $db->loadAssoc();
    }
-
-	/**
-	 * Get the list of selected types for this tag
-	 */
-	public function getTagTypes() {
-		$db = JFactory::getDBO();
-		$id = JRequest::getVar('cid');
-		$q = "SELECT type_id
-			FROM #__redproductfinder_tag_type
-			WHERE tag_id = ".$id[0];
-		$db->setQuery($q);
-		return $db->loadResultArray();
-	}
 
 	/**
 	 * Get the list of selected type names for this tag
