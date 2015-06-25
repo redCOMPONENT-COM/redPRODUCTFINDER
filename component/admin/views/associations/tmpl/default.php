@@ -8,6 +8,16 @@
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
+// Check if redshop already enabled
+jimport('joomla.application.component.helper');
+
+if(!JComponentHelper::isEnabled('com_redshop', true)) :
+?>
+
+<div><?php echo JText::_("COM_REDPRODUCTFINDER_REDSHOP_INSTALLED"); ?></div>
+
+<?php
+else :
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('bootstrap.tooltip');
@@ -184,3 +194,4 @@ JFactory::getDocument()->addScriptDeclaration('
 
 	<?php echo JHtml::_('form.token'); ?>
 </form>
+<?php endif; ?>
