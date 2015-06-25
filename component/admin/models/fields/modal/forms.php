@@ -53,7 +53,7 @@ class JFormFieldModal_Forms extends JFormField
 
 		// Setup variables for display.
 		$html	= array();
-		$link	= 'index.php?option=com_redproductfinder&amp;view=forms&amp;layout=modal&amp;tmpl=component&amp;function=jSelectContact_' . $this->id;
+		$link	= JRoute::_('index.php?option=com_redproductfinder&amp;view=forms&amp;layout=modal&amp;tmpl=component&amp;function=jSelectContact_' . $this->id);
 
 		// Get the title of the linked chart
 		if ((int) $this->value > 0)
@@ -97,7 +97,7 @@ class JFormFieldModal_Forms extends JFormField
 		$html[] = '<input type="text" class="input-medium" id="' . $this->id . '_name" value="' . $title . '" disabled="disabled" size="35" />';
 		$html[] = '<a'
 			. ' class="modal btn hasTooltip"'
-			. ' title="' . JHtml::tooltipText('COM_CONTACT_CHANGE_CONTACT') . '"'
+			. ' title="' . JHtml::tooltipText('COM_REDPRODUCTFINDER_CHANGE_FORM') . '"'
 			. ' href="' . $link . '&amp;' . JSession::getFormToken() . '=1"'
 			. ' rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'
 			. '<i class="icon-file"></i> ' . JText::_('JSELECT')

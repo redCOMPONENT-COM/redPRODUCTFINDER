@@ -51,25 +51,6 @@ class RedproductfinderModelAssociations extends RModelList
 	}
 
 	/**
-	 * Method to get the total number of testimonial items for the category
-	 *
-	 * @access public
-	 * @return integer
-	 */
-	function getTotal()
-	{
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_total))
-		{
-			$query = "SELECT COUNT(*) AS total"
-			. "\n FROM #__redproductfinder_associations";
-			$this->_total = $this->_getListCount($query);
-		}
-
-		return $this->_total;
-	}
-
-	/**
 	 * Retrieve an association to edit
 	 *
 	 * @return void

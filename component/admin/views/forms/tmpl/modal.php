@@ -46,12 +46,12 @@ $input     = JFactory::getApplication()->input;
 $function  = $input->getCmd('function', 'jSelectContact');
 
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
-				<label for="filter_search" class="element-invisible"><?php echo JText::_('COM_CONTACT_FILTER_SEARCH_DESC');?></label>
-				<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('COM_CONTACT_SEARCH_IN_NAME'); ?>" />
+				<label for="filter_search" class="element-invisible"><?php echo JText::_('COM_REDPRODUCTFINDER_FILTER_SEARCH_DESC');?></label>
+				<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('COM_REDPRODUCTFINDER_FILTER_SEARCH_DESC'); ?>" />
 			</div>
 			<div class="btn-group pull-left">
 				<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
@@ -60,14 +60,6 @@ $function  = $input->getCmd('function', 'jSelectContact');
 			<div class="btn-group pull-right hidden-phone">
 				<label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
 				<?php echo $this->pagination->getLimitBox(); ?>
-			</div>
-			<div class="btn-group pull-right hidden-phone">
-				<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
-				<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
-					<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC');?></option>
-					<option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
-					<option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
-				</select>
 			</div>
 			<div class="btn-group pull-right">
 				<label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
@@ -94,9 +86,6 @@ $function  = $input->getCmd('function', 'jSelectContact');
 				</th>
 				<th width="3%" class="title center">
 					<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
-				</th>
-				<th width="20%" class="title">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_TAG'); ?>
 				</th>
 				<th width="2%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -133,11 +122,6 @@ $function  = $input->getCmd('function', 'jSelectContact');
 						<td class="center">
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'forms.', 1, 'cb', $item->publish_up, $item->publish_down); ?>
 						</td>
-						<td>
-						<?php
-							echo "{redproductfinder}".$item->id."{/redproductfinder}";
-						?>
-						</td>
 						<td class="hidden-phone">
 							<?php echo $item->id; ?>
 						</td>
@@ -159,6 +143,8 @@ $function  = $input->getCmd('function', 'jSelectContact');
 	</div>
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="view" value="forms" />
+	<input type="hidden" name="layout" value="modal" />
+	<input type="hidden" name="tmpl" value="component" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />

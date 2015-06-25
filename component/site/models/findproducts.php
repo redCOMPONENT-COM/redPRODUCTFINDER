@@ -177,9 +177,14 @@ class RedproductfinderModelFindproducts extends RModelList
 			$orderBy = 'p.product_id DESC';
 		}
 
-		$attribute = $pk["properties"];
-
-		if ($attribute != 0)
+		$attribute = "";
+		
+		if (isset($pk["properties"]))
+		{
+			$attribute = $pk["properties"];
+		}
+		
+		if ($attribute != "")
 		{
 			$properties = implode("','", $attribute);
 		}
@@ -198,8 +203,14 @@ class RedproductfinderModelFindproducts extends RModelList
 			->join("LEFT", $db->qn("#__redshop_product_subattribute_color", "ps") . " ON " . "ps.subattribute_id = pp.property_id")
 			->where("p.published=1")
 			->group($db->qn("p.product_id"));
+			
+			if ($attribute)
+			{
+				$query->where("(" . $db->qn("pp.property_name") . " IN ('" . $properties . "') OR ps.subattribute_color_name IN ('" . $properties . "'))");
+			}
+			
+			
 		}
-
 		elseif ($searchByComp == 0)
 		{
 			$query->select("a.product_id")
@@ -212,20 +223,67 @@ class RedproductfinderModelFindproducts extends RModelList
 			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
 			->where("a.published=1")
 			->group($db->qn("a.product_id"));
+			
+			unset($pk["filterprice"]);
+			unset($pk["template_id"]);
+			unset($pk["manufacturer_id"]);
+			unset($pk["cid"]);
+			
+			// Add tag id
+			$keyTags = array();
+			
+			foreach ( $pk as $k => $value )
+			{
+				if (!isset($value["tags"]))
+				{
+					continue;
+				}
+			
+				foreach ( $value["tags"] as $k_t => $tag )
+				{
+					$keyTags[] = $tag;
+				}
+			}
+			
+			if (count($keyTags) != 0)
+			{
+				// Add type id
+				$keyTypes = array_keys($pk);
+			
+				if ($keyTypes)
+				{
+					$keyTypeString = implode(",", $keyTypes);
+					$query->where($db->qn("at.type_id") . " IN (" . $keyTypeString . ")");
+				}
+			
+				// Remove duplicate tag id
+				$keyTags = array_unique($keyTags);
+			
+				// Add tag id
+				$keyTagString = implode(",", $keyTags);
+				$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
+			}
+			else
+			{
+				if (!$filter)
+				{
+					$query = $db->getQuery(true);
+					$query->select("p.product_id")
+					->from($db->qn("#__redshop_product", "p"))
+					->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
+					->where("p.published=1")
+					->group($db->qn("p.product_id"));
+				}
+			}
 		}
 
-		if ($attribute)
+		if (isset($pk["filterprice"]))
 		{
-			$query->where("(" . $db->qn("pp.property_name") . " IN ('" . $properties . "') OR ps.subattribute_color_name IN ('" . $properties . "'))");
-		}
-
-		// Condition min max
-		$filter = $pk["filterprice"];
-		$min = $filter['min'];
-		$max = $filter['max'];
-
-		if ($filter)
-		{
+			// Condition min max
+			$filter = $pk["filterprice"];
+			$min = $filter['min'];
+			$max = $filter['max'];
+			
 			$priceNormal = $db->qn("p.product_price") . " BETWEEN $min AND $max";
 			$priceDiscount = $db->qn("p.discount_price") . " BETWEEN $min AND $max";
 			$saleTime = $db->qn('p.discount_stratdate') . ' AND ' . $db->qn('p.discount_enddate');
@@ -235,58 +293,6 @@ class RedproductfinderModelFindproducts extends RModelList
 		// Filter by cid
 		$cid = $this->getState("catid");
 		$manufacturerId = $pk["manufacturer_id"];
-
-		unset($pk["filterprice"]);
-		unset($pk["template_id"]);
-		unset($pk["manufacturer_id"]);
-		unset($pk["cid"]);
-
-		// Add tag id
-		$keyTags = array();
-
-		foreach ( $pk as $k => $value )
-		{
-			if (!isset($value["tags"]))
-			{
-				continue;
-			}
-
-			foreach ( $value["tags"] as $k_t => $tag )
-			{
-				$keyTags[] = $tag;
-			}
-		}
-
-		if (count($keyTags) != 0)
-		{
-			// Add type id
-			$keyTypes = array_keys($pk);
-
-			if ($keyTypes)
-			{
-				$keyTypeString = implode(",", $keyTypes);
-				$query->where($db->qn("at.type_id") . " IN (" . $keyTypeString . ")");
-			}
-
-			// Remove duplicate tag id
-			$keyTags = array_unique($keyTags);
-
-			// Add tag id
-			$keyTagString = implode(",", $keyTags);
-			$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
-		}
-		else
-		{
-			if (!$filter)
-			{
-				$query = $db->getQuery(true);
-				$query->select("p.product_id")
-				->from($db->qn("#__redshop_product", "p"))
-				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
-				->where("p.published=1")
-				->group($db->qn("p.product_id"));
-			}
-		}
 
 		if ($cid)
 		{
@@ -302,7 +308,7 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			$query->order($db->escape($orderBy));
 		}
-
+		
 		return $query;
 	}
 
@@ -343,14 +349,17 @@ class RedproductfinderModelFindproducts extends RModelList
 		unset($pk["manufacturer_id"]);
 		unset($pk["cid"]);
 
-		// Get how many type
-		$types = array_keys($pk);
-
 		// Create arrays variable
 		$tables = array();
-
 		$increase = 0;
-
+		$types = array();
+		
+		if ($pk != null)
+		{
+			// Get how many type
+			$types = array_keys($pk);
+		}
+		
 		// Begin sub query
 		foreach ($types as $k => $type)
 		{

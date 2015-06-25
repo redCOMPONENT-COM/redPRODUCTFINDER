@@ -3,17 +3,15 @@
 <extension type="component" version="3.4" method="upgrade">
 	<name>COM_REDPRODUCTFINDER</name>
 	<author>Redweb.dk</author>
-	<creationDate>21-07-2011</creationDate>
+	<creationDate>25-06-2015</creationDate>
 	<copyright>redWEB ApS</copyright>
 	<license>GNU/GPL</license>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redweb.dk</authorUrl>
 	<version>2.0</version>
-	<redcore version="1.5.6" />
+	<redcore version="1.6.0" defaultFramework="bootstrap3" />
+	<scriptfile>install.php</scriptfile>
 	<description>COM_REDPRODUCTFINDER_XML_DESC</description>
-	
-	<installfile>component/install.redproductfinder.php</installfile>
-	<uninstallfile>component/uninstall.redproductfinder.php</uninstallfile>
 	
 	<install>
 		<sql>
@@ -44,37 +42,20 @@
 		<language tag="da-DK">da-DK/da-DK.com_redproductfinder.ini</language>
 	</languages>
 	
-	<media folder="media" destination="com_redproductfinder">
-		<filename>redproductfinder_association16.png</filename>
-		<filename>redproductfinder_association32.png</filename>
-		<filename>redproductfinder_association48.png</filename>
-		<filename>redproductfinder_logo_400width.png</filename>
-		<filename>redproductfinder_logo_800width.png</filename>
-		<filename>redproductfinder_logo_1200width.png</filename>
-		<filename>redproductfinder_form16.png</filename>
-		<filename>redproductfinder_form32.png</filename>
-		<filename>redproductfinder_form48.png</filename>
-		<filename>redproductfinder_tags16.png</filename>
-		<filename>redproductfinder_tags32.png</filename>
-		<filename>redproductfinder_tags48.png</filename>
-		<filename>redproductfinder_type16.png</filename>
-		<filename>redproductfinder_type32.png</filename>
-		<filename>redproductfinder_type48.png</filename>
-		<filename>redproductfinder_prodlogo16.gif</filename>
-		<filename>redproductfinder_prodlogo32.gif</filename>
-		<filename>redproductfinder_prodlogo48.gif</filename>
+	<media folder="media/com_redproductfinder" destination="com_redproductfinder">
+		<folder>images</folder>
 	</media>
 	
 	<administration>
-		<menu img="../media/com_redproductfinder/redproductfinder_prodlogo16.gif" link="option=com_redproductfinder" view="redproductfinder">redPRODUCTFINDER</menu>
+		<menu link="option=com_redproductfinder" view="redproductfinder">COM_REDPRODUCTFINDER_MENU_MAIN</menu>
 		
 		<submenu>
-			<menu img="../media/com_redproductfinder/redproductfinder_prodlogo16.gif"  link="option=com_redproductfinder" view="redproductfinder">COM_REDPRODUCTFINDER_REDPRODUCTFINDER</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_form16.png" link="option=com_redproductfinder&amp;view=forms" view="forms">COM_REDPRODUCTFINDER_FORMS</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_type16.png" link="option=com_redproductfinder&amp;view=types" view="types">COM_REDPRODUCTFINDER_TYPES</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_tags16.png" link="option=com_redproductfinder&amp;view=tags" view="tags">COM_REDPRODUCTFINDER_TAGS</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_association16.png" link="option=com_redproductfinder&amp;view=associations" view="associations">COM_REDPRODUCTFINDER_ASSOCIATIONS</menu>
-			<menu img="../media/com_redproductfinder/redproductfinder_filter16.png" link="option=com_redproductfinder&amp;view=filters" view="filters">COM_REDPRODUCTFINDER_FILTERS</menu>
+			<menu link="option=com_redproductfinder" view="redproductfinder">COM_REDPRODUCTFINDER_REDPRODUCTFINDER</menu>
+			<menu link="option=com_redproductfinder&amp;view=forms" view="forms">COM_REDPRODUCTFINDER_FORMS</menu>
+			<menu link="option=com_redproductfinder&amp;view=types" view="types">COM_REDPRODUCTFINDER_TYPES</menu>
+			<menu link="option=com_redproductfinder&amp;view=tags" view="tags">COM_REDPRODUCTFINDER_TAGS</menu>
+			<menu link="option=com_redproductfinder&amp;view=associations" view="associations">COM_REDPRODUCTFINDER_ASSOCIATIONS</menu>
+			<menu link="option=com_redproductfinder&amp;view=filters" view="filters">COM_REDPRODUCTFINDER_FILTERS</menu>
 		</submenu>
 		
 		<files folder="component/admin">
@@ -102,5 +83,4 @@
 		</languages>
 		
 	</administration>
-	
 </extension>

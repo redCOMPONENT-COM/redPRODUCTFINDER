@@ -61,7 +61,7 @@
 			<fileset dir="${project.basedir}/">
 				<include name="LICENSE.txt"/>
 				<include name="redproductfinder.xml"/>
-				<include name="component/install.redproductfinder.php"/>
+				<include name="install.php"/>
 			</fileset>
 		</copy>
 
@@ -74,7 +74,7 @@
 		</copy>
 
 		<echo msg="Copying MEDIA folder to build directory..."/>
-		<copy todir="${tmpdir}/${extension}/media/com_redproductfinder">
+		<copy todir="${tmpdir}/${extension}/media/">
 			<fileset dir="${project.basedir}/media">
 				<include name="**"/>
 				<exclude name=".*"/>

@@ -18,20 +18,32 @@ class JFormFieldredproductfindertemplate extends JFormField
 	 * @var		string
 	 */
 	public	$type = 'redproductfindertemplate';
+	
+	/**
+	 * Get template of redproducfinder from redshop
+	 * 
+	 * @return string
+	 */
 	protected function getInput()
 	{
-	
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 		$name = $this->name;
 		$control_name = $this->name;
+		
 		// This might get a conflict with the dynamic translation - TODO: search for better solution
-		$query = 'SELECT template_id, template_name' .
-				' FROM #__redshop_template WHERE published=1 AND template_section="redproductfinder"' .
-				' ORDER BY template_id';
+		$query->select("template_id, template_name");
+		$query->from($db->qn("#__redshop_template"));
+		$query->where("published=1");
+		$query->where("template_section=" . $db->q("redproductfinder"));
+		$query->order("template_id");
+		
 		$db->setQuery($query);
+		
 		$options = $db->loadObjectList();
+		
 		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select Template').' -', 'template_id', 'template_name'));
+		
 		return  JHTML::_('select.genericlist',  $options, $name , 'class="inputbox"', 'template_id', 'template_name', $this->value, $this->template_id );
-		//return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'template_id', 'template_name', $value, $control_name.$name );
 	}
 }
