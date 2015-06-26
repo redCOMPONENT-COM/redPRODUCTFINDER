@@ -21,7 +21,10 @@ $option = JFactory::getApplication()->input->get("option");
 $formid = $params->get("form_id");
 $module_class_sfx = $params->get("moduleclass_sfx");
 $app = JFactory::getApplication();
-$searchBy = $params->get('search_by');
+
+// Get search by tag or type from component
+$paramComponent = JComponentHelper::getParams('com_redproductfinder');
+$searchBy = $paramComponent->get('search_by');
 $Itemid = $app->input->get("Itemid", 0);
 
 $cid = 0;
