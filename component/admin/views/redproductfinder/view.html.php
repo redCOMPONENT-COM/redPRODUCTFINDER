@@ -1,27 +1,37 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
- * redPRODUCTFINDER view
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 require_once JPATH_COMPONENT . '/helpers/redproductfinder.php';
-
 /**
- * ProductSearch View
+ * RedPRODUCTFINDER Forms View.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
 class RedproductfinderViewRedproductfinder extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+
 	/**
-	 * Productsearch view display method
-	 * @return void
-	 **/
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
+	 */
 	function display($tpl = null)
 	{
 		/* Get the total number of tags */
@@ -42,6 +52,11 @@ class RedproductfinderViewRedproductfinder extends JViewLegacy
 		parent::display($tpl);
 	}
 
+	/**
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
+	 */
 	function toolbar()
 	{
 		JHtmlSidebar::setAction('index.php?option=com_redproductfinder');
@@ -50,4 +65,3 @@ class RedproductfinderViewRedproductfinder extends JViewLegacy
 		JToolBarHelper::preferences('com_redproductfinder', '300');
 	}
 }
-?>

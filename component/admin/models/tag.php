@@ -38,7 +38,7 @@ class RedproductfinderModelTag extends RModelAdmin
 
 			$query = $db->getQuery(true);
 
-			// delete all custom keys for user 1001.
+			// Delete all custom keys for user 1001.
 			$conditions = array(
 				$db->quoteName('tag_id') . ' = ' . $id
 			);
@@ -162,8 +162,6 @@ class RedproductfinderModelTag extends RModelAdmin
 	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
-	 *
-	 * @since    3.0
 	 */
 	public function save($data)
 	{
@@ -181,10 +179,10 @@ class RedproductfinderModelTag extends RModelAdmin
 				if (count($post["type_id"]) > 0)
 				{
 					// Delete tag
-					$r = $this->deleteTag_Type($post, $post["id"]);
+					$r = $this->deleteTagType($post["id"]);
 
 					// Insert tag type
-					$a = $this->insertTag_Type($post, $post["id"]);
+					$a = $this->insertTagType($post);
 				}
 			}
 			else
@@ -194,16 +192,24 @@ class RedproductfinderModelTag extends RModelAdmin
 				// Save tag type into table tag_type
 				if (count($post["type_id"]) > 0)
 				{
-					$a = $this->insertTag_Type($post, $idTag);
+					$a = $this->insertTagType($post);
 				}
 			}
 
 			return true;
 		}
+
 		return false;
 	}
 
-	protected function insertTag_Type($data, $idTag)
+	/**
+	 * This method will insert both tag and type into table map
+	 *
+	 * @param   array  $data  array data to insert
+	 *
+	 * @return mixed
+	 */
+	public function insertTagType($data)
 	{
 		$db = JFactory::getDbo();
 
@@ -224,13 +230,20 @@ class RedproductfinderModelTag extends RModelAdmin
 		return $result;
 	}
 
-	protected function deleteTag_Type($data, $idTag)
+	/**
+	 * This method will delete both tag_type in table tag_type
+	 *
+	 * @param   int  $idTag  id of tag that need to be removed
+	 *
+	 * @return boolean
+	 */
+	protected function deleteTagType($idTag)
 	{
 		$db = JFactory::getDbo();
 
 		$query = $db->getQuery(true);
 
-		// delete all custom keys for user 1001.
+		// Delete all custom keys for user 1001.
 		$conditions = array(
 			$db->quoteName('tag_id') . ' = ' . $idTag
 		);

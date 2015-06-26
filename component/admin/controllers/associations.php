@@ -17,20 +17,16 @@ defined('_JEXEC') or die;
 class RedproductfinderControllerAssociations extends RControllerAdmin
 {
 	/**
-	 * Returns a Table object, always creating it
+	 * Proxy for getModel.
 	 *
-	 * @param   type    $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  The array of possible config values. Optional.
 	 *
-	 * @return  JTable  A database object
-	 *
-	 * @since   1.6
+	 * @return  JModel
 	 */
 	public function getModel($name = 'Association', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 }

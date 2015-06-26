@@ -9,6 +9,7 @@
  */
 
 JLoader::import('forms', JPATH_SITE . '/components/com_redproductfinder/helpers');
+JLoader::import('helper', JPATH_SITE . '/modules/mod_redproductforms');
 
 $data = RedproductfinderForms::filterForm($this->item);
 $model = $this->getModel('forms');
@@ -21,7 +22,8 @@ $cid = 0;
 $manufacturer_id = 0;
 $template_id = $param->get('prod_template');
 $formid = $param->get('form');
-$range = 0;
+$range = ModRedproductForms::getRangeMaxMin($cid, $manufacturer_id);;
+
 ?>
 
 <div class="">
@@ -87,7 +89,7 @@ $range = 0;
 			<span><?php echo JText::_("COM_REDPRODUCTFINDER_VIEWS_FORMS_DEFAULT_MAX")?></span><span><input type="text" name="redform[filterprice][max]" value="<?php echo $range['max'];?>"/></span>
 		</div>
 	</div>
-	
+
 	<input type="submit" name="submit" value="submit" />
 	<input type="hidden" name="view" value="findproducts" />
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />

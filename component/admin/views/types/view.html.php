@@ -1,21 +1,30 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
- * Types view
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 /**
- * Tags View
+ * RedPRODUCTFINDER Types View.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
 class RedproductfinderViewTypes extends JViewLegacy
 {
+	/**
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
+	 */
 	function display($tpl = null)
 	{
 		/* add submenu here */
@@ -42,9 +51,14 @@ class RedproductfinderViewTypes extends JViewLegacy
 		parent::display($tpl);
 	}
 
+	/**
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
+	 */
 	function toolbar()
 	{
-		JToolBarHelper::title(JText::_( 'Type' ), 'address contact');
+		JToolBarHelper::title(JText::_('Types List'), 'address contact');
 		JToolbarHelper::addNew('type.add');
 		JToolbarHelper::editList('type.edit');
 		JToolbarHelper::publish('types.publish', 'JTOOLBAR_PUBLISH', true);
@@ -56,8 +70,6 @@ class RedproductfinderViewTypes extends JViewLegacy
 	 * Returns an array of fields the table can be sorted by
 	 *
 	 * @return  array  Array containing the field name to sort by as the key and display text as value
-	 *
-	 * @since   3.0
 	 */
 	protected function getSortFields()
 	{
@@ -68,4 +80,3 @@ class RedproductfinderViewTypes extends JViewLegacy
 		);
 	}
 }
-?>
