@@ -1,11 +1,13 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
+ *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+
+defined('_JEXEC') or die;
 
 $model = JModelLegacy::getInstance("Filters", "RedproductfinderModel");
 
@@ -102,7 +104,8 @@ JFactory::getDocument()->addScriptDeclaration('
 				</th>
 			</tr>
 			</thead>
-			<?php
+			<tbody>
+				<?php
 			$k = 0;
 			for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 			{
@@ -153,9 +156,12 @@ JFactory::getDocument()->addScriptDeclaration('
 				$k = 1 - $k;
 			}
 			?>
-			<tr>
-	            <td colspan="8"><?php echo $this->pagination->getListFooter(); ?></td>
-	         </tr>
+			</tbody>
+			<tfoot>
+				<tr>
+		            <td colspan="8"><?php echo $this->pagination->getListFooter(); ?></td>
+	         	</tr>
+			</tfoot>
 		</table>
 	</div>
 

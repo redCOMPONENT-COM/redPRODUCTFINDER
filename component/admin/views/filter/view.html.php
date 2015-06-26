@@ -1,24 +1,30 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
- * Products view
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
+
 /**
- * Associations View
+ * RedPRODUCTFINDER Filter View.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
 class RedproductfinderViewFilter extends JViewLegacy
 {
 	/**
-	 * redFORM view display method
-	 * @return void
-	 **/
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a Error object.
+	 */
 	function display($tpl = null)
 	{
 		$this->form		= $this->get('Form');
@@ -31,9 +37,25 @@ class RedproductfinderViewFilter extends JViewLegacy
 		parent::display($tpl);
 	}
 
+	/**
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
+	 */
 	function toolbar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
+
+		$isNew			= ($this->item->id == 0);
+
+		if ($isNew)
+		{
+			JToolBarHelper::title(JText::_('COM_REDPRODUCTFINDER_VIEWS_FILTER_NEW_TITLE'), 'address contact');
+		}
+		else
+		{
+			JToolBarHelper::title(JText::_('COM_REDPRODUCTFINDER_VIEWS_FILTER_EDIT_TITLE'), 'address contact');
+		}
 
 		JToolbarHelper::apply('filter.apply');
 		JToolbarHelper::save('filter.save');
@@ -43,4 +65,3 @@ class RedproductfinderViewFilter extends JViewLegacy
 		JToolbarHelper::divider();
 	}
 }
-?>

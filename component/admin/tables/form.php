@@ -1,18 +1,20 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
-
-use Joomla\Registry\Registry;
+defined('_JEXEC') or die;
 
 /**
+ * RedPRODUCTFINDER Form Table.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
 class RedproductfinderTableForm extends JTable
 {
@@ -39,21 +41,26 @@ class RedproductfinderTableForm extends JTable
 
 	/** @var string Whether or not the entry is dependency */
 	var $dependency = 0;
-	
+
+	/** @var datetime default value is null*/
 	var $checked_out = null;
-	
+
+	/** @var datetime default value is null*/
 	var $checked_out_time = null;
-	
+
+	/** @var int default value is 0*/
 	var $formexpires = 0;
-	
+
+	/** @var datetime default value is null*/
 	var $created = null;
-	
+
 	/**
-	* @param database A database connector object
-	*/
-	function __construct( &$db )
+	 * Database A database connector object
+	 *
+	 * @param   JDatabase  $db  Jdatabase object
+	 */
+	public function __construct($db)
 	{
-		parent::__construct('#__redproductfinder_forms', 'id', $db );
+		parent::__construct('#__redproductfinder_forms', 'id', $db);
 	}
 }
-?>

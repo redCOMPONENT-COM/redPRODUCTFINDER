@@ -69,8 +69,6 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	 * @param   object  $record  A record object.
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
 	 */
 	protected function canEditState($record)
 	{
@@ -96,8 +94,6 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A database object
-	 *
-	 * @since   1.6
 	 */
 	public function getTable($type = 'Association', $prefix = 'RedproductfinderTable', $config = array())
 	{
@@ -111,8 +107,6 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
-	 *
-	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -135,8 +129,6 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	 * @param   integer  $pk  The id of the primary key.
 	 *
 	 * @return  mixed  Object on success, false on failure.
-	 *
-	 * @since   1.6
 	 */
 	public function getItem($pk = null)
 	{
@@ -149,8 +141,6 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
 	 */
 	protected function loadFormData()
 	{
@@ -171,8 +161,6 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
-	 *
-	 * @since    3.0
 	 */
 	public function save($data)
 	{
@@ -190,10 +178,10 @@ class RedproductfinderModelAssociation extends RModelAdmin
 				if (count($post["tag_id"]) > 0)
 				{
 					// Delete tag
-					$r = $this->deleteTag_Type($post, $post["id"]);
+					$r = $this->deleteTagType($post, $post["id"]);
 
 					// Insert tag type
-					$a = $this->insertTag_Type($post, $post["id"]);
+					$a = $this->insertTagType($post, $post["id"]);
 				}
 			}
 			else
@@ -203,7 +191,7 @@ class RedproductfinderModelAssociation extends RModelAdmin
 				// Save tag type into table tag_type
 				if (count($post["tag_id"]) > 0)
 				{
-					$a = $this->insertTag_Type($post, $idTag);
+					$a = $this->insertTagType($post, $idTag);
 				}
 			}
 
@@ -221,7 +209,7 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	 *
 	 * @return boolean
 	 */
-	protected function insertTag_Type($data = array(), $idTag = "")
+	protected function insertTagType($data = array(), $idTag = "")
 	{
 		$db = JFactory::getDbo();
 
@@ -252,7 +240,7 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	 *
 	 * @return boolean
 	 */
-	protected function deleteTag_Type($data, $idTag)
+	protected function deleteTagType($data, $idTag)
 	{
 		$db = JFactory::getDbo();
 

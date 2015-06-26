@@ -1,17 +1,20 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
- * Types table
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 /**
+ * RedPRODUCTFINDER Form Table.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
 class RedproductfinderTableType extends JTable
 {
@@ -42,20 +45,25 @@ class RedproductfinderTableType extends JTable
 	/** @var int ID of the form the type belongs to */
 	var $form_id = null;
 
+	/** @var int is show picker or no*/
 	var $picker = null;
 
+	/** @var int extrafield of type*/
 	var $extrafield = null;
 
+	/** @var int ID of the form the type belongs to */
 	var $publish_up = null;
 
+	/** @var int ID of the form the type belongs to */
 	var $publish_down = null;
 
 	/**
-	* @param database A database connector object
-	*/
-	function __construct( &$db )
+	 * Database A database connector object
+	 *
+	 * @param   JDatabase  $db  A database connector object
+	 */
+	public function __construct($db)
 	{
-		parent::__construct('#__redproductfinder_types', 'id', $db );
+		parent::__construct('#__redproductfinder_types', 'id', $db);
 	}
 }
-?>

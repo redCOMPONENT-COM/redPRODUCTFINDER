@@ -1,13 +1,24 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
+ *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die;
 
+// Check if redshop already enabled
+jimport('joomla.application.component.helper');
+
+if(!JComponentHelper::isEnabled('com_redshop', true)) :
+?>
+
+<div><?php echo JText::_("COM_REDPRODUCTFINDER_REDSHOP_INSTALLED"); ?></div>
+
+<?php
+else :
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('bootstrap.tooltip');
@@ -59,21 +70,6 @@ JFactory::getDocument()->addScriptDeclaration('
 				<label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
 				<?php echo $this->pagination->getLimitBox(); ?>
 			</div>
-			<div class="btn-group pull-right hidden-phone">
-				<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
-				<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
-					<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC');?></option>
-					<option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
-					<option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
-				</select>
-			</div>
-			<div class="btn-group pull-right">
-				<label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
-				<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-					<option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-					<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
-				</select>
-			</div>
 		</div>
 
 		<div class="clearfix"></div>
@@ -82,7 +78,7 @@ JFactory::getDocument()->addScriptDeclaration('
 		<thead>
 			<tr>
 				<th width="1%" class="nowrap center hidden-phone">
-					<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+					<?php echo JText::_("#"); ?>
 				</th>
 				<th width="1%" class="center">
 					<?php echo JHtml::_('grid.checkall'); ?>
@@ -94,9 +90,6 @@ JFactory::getDocument()->addScriptDeclaration('
 					<?php echo JText::_('COM_REDPRODUCTFINDER_TAG_NAME'); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('Ordering'); ?>
-				</th>
-				<th class="title">
 					<?php echo JText::_('Published'); ?>
 				</th>
 				<th width="1%">
@@ -104,6 +97,7 @@ JFactory::getDocument()->addScriptDeclaration('
 				</th>
 			</tr>
 		</thead>
+		<tbody>
 			<?php
 				$k = 0;
 				if ($this->items != false)
@@ -111,7 +105,7 @@ JFactory::getDocument()->addScriptDeclaration('
 					for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 					{
 						$item = $this->items[$i];
-					
+						
 						JFilterOutput::objectHTMLSafe($item);
 						$link 	= JRoute::_('index.php?option=com_redproductfinder&task=association.edit&id='. $item->id);
 					
@@ -155,9 +149,6 @@ JFactory::getDocument()->addScriptDeclaration('
 												};
 											?>
 										</td>
-										<td>
-											<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="text_area" style="text-align: center" />
-										</td>
 										<td width="10%" align="center">
 											<?php echo JHtml::_('jgrid.published', $item->published, $i, 'associations.', 1, 'cb', $item->publish_up, $item->publish_down); ?>
 										</td>
@@ -170,9 +161,12 @@ JFactory::getDocument()->addScriptDeclaration('
 								}	
 				}
 			?>
+		</tbody>
+		<tfoot>
 			<tr>
 	            <td colspan="9"><?php echo $this->pagination->getListFooter(); ?></td>
 	         </tr>
+	    </tfoot>
 		</table>
 	</div>
 
@@ -184,3 +178,4 @@ JFactory::getDocument()->addScriptDeclaration('
 
 	<?php echo JHtml::_('form.token'); ?>
 </form>
+<?php endif; ?>
