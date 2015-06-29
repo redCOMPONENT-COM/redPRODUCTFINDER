@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 JLoader::import('helper', JPATH_SITE . '/modules/mod_redproductforms');
 
 $lists = ModRedproductForms::getList($params);
-$model = new RedproductfinderModelForms;
+$model = JModelLegacy::getInstance("Forms", "RedproductfinderModel");
 $attributes = $model->getAttribute();
 $attributeProperties = $model->getAttributeProperty();
 $attributeSubProperties = $model->getAttributeSubProperty();

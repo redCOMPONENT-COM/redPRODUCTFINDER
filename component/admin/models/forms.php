@@ -30,7 +30,7 @@ class RedproductfinderModelForms extends RModelList
 	 *
 	 * @since   1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.formname', $direction = 'asc')
 	{
 		$app = JFactory::getApplication();
 
@@ -46,8 +46,16 @@ class RedproductfinderModelForms extends RModelList
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
+		$value = $app->getUserStateFromRequest('global.list.limit', $this->paginationPrefix . 'limit', $app->getCfg('list_limit'), 'uint');
+		$limit = $value;
+		$this->setState('list.limit', $limit);
+
+		$value = $app->getUserStateFromRequest($this->context . '.limitstart', $this->paginationPrefix . 'limitstart', 0);
+		$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
+		$this->setState('list.start', $limitstart);
+
 		// List state information.
-		parent::populateState('a.formname', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
@@ -69,58 +77,43 @@ class RedproductfinderModelForms extends RModelList
 		return $this->_total;
 	}
 
-    /**
-     * Build an SQL query to load the list data.
-     *
-     * @return  JDatabaseQuery
-     *
-     * @since   1.6
-     */
-    protected function getListQuery()
-    {
-    	// Create a new query object.
-    	$db = $this->getDbo();
-    	$query = $db->getQuery(true);
+	/**
+	 * Build an SQL query to load the list data.
+	 *
+	 * @return JDatabaseQuery
+	 */
+	public function getListQuery()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
 
-    	// Get filter state - do it later
-    	$state = "1";
+		/*
+		 * @todo Get filter by state - we will continue on the next version
+		*/
+		$state = "1";
 
-    	$query->select("*")
-    	->from($db->qn("#__redproductfinder_forms")  . " as a");
+		$query->select("*")
+		->from($db->qn("#__redproductfinder_forms", "a"));
 
-    	// Filter by published state
-    	$published = $this->getState('filter.published');
+		// Filter by published state
+		$published = $this->getState('filter.published');
 
-    	if ($state == "-2")
-    	{
-    		$query->where($db->qn("a.published") . "=" . $db->qn("-2"));
-    	}
-    	else
-    	{
-    		$query->where($db->qn("a.published") . "!=" . $db->q("-2"));
-    	}
+		// Filter by search in formname
+		$search = $this->getState('filter.search');
 
-    	// Filter by search in formname.
-    	$search = $this->getState('filter.search');
+		if (!empty($search))
+		{
+			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$query->where('(a.formname LIKE ' . $search . ')');
+		}
 
-    	if (!empty($search))
-    	{
-    			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-    			$query->where('(a.formname LIKE ' . $search . ')');
-    	}
+		// Add the list ordering clause.
+		$orderCol = $this->state->get('list.ordering', 'a.formname');
+		$orderDirn = $this->state->get('list.direction', 'asc');
 
-    	// Add the list ordering clause.
-    	$orderCol = $this->state->get('list.ordering', 'a.formname');
-    	$orderDirn = $this->state->get('list.direction', 'asc');
+		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
-    	if ($orderCol == 'a.ordering')
-    	{
-    		$orderCol = 'c.title ' . $orderDirn . ', a.ordering';
-    	}
-
-    	$query->order($db->escape($orderCol . ' ' . $orderDirn));
-
-    	return $query;
-    }
+		return $query;
+	}
 }
-?>

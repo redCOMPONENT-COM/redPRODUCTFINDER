@@ -13,9 +13,20 @@ $catid = $displayData["catid"];
 $input = JFactory::getApplication()->input;
 
 ?>
-			<input type="hidden" name="catid" value="<?php echo $selected[0] ?>">
+			<input type="hidden" name="catid"
+				value="<?php
+							if ($selected)
+							{
+								echo $selected[0];
+							}
+							else
+							{
+								echo "0";
+							}
+						?>">
+
 			<select id="select-categories" onchange="submitform('association.setProduct');" name="jform[category_id]">
-				<option><?php echo JText::_('COM_REDPRODUCTFINDER_MODELS_FORMS_ASSOCIATION_CATEGORY_ID_LABEL') ?></option>
+				<option value="0"><?php echo JText::_('COM_REDPRODUCTFINDER_MODELS_FORMS_ASSOCIATION_CATEGORY_ID_LABEL') ?></option>
 				<?php foreach ($categories as $category_id => $category) : ?>
 					<?php
 						$isSelected = "";

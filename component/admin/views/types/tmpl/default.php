@@ -1,24 +1,28 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
+ *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die;
+
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('rjquery.chosen', 'select');
+RHtml::_('rsearchtools.form', "#adminForm", array());
 
 $app       = JFactory::getApplication();
 $user      = JFactory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-
+$saveOrder = ($listOrder == 't.ordering' && strtolower($listDirn) == 'asc');
 $sortFields = $this->getSortFields();
 
 JFactory::getDocument()->addScriptDeclaration('
@@ -41,13 +45,20 @@ JFactory::getDocument()->addScriptDeclaration('
 	};
 ');
 
+$saveOrderLink = JRoute::_('index.php?option=com_redproductfinder&task=types.saveOrderAjax&tmpl=component', false);
+
+if ($saveOrder)
+{
+	JHTML::_('rsortablelist.sortable', 'table-typeslist', 'adminForm', strtolower($listDirn), $saveOrderLink, false, true);
+}
+
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 				<div class="filter-search btn-group pull-left">
 					<label for="filter_search" class="element-invisible"><?php echo JText::_('COM_CONTACT_FILTER_SEARCH_DESC');?></label>
-					<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('COM_CONTACT_SEARCH_IN_NAME'); ?>" />
+					<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('COM_REDPRODUCTFINDER_FILTER_SEARCH_DESC'); ?>" />
 				</div>
 				<div class="btn-group pull-left">
 					<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
@@ -57,30 +68,15 @@ JFactory::getDocument()->addScriptDeclaration('
 					<label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
 					<?php echo $this->pagination->getLimitBox(); ?>
 				</div>
-				<div class="btn-group pull-right hidden-phone">
-					<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
-					<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
-						<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC');?></option>
-						<option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
-						<option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
-					</select>
-				</div>
-				<div class="btn-group pull-right">
-					<label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
-					<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-						<option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-						<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
-					</select>
-				</div>
 			</div>
 
 			<div class="clearfix"></div>
 
-		<table class="table table-striped" id="typeslist" class="adminlist">
+		<table class="table table-striped" id="table-typeslist" class="adminlist">
 			<thead>
 				<tr>
 					<th width="1%" class="nowrap center hidden-phone">
-						<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+						<?php echo JHTML::_('rsearchtools.sort', '<i class=\'icon-sort\'></i>', 't.ordering', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="center">
 						<?php echo JHtml::_('grid.checkall'); ?>
@@ -94,9 +90,6 @@ JFactory::getDocument()->addScriptDeclaration('
 					<th class="title">
 						<?php echo JText::_('COM_REDPRODUCTFINDER_TYPE_SELECT'); ?>
 					</th>
-					<th class="title" width="1%">
-						<?php echo JText::_('COM_REDPRODUCTFINDER_ORDERING'); ?>
-					</th>
 					<th class="title">
 						<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
 					</th>
@@ -108,6 +101,7 @@ JFactory::getDocument()->addScriptDeclaration('
 			<tbody>
 			<?php
 			$k = 0;
+
 			for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 			{
 				$item = $this->items[$i];
@@ -120,15 +114,13 @@ JFactory::getDocument()->addScriptDeclaration('
 				?>
 				<tr class="<?php echo 'row'. $k; ?>">
 					<td class="order nowrap center hidden-phone">
-						<?php
-							$iconClass = ' inactive';
-						?>
-						<span class="sortable-handler<?php echo $iconClass ?>">
-							<i class="icon-menu"></i>
+						<span class="sortable-handler hasTooltip <?php echo ($saveOrder) ? '' : 'inactive'; ?>">
+							<i class="icon-move"></i>
 						</span>
+						<input type="text" style="display:none" name="order[]" value="<?php echo $item->ordering;?>" class="text-area-order" />
 					</td>
 					<td>
-					<?php echo $checked; ?>
+						<?php echo $checked; ?>
 					</td>
 					<td>
 					<?php
@@ -151,9 +143,6 @@ JFactory::getDocument()->addScriptDeclaration('
 					</td>
 					<td>
 						<?php echo JText::_($item->type_select); ?>
-					</td>
-					<td>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="text_area" style="text-align: center" />
 					</td>
 					<td width="10%" align="center">
 						<?php echo JHtml::_('jgrid.published', $item->published, $i, 'types.', 1, 'cb', $item->publish_up, $item->publish_down); ?>

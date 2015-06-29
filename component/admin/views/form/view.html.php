@@ -1,39 +1,55 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
- * redFORM view
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ *
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 /**
- * redFORM View
+ * RedPRODUCTFINDER Form View.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ *
+ * @since    2.0
  */
 class RedproductfinderViewForm extends JViewLegacy
 {
-	protected $item;
-
 	protected $form;
 
+	protected $item;
+
+	protected $state;
+
+	/**
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a Error object.
+	 */
 	function display( $tpl = null )
 	{
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
-		// $this->state	= $this->get('State');
 
 		$this->addToolbar();
 
 		parent::display($tpl);
 	}
 
+	/**
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
+	 */
 	function addToolbar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
+		JToolBarHelper::title(JText::_('Form Edit'), 'address contact');
 
 		$user		= JFactory::getUser();
 		$userId		= $user->get('id');
@@ -48,4 +64,3 @@ class RedproductfinderViewForm extends JViewLegacy
 		JToolbarHelper::divider();
 	}
 }
-?>

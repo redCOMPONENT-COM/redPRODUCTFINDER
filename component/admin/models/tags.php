@@ -28,6 +28,27 @@ class RedproductfinderModelTags extends RModelList
 	protected $_limit = null;
 
 	/**
+	 * Constructor
+	 *
+	 * @param   array  $config  [description]
+	 *
+	 * @see     JController
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields']))
+		{
+			$filterFields = array(
+					'ordering', 't.ordering'
+			);
+
+			$config['filter_fields'] = $filterFields;
+		}
+
+		parent::__construct($config);
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
@@ -39,7 +60,7 @@ class RedproductfinderModelTags extends RModelList
 	 *
 	 * @since   1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = "t.ordering", $direction = "asc")
 	{
 		$app = JFactory::getApplication();
 
@@ -55,56 +76,76 @@ class RedproductfinderModelTags extends RModelList
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
+		$value = $app->getUserStateFromRequest('global.list.limit', $this->paginationPrefix . 'limit', $app->getCfg('list_limit'), 'uint');
+		$limit = $value;
+		$this->setState('list.limit', $limit);
+
+		$value = $app->getUserStateFromRequest($this->context . '.limitstart', $this->paginationPrefix . 'limitstart', 0);
+		$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
+		$this->setState('list.start', $limitstart);
+
 		// List state information.
-		parent::populateState('t.tag_name', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
 	 * Show all tags that have been created
+	 *
+	 * @return Objects
 	 */
-	function getTags() {
+	function getTags()
+	{
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 		$filtertype = JRequest::getInt('filtertype', false);
 
 		/* Get all the fields based on the limits */
-		$query = "SELECT t.* FROM #__redproductfinder_tags t
-				LEFT JOIN #__redproductfinder_tag_type y
-				ON t.id = y.tag_id ";
-		if ($filtertype) $query .= "WHERE y.type_id = ".$filtertype." ";
-		$query .= " GROUP BY t.id
-					ORDER BY t.ordering";
+		$query->select("t.*");
+		$query->from($db->qn("#__redproductfinder_tags", "t"));
+		$query->join("LEFT", $db->qn("#__redproductfinder_tag_type", "y") . " ON t.id = y.tag_id");
+		$query->where("y.type_id = " . $filtertype);
+		$query->group("t.id");
+		$query->order("t.ordering");
+
 		$db->setQuery($query, $this->_limitstart, $this->_limit);
+
 		return $db->loadObjectList();
 	}
 
-   /**
-    * Retrieve a tag to edit
-    */
-   function getTag()
-   {
-      $row = $this->getTable();
-      $my = JFactory::getUser();
-      $id = JRequest::getVar('cid');
+	/**
+	 * Retrieve a tag to edit
+	 *
+	 * @return object
+	 */
+	function getTag()
+	{
+		$row = $this->getTable();
+		$my = JFactory::getUser();
+		$id = JRequest::getVar('cid');
 
-      /* load the row from the db table */
-      $row->load($id[0]);
+		/* load the row from the db table */
+		$row->load($id[0]);
 
-      if ($id[0])
-      {
-         // do stuff for existing records
-         $result = $row->checkout( $my->id );
-      }
-      else
-      {
-         // do stuff for new records
-         $row->published    = 1;
-      }
+		if ($id[0])
+		{
+			// Do stuff for existing records
+			$result = $row->checkout($my->id);
+		}
+		else
+		{
+			// Do stuff for new records
+			$row->published    = 1;
+		}
 
-      return $row;
-   }
+		return $row;
+	}
 
 	/**
 	 * Get the list of selected types for this tag
+	 *
+	 * @param   int  $id  id of tag type element
+	 *
+	 * @return array
 	 */
 	public function getTagTypes($id)
 	{
@@ -122,32 +163,51 @@ class RedproductfinderModelTags extends RModelList
 
 	/**
 	 * Get the list of selected type names for this tag
+	 *
+	 * @return array
 	 */
-	public function getTagTypeNames() {
+	public function getTagTypeNames()
+	{
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 		$id = JRequest::getVar('cid');
-		$q = "SELECT tag_id, type_name
-			FROM #__redproductfinder_tag_type j, #__redproductfinder_types t
-			WHERE j.type_id = t.id;";
-		$db->setQuery($q);
+
+		$query->select("tag_id, type_name")
+			->from($db->qn("#__redproductfinder_tag_type", "j"))
+			->from($db->qn("#__redproductfinder_types", "t"))
+			->where("j.type_id = t.id");
+
+		$db->setQuery($query);
+
 		$list = $db->loadObjectList();
+
 		$sortlist = array();
-		foreach ($list as $key => $type) {
+
+		foreach ($list as $key => $type)
+		{
 			$sortlist[$type->tag_id][] = $type->type_name;
 		}
+
 		return $sortlist;
 	}
 
 	/**
 	 * Show all types
+	 *
+	 * @return object
 	 */
-	public function getTypes() {
+	public function getTypes()
+	{
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
 		/* Get all the fields based on the limits */
-		$query = "SELECT id, type_name FROM #__redproductfinder_types
-				ORDER BY type_name";
+		$query->select("id, type_name")
+			->from("#__redproductfinder_types")
+			->order("type_name");
+
 		$db->setQuery($query, $this->_limitstart, $this->_limit);
+
 		return $db->loadObjectList();
 	}
 
@@ -164,22 +224,13 @@ class RedproductfinderModelTags extends RModelList
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
-		// Get filter state - do it later
+		/*
+		 * @todo: we will continue make filter by state on next version
+		 */
 		$state = "1";
 
 		$query->select("t.*")
-		->from($db->qn("#__redproductfinder_tags") . " t")
-		//->join("LEFT", $db->qn("#__redproductfinder_tag_type") . " y ON t.id = y.tag_id")
-		->order($db->qn("t") . "." . $db->qn("id"));
-
-		if ($state == "-2")
-		{
-			$query->where($db->qn("t") . "." . $db->qn("published") . "=" . $db->qn("-2"));
-		}
-		else
-		{
-			$query->where($db->qn("t") . "." . $db->qn("published") . "!=" . $db->q("-2"));
-		}
+			->from($db->qn("#__redproductfinder_tags", "t"));
 
 		// Filter by search
 		$search = $this->getState('filter.search');
@@ -191,7 +242,7 @@ class RedproductfinderModelTags extends RModelList
 		}
 
 		// Add the list ordering clause.
-		$orderCol = $this->state->get('list.ordering', 't.tag_name');
+		$orderCol = $this->state->get('list.ordering', 't.ordering');
 		$orderDirn = $this->state->get('list.direction', 'asc');
 
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -199,4 +250,3 @@ class RedproductfinderModelTags extends RModelList
 		return $query;
 	}
 }
-?>

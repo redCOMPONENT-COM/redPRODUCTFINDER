@@ -11,15 +11,10 @@
 			class="readonly"
 		/>
 
-		<field 	id="published" name="published" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC"
-				class="chzn-color-state"
-				size="1"
-				default="1"
-		>
-			<option value="1">
-				JYES</option>
-			<option value="0">
-				JNO</option>
+		<field 	id="published" name="published" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" 
+		class="chzn-color-state" filter="intval" size="1" default="1">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
 		</field>
 		
 		<field name="formname"

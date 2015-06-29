@@ -19,110 +19,54 @@ defined('_JEXEC') or die;
 class RedproductfinderModelFilters extends RModelList
 {
 	/**
-	 * Show all Filter that have been created
-	 */
-	function getFilters()
-	{
-		$db = JFactory::getDBO();
-		//$filtertype = JRequest::getInt('filtertype', false);
-
-		/* Get all the fields based on the limits */
-		$query = "SELECT f.* FROM #__redproductfinder_filters f";
-		//if ($filtertype) $query .= "WHERE y.type_id = ".$filtertype." ";
-		$query .= " GROUP BY f.id
-					ORDER BY f.ordering";
-
-		$db->setQuery($query, $this->_limitstart, $this->_limit);
-		return $db->loadObjectList();
-	}
-
-	function getPagination()
-	{
-		global $mainframe, $option;
-		$mainframe = JFactory::getApplication();
-		/* Lets load the pagination if it doesn't already exist */
-		if (empty($this->_pagination)) {
-		jimport('joomla.html.pagination');
-		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-		$this->_limitstart = JRequest::getVar('limitstart', 0, '', 'int');
-
-		// In case limit has been changed, adjust it
-		$this->_limitstart = ($this->_limit != 0 ? (floor($this->_limitstart / $this->_limit) * $this->_limit) : 0);
-
-			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
-				//$mainframe->Redirect('index.php');
-		}
-
-		return $this->_pagination;
-	}
-
-	/**
-	 * Method to get the total number of testimonial items for the category
+	 * This method will get filter item on each id
 	 *
-	 * @access public
-	 * @return integer
+	 * @param   int  $id  id filter item
+	 *
+	 * @return Array
 	 */
-	function getTotal() {
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_total))
-		{
-			$query = "SELECT COUNT(*) AS total"
-			. "\n FROM #__redproductfinder_filters";
-			$this->_total = $this->_getListCount($query);
-		}
-
-		return $this->_total;
-	}
-
-   /**
-    * Retrieve a Filter to edit
-    */
-    function getFilter($id)
-    {
-    	$db = JFactory::getDBO();
-    	$query = $db->getQuery(true);
-
-    	$query->select("f.*")
-    	->from("#__redproductfinder_filters f")
-    	->where($db->qn("id") . " = " . $db->q($id));
-
-    	$db->setQuery($query);
-
-    	return $db->loadAssoc();
-   }
-
-	/**
-	 * Get the list of selected types for this tag
-	 */
-	public function getTagTypes() {
+	public function getFilter($id)
+	{
 		$db = JFactory::getDBO();
-		$id = JRequest::getVar('cid');
-		$q = "SELECT type_id
-			FROM #__redproductfinder_tag_type
-			WHERE tag_id = ".$id[0];
-		$db->setQuery($q);
-		return $db->loadResultArray();
+		$query = $db->getQuery(true);
+
+		$query->select("f.*")
+		->from("#__redproductfinder_filters f")
+		->where($db->qn("id") . " = " . $db->q($id));
+
+		$db->setQuery($query);
+
+		return $db->loadAssoc();
 	}
 
 	/**
 	 * Get the list of selected type names for this tag
+	 *
+	 * @param   int  $typeId  typeid for item
+	 *
+	 * @return Objects
 	 */
-	public function getTags($type_id) {
+	public function getTags($typeId)
+	{
 		$db = JFactory::getDBO();
 		$id = JRequest::getVar('cid');
 		$q = "SELECT tag_id, tag_name
 			FROM #__redproductfinder_tag_type j, #__redproductfinder_tags t
-			WHERE j.tag_id = t.id AND j.type_id=".$type_id;
+			WHERE j.tag_id = t.id AND j.type_id=" . $typeId;
 		$db->setQuery($q);
 
 		$list = $db->loadObjectList();
+
 		return $list;
 	}
 
 	/**
 	 * Show all tag
+	 *
+	 * @return Objects
 	 */
-	public function getTypes() {
+	public function getTypes()
+	{
 		$db = JFactory::getDBO();
 
 		/* Get all the fields based on the limits */
@@ -130,22 +74,28 @@ class RedproductfinderModelFilters extends RModelList
 				ORDER BY ordering";
 
 		$db->setQuery($query);
+
 		return $db->loadObjectlist();
 	}
+
 	/**
 	 * Show tag name
+	 *
+	 * @param   string  $tagIds  list string id of tags
+	 *
+	 * @return string
 	 */
-	public function getTagname($tag_ids = '')
+	public function getTagname($tagIds = '')
 	{
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 
-		if (!empty($tag_ids))
+		if (!empty($tagIds))
 		{
 			$query->select("tag_name")
 			->from("#__redproductfinder_tags");
 
-			$tagsArray = explode(",", $tag_ids);
+			$tagsArray = explode(",", $tagIds);
 			$tags = array();
 
 			foreach ($tagsArray as $k => $value)
@@ -154,10 +104,10 @@ class RedproductfinderModelFilters extends RModelList
 				$tags[] = $arr[1];
 			}
 
-			$tag_ids = implode(",", $tags);
+			$tagIds = implode(",", $tags);
 
 			// Add where query
-			$query->where("id IN (" . $tag_ids . ")");
+			$query->where("id IN (" . $tagIds . ")");
 
 			$db->setQuery($query);
 
@@ -218,4 +168,3 @@ class RedproductfinderModelFilters extends RModelList
 		return $query;
 	}
 }
-?>
