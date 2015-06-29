@@ -1,7 +1,5 @@
 SET FOREIGN_KEY_CHECKS=0;
 
-DROP TABLE `#__redproductfinder_types`;
-
 DROP TABLE IF EXISTS `#__redproductfinder_associations`;
 DROP TABLE IF EXISTS `#__redproductfinder_association_tag`;
 DROP TABLE IF EXISTS `#__redproductfinder_dependent_tag`;

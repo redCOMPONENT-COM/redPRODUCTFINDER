@@ -66,20 +66,6 @@ class RedproductfinderModelTag extends RModelAdmin
 	}
 
 	/**
-	 * Method to test whether a record can have its state edited.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canEditState($record)
-	{
-		return parent::canEditState($record);
-	}
-
-	/**
 	 * Returns a Table object, always creating it
 	 *
 	 * @param   type    $type    The table type to instantiate
@@ -182,7 +168,7 @@ class RedproductfinderModelTag extends RModelAdmin
 					$r = $this->deleteTagType($post["id"]);
 
 					// Insert tag type
-					$a = $this->insertTagType($post);
+					$a = $this->insertTagType($post, $post["id"]);
 				}
 			}
 			else
@@ -192,7 +178,7 @@ class RedproductfinderModelTag extends RModelAdmin
 				// Save tag type into table tag_type
 				if (count($post["type_id"]) > 0)
 				{
-					$a = $this->insertTagType($post);
+					$a = $this->insertTagType($post, $idTag);
 				}
 			}
 
@@ -205,11 +191,12 @@ class RedproductfinderModelTag extends RModelAdmin
 	/**
 	 * This method will insert both tag and type into table map
 	 *
-	 * @param   array  $data  array data to insert
+	 * @param   array  $data   array data to insert
+	 * @param   int    $idTag  tag id
 	 *
 	 * @return mixed
 	 */
-	public function insertTagType($data)
+	public function insertTagType($data, $idTag)
 	{
 		$db = JFactory::getDbo();
 

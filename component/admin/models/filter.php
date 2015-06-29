@@ -19,52 +19,6 @@ defined('_JEXEC') or die;
 class RedproductfinderModelFilter extends RModelAdmin
 {
 	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canDelete($record)
-	{
-		if (!empty($record->id))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Method to test whether a record can have its state edited.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canEditState($record)
-	{
-		// Check against the category.
-		if (!empty($record->catid))
-		{
-			$user = JFactory::getUser();
-
-			return $user->authorise('core.edit.state', 'com_contact.category.' . (int) $record->catid);
-		}
-		// Default to component settings if category not known.
-		else
-		{
-			return parent::canEditState($record);
-		}
-	}
-
-	/**
 	 * Returns a Table object, always creating it
 	 *
 	 * @param   type    $type    The table type to instantiate

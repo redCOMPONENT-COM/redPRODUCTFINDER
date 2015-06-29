@@ -29,9 +29,10 @@ if (file_exists(JPATH_ADMINISTRATOR . '/components/com_redshop/helpers/redshop.c
 	require_once JPATH_ADMINISTRATOR . '/components/com_redshop/helpers/redshop.cfg.php';
 }
 
+JLoader::import('redshop.library');
 require_once $redshop_admin_path . '/helpers/template.php';
-require_once JPATH_ADMINISTRATOR . '/components/com_redshop/helpers/configuration.php';
-require_once JPATH_ADMINISTRATOR . '/components/com_redshop/helpers/stockroom.php';
+JLoader::load('RedshopHelperAdminConfiguration');
+JLoader::load('RedshopHelperAdminStockroom');
 
 require_once $redshop_site_path . '/helpers/helper.php';
 require_once $redshop_admin_path . '/helpers/text_library.php';

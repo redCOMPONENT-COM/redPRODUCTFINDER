@@ -29,4 +29,17 @@ class RedproductfinderControllerAssociations extends RControllerAdmin
 	{
 		return parent::getModel($name, $prefix, $config);
 	}
+
+	/**
+	 * Save dependent tags
+	 *
+	 * @return JModel
+	 */
+	function savedependent()
+	{
+		$model = $this->getModel('associations');
+		$msg = $model->savedependent();
+		echo $msg;
+		exit;
+	}
 }

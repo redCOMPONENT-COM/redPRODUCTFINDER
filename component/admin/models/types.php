@@ -27,6 +27,8 @@ class RedproductfinderModelTypes extends RModelList
 	/** @var integer pagination limit */
 	protected $_limit = null;
 
+	protected $filter_fields = array('ordering', 't.ordering');
+
 	var $_context = null;
 
 	/**
@@ -38,20 +40,7 @@ class RedproductfinderModelTypes extends RModelList
 	 */
 	public function __construct($config = array())
 	{
-		if (empty($config['filter_fields']))
-		{
-			$filterFields = array(
-					'ordering', 't.ordering'
-			);
-
-			$config['filter_fields'] = $filterFields;
-
-			parent::__construct($config);
-		}
-		else
-		{
-			parent::__construct($config);
-		}
+		parent::__construct($config);
 	}
 
 	/**

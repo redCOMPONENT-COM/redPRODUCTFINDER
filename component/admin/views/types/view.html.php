@@ -18,6 +18,8 @@ defined('_JEXEC') or die;
  */
 class RedproductfinderViewTypes extends JViewLegacy
 {
+	protected $pagination;
+
 	/**
 	 * Display the view
 	 *
@@ -31,7 +33,7 @@ class RedproductfinderViewTypes extends JViewLegacy
 		RedproductfinderHelper::addSubmenu("types");
 
 		/* Get the pagination */
-		$pagination = $this->get('Pagination');
+		$this->pagination    = $this->get('Pagination');
 
 		/* Get the fields list */
 		$types = $this->get('Types');
@@ -39,7 +41,6 @@ class RedproductfinderViewTypes extends JViewLegacy
 		$state = $this->get("State");
 
 		/* Set variabels */
-		$this->assignRef('pagination', $pagination);
 		$this->assignRef('types', $types);
 		$this->assignRef('items', $items);
 		$this->assignRef('state', $state);

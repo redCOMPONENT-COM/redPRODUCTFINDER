@@ -94,7 +94,7 @@ class RedproductfinderModelAssociations extends RModelList
 		$query->select($db->qn("p.product_id") . ", CONCAT(product_number, '::', product_name) AS full_product_name")
 		->from("#__redshop_product p")
 		->join("LEFT", "#__redshop_product_category_xref pc ON pc.product_id = p.product_id")
-		->where($db->qn("pc.category_id") . " = " . $id);
+		->where($db->qn("pc.category_id") . " = " . (int) $id);
 
 		$db->setQuery($query);
 
@@ -117,7 +117,7 @@ class RedproductfinderModelAssociations extends RModelList
 		$query->select($db->qn("c.category_id"))
 		->from("#__redshop_category c")
 		->join("LEFT", "#__redshop_product_category_xref pc ON pc.category_id = c.category_id")
-		->where($db->qn("pc.product_id") . " = " . $id);
+		->where($db->qn("pc.product_id") . " = " . (int) $id);
 
 		$db->setQuery($query);
 		$row = $db->loadAssoc();
@@ -140,7 +140,7 @@ class RedproductfinderModelAssociations extends RModelList
 
 		$query->select($db->qn("a.product_id"))
 		->from("#__redproductfinder_associations a")
-		->where($db->qn("a.id") . " = " . $id);
+		->where($db->qn("a.id") . " = " . (int) $id);
 
 		$db->setQuery($query);
 		$row = $db->loadAssoc();
@@ -201,7 +201,7 @@ class RedproductfinderModelAssociations extends RModelList
 		->from("#__redproductfinder_associations a")
 		->join("LEFT", "#__redshop_product_category_xref pc ON pc.product_id = a.product_id")
 		->join("LEFT", "#__redshop_category c ON c.category_id = pc.category_id")
-		->where($db->qn("a.id") . " = " . $id);
+		->where($db->qn("a.id") . " = " . (int) $id);
 
 		$db->setQuery($query);
 
@@ -225,7 +225,7 @@ class RedproductfinderModelAssociations extends RModelList
 		->from("#__redproductfinder_associations a")
 		->join("LEFT", "#__redshop_product_category_xref pc ON pc.product_id = a.product_id")
 		->join("LEFT", "#__redshop_product p ON p.product_id = pc.product_id")
-		->where($db->qn("a.id") . " = " . $id);
+		->where($db->qn("a.id") . " = " . (int) $id);
 
 		$db->setQuery($query);
 
@@ -239,7 +239,6 @@ class RedproductfinderModelAssociations extends RModelList
 	 */
 	function getSaveAssociations()
 	{
-		global $mainframe;
 		$mainframe = JFactory::getApplication();
 		$row = $this->getTable();
 
@@ -286,17 +285,17 @@ class RedproductfinderModelAssociations extends RModelList
 					/* Split tag to type ID and tag ID */
 					list($type_id, $tag_id) = explode('.', $tag);
 
-					if (empty($qs[$type_id . '.' . $tag_id]))
+					if (empty($qs[$type_id . '.' . (int) $tag_id]))
 					{
 						$qs_id = 0;
 					}
 					else
 					{
-						$qs_id = $qs[$type_id . '.' . $tag_id];
+						$qs_id = $qs[$type_id . '.' . (int) $tag_id];
 					}
 
 					$q = "INSERT IGNORE INTO #__redproductfinder_association_tag
-				  		VALUES (" . $row->id . "," . $tag_id . "," . $type_id . ",'" . $qs_id . "')";
+				  		VALUES (" . $row->id . "," . (int) $tag_id . "," . (int) $type_id . ",'" . (int) $qs_id . "')";
 					$db->setQuery($q);
 					$db->query();
 				}
@@ -320,7 +319,6 @@ class RedproductfinderModelAssociations extends RModelList
 	 */
 	function getRemoveAssociation()
 	{
-		global $mainframe;
 		$mainframe = JFactory::getApplication();
 		$database =& JFactory::getDBO();
 		$cid = JRequest::getVar('cid');
@@ -335,7 +333,7 @@ class RedproductfinderModelAssociations extends RModelList
 
 		if (count($cid))
 		{
-			$cids = 'id=' . implode(' OR id=', $cid);
+			$cids = 'id=' . implode(' OR id=', (int) $cid);
 			$query = "DELETE FROM #__redproductfinder_associations"
 				. "\n  WHERE ( $cids )";
 
@@ -360,11 +358,10 @@ class RedproductfinderModelAssociations extends RModelList
 				}
 
 				/* Now remove the type associations */
-				$cids = 'association_id=' . implode(' OR association_id=', $cid);
+				$cids = 'association_id=' . implode(' OR association_id=', (int) $cid);
 				$query = "DELETE FROM #__redproductfinder_association_tag"
 					. "\n  WHERE ( $cids )";
 
-				global $mainframe;
 				$mainframe = JFactory::getApplication();
 				$database =& JFactory::getDBO();
 				$cid = JRequest::getVar('cid');
@@ -380,7 +377,7 @@ class RedproductfinderModelAssociations extends RModelList
 
 				if (count($cid))
 				{
-					$cids = 'id=' . implode(' OR id=', $cid);
+					$cids = 'id=' . implode(' OR id=', (int) $cid);
 					$query = "DELETE FROM #__redproductfinder_associations"
 						. "\n  WHERE ( $cids )";
 
@@ -405,7 +402,7 @@ class RedproductfinderModelAssociations extends RModelList
 						}
 
 						/* Now remove the type associations */
-						$cids = 'association_id=' . implode(' OR association_id=', $cid);
+						$cids = 'association_id=' . implode(' OR association_id=', (int) $cid);
 						$query = "DELETE FROM #__redproductfinder_association_tag"
 							. "\n  WHERE ( $cids )";
 						$database->setQuery($query);
@@ -471,7 +468,7 @@ class RedproductfinderModelAssociations extends RModelList
 
 		$query->select($db->qn("tag_id") . "," . $db->qn("type_id") . ", CONCAT(tag_id, '.', type_id ) as tag_type")
 		->from($db->qn("#__redproductfinder_association_tag"))
-		->where($db->qn("association_id") . " = " . $id);
+		->where($db->qn("association_id") . " = " . (int) $id);
 
 		$db->setQuery($query);
 
@@ -536,7 +533,7 @@ class RedproductfinderModelAssociations extends RModelList
 			$query->select("t.id, tag_name")
 				->from("#__redproductfinder_tag_type j")
 				->join("LEFT", "#__redproductfinder_tags t ON j.tag_id = t.id")
-				->where("j.type_id = " . $id)
+				->where("j.type_id = " . (int) $id)
 				->where("t.published = 1")
 				->order("t.ordering");
 
@@ -601,9 +598,9 @@ class RedproductfinderModelAssociations extends RModelList
 	function getDependenttag($product_id = 0, $type_id = 0, $tag_id = 0)
 	{
 		$db = JFactory::getDBO();
-		$where = " product_id='" . $product_id . "'";
-		$where .= " AND type_id='" . $type_id . "'";
-		$where .= " AND tag_id='" . $tag_id . "'";
+		$where = " product_id='" . (int) $product_id . "'";
+		$where .= " AND type_id='" . (int) $type_id . "'";
+		$where .= " AND tag_id='" . (int) $tag_id . "'";
 		$query = "SELECT dependent_tags FROM #__redproductfinder_dependent_tag WHERE " . $where;
 		$db->setQuery($query);
 		$rs = $db->loadResult();
@@ -627,7 +624,7 @@ class RedproductfinderModelAssociations extends RModelList
 
 		$q = "SELECT type_id
 			FROM #__redproductfinder_association_tag
-			WHERE association_id = " . $id[0] . " and tag_id=" . $tag . "";
+			WHERE association_id = " . (int) $id[0] . " and tag_id=" . (int) $tag . "";
 
 		$db->setQuery($q);
 
@@ -653,7 +650,7 @@ class RedproductfinderModelAssociations extends RModelList
 		{
 			$query = "SELECT *
 				FROM #__redproductfinder_forms
-				WHERE id = " . $id . "";
+				WHERE id = " . (int) $id . "";
 			$db->setQuery($query);
 			$list = $db->loadObjectlist();
 
@@ -684,11 +681,11 @@ class RedproductfinderModelAssociations extends RModelList
 
 		if ($state == "-2")
 		{
-			$query->where($db->qn("a") . "." . $db->qn("published") . "=" . $db->qn("-2"));
+			$query->where($db->qn("a.published") . "=" . $db->q("-2"));
 		}
 		else
 		{
-			$query->where($db->qn("a") . "." . $db->qn("published") . "!=" . $db->q("-2"));
+			$query->where($db->qn("a.published") . "!=" . $db->q("-2"));
 		}
 
 		// Filter by search in formname.

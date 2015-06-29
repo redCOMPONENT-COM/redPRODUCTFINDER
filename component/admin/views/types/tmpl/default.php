@@ -53,12 +53,12 @@ if ($saveOrder)
 }
 
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=types'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 				<div class="filter-search btn-group pull-left">
-					<label for="filter_search" class="element-invisible"><?php echo JText::_('COM_CONTACT_FILTER_SEARCH_DESC');?></label>
-					<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('COM_REDPRODUCTFINDER_FILTER_SEARCH_DESC'); ?>" />
+					<label for="filter_search" class="element-invisible"><?php echo JText::_('COM_REDPRODUCTFINDER_FILTER_SEARCH_DESC');?></label>
+					<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('COM_REDPRODUCTFINDER_SEARCH_IN_NAME'); ?>" />
 				</div>
 				<div class="btn-group pull-left">
 					<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
@@ -164,7 +164,6 @@ if ($saveOrder)
 			</table>
 	</div>
 	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="view" value="types" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />

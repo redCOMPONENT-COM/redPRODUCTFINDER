@@ -10,16 +10,19 @@ defined('_JEXEC') or die;
 
 // Add helper of site
 require_once JPATH_SITE . '/administrator/components/com_redshop/helpers/redshop.cfg.php';
+require_once JPATH_SITE . '/components/com_redproductfinder/models/forms.php';
+
+JLoader::import('redshop.library');
 JLoader::import('forms', JPATH_SITE . '/components/com_redproductfinder/helpers');
 JLoader::import('product', JPATH_SITE . '/components/com_redshop/helpers');
 JLoader::import('helper', JPATH_SITE . '/components/com_redshop/helpers');
 JLoader::import('user', JPATH_SITE . '/components/com_redshop/helpers');
-JLoader::import('stockroom', JPATH_SITE . '/administrator/components/com_redshop/helpers');
 
-require_once JPATH_SITE . '/administrator/components/com_redshop/helpers/configuration.php';
-require_once JPATH_SITE . '/components/com_redproductfinder/models/forms.php';
-require_once JPATH_SITE . '/libraries/redshop/helper/product.php';
-require_once JPATH_SITE . '/libraries/redshop/helper/user.php';
+JLoader::load('RedshopHelperAdminStockroom');
+JLoader::load('RedshopHelperAdminConfiguration');
+JLoader::load('RedshopHelperUser');
+JLoader::load('RedshopHelperProduct');
+
 
 // Define some variable that make show warning error
 $Redconfiguration = new Redconfiguration;

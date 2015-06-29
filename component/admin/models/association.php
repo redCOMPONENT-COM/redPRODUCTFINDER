@@ -64,29 +64,6 @@ class RedproductfinderModelAssociation extends RModelAdmin
 	}
 
 	/**
-	 * Method to test whether a record can have its state edited.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 */
-	protected function canEditState($record)
-	{
-		// Check against the category.
-		if (!empty($record->catid))
-		{
-			$user = JFactory::getUser();
-
-			return $user->authorise('core.edit.state', 'com_contact.category.' . (int) $record->catid);
-		}
-		// Default to component settings if category not known.
-		else
-		{
-			return parent::canEditState($record);
-		}
-	}
-
-	/**
 	 * Returns a Table object, always creating it
 	 *
 	 * @param   type    $type    The table type to instantiate
@@ -191,7 +168,7 @@ class RedproductfinderModelAssociation extends RModelAdmin
 				// Save tag type into table tag_type
 				if (count($post["tag_id"]) > 0)
 				{
-					$a = $this->insertTagType($post, $idTag);
+					$a = $this->insertTagType($post, (int) $idTag);
 				}
 			}
 
@@ -222,7 +199,7 @@ class RedproductfinderModelAssociation extends RModelAdmin
 		{
 			$arr = explode(".", $value);
 
-			$values = $db->q($idTag) . ',' . $db->q($arr[1]) . ',' . $db->q($arr[0]);
+			$values = $db->q((int) $idTag) . ',' . $db->q($arr[1]) . ',' . $db->q($arr[0]);
 			$query->values($values);
 		}
 
@@ -248,7 +225,7 @@ class RedproductfinderModelAssociation extends RModelAdmin
 
 		// Delete all custom keys for user 1001.
 		$conditions = array(
-			$db->quoteName('association_id') . ' = ' . $idTag
+			$db->quoteName('association_id') . ' = ' . (int) $idTag
 		);
 
 		$query->delete($db->quoteName('#__redproductfinder_association_tag'));

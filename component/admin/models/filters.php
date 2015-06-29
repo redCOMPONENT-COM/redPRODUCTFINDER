@@ -153,16 +153,16 @@ class RedproductfinderModelFilters extends RModelList
 
 		$query->select("f.*")
 		->from($db->qn("#__redproductfinder_filters") . " f")
-		->group($db->qn("f") . "." . $db->qn("ordering"))
-		->group($db->qn("f") . "." . $db->qn("id"));
+		->group($db->qn("f.ordering"))
+		->group($db->qn("f.id"));
 
 		if ($state == "-2")
 		{
-			$query->where($db->qn("f") . "." . $db->qn("published") . "=" . $db->qn("-2"));
+			$query->where($db->qn("f.published") . "=" . $db->q("-2"));
 		}
 		else
 		{
-			$query->where($db->qn("f") . "." . $db->qn("published") . "!=" . $db->q("-2"));
+			$query->where($db->qn("f.published") . "!=" . $db->q("-2"));
 		}
 
 		return $query;
