@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ==================================================================  -->
-<!-- redSHOP full packager                                                    -->
-<!-- This PHING build file generates the redSHOP extension package       -->
+<!-- redPRODUCTFINDER full packager                                                    -->
+<!-- This PHING build file generates the redPRODUCTFINDER extension package       -->
 <!-- including all extra extensions: modules and plugins                 -->
 <!--    Change the following variables in build.properties file          -->
 <!--            (copy variables from build.properties.dist )             -->
@@ -24,7 +24,7 @@
             </then>
         </if>
 
-        <!-- Folder where the redSHOP repository is located  -->
+        <!-- Folder where redPRODUCTFINDER repository is located  -->
         <property
                 name="extpath"
                 value="."
@@ -52,12 +52,12 @@
             </then>
         </if>
         <echo msg="Making directory to store the temporary packages at ${tmpdir}"/>
-        <mkdir dir="${package.dir}/${tmpdir}"/>
+        <mkdir dir="${tmpdir}"/>
     </target>
 
     <target name="build" depends="prepare">
     	<echo msg="###################### build ######################"/>
-        <phing phingfile="${project.basedir}/component_packager.xml" target="autopack"
+        <phing phingfile="${project.basedir}/extension_packager.xml" target="autopack"
                haltonfailure="true">
             <property name="package.delete" value="false" />
         </phing>
@@ -110,12 +110,12 @@
     <target name="autopack">
         <property
                 name="package.dir"
-                value="${package.dir}"
+                value=".dist"
                 override="true"/>
 
         <property
                 name="extension"
-                value="redshop"
+                value="redproductfinder"
                 override="true"/>
 
         <property
