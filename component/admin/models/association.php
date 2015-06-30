@@ -38,7 +38,7 @@ class RedproductfinderModelAssociation extends RModelAdmin
 
 			// Delete all custom keys
 			$conditions = array(
-				$db->quoteName('association_id') . ' = ' . $id
+				$db->quoteName('association_id') . ' = ' . (int) $id
 			);
 
 			$query->delete($db->quoteName('#__redproductfinder_association_tag'));
