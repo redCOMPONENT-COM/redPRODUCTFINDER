@@ -50,7 +50,7 @@ class RedproductfinderModelFilters extends RModelList
 		$query = $db->getQuery(true);
 
 		/* Get all the fields based on the limits */
-		$query->select("id,type_name")
+		$query->select("id, type_name")
 		->from("#__redproductfinder_types")
 		->order($db->qn("ordering"));
 
@@ -133,7 +133,7 @@ class RedproductfinderModelFilters extends RModelList
 		$state = "1";
 
 		$query->select("f.*")
-		->from($db->qn("#__redproductfinder_filters") . " f")
+		->from($db->qn("#__redproductfinder_filters", "f"))
 		->group($db->qn("f.ordering"))
 		->group($db->qn("f.id"));
 

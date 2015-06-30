@@ -61,6 +61,7 @@ class RedproductfinderModelAssociations extends RModelList
 		$my = JFactory::getUser();
 		$input = JFactory::getApplication()->input;
 		$id = $input->getInt('cid', 0);
+
 		/* load the row from the db table */
 		$row->load($id[0]);
 
@@ -92,8 +93,8 @@ class RedproductfinderModelAssociations extends RModelList
 		$query = $db->getQuery(true);
 
 		$query->select($db->qn("p.product_id") . ",  CONCAT(p.product_number, '::', p.product_name) AS full_product_name")
-		->from($db->qn("#__redshop_product") . " p")
-		->join("LEFT", $db->qn("#__redshop_product_category_xref") . " pc ON pc.product_id = p.product_id")
+		->from($db->qn("#__redshop_product", "p"))
+		->join("LEFT", $db->qn("#__redshop_product_category_xref", "pc") . " ON pc.product_id = p.product_id")
 		->where($db->qn("pc.category_id") . " = " . $db->q((int) $id));
 
 		$db->setQuery($query);
@@ -115,8 +116,8 @@ class RedproductfinderModelAssociations extends RModelList
 		$query = $db->getQuery(true);
 
 		$query->select($db->qn("c.category_id"))
-		->from($db->qn("#__redshop_category") . " a")
-		->join("LEFT", $db->qn("#__redshop_product_category_xref ") . " pc ON pc.category_id = c.category_id")
+		->from($db->qn("#__redshop_category", "c"))
+		->join("LEFT", $db->qn("#__redshop_product_category_xref", "pc") . " ON pc.category_id = c.category_id")
 		->where($db->qn("pc.product_id") . " = " . $db->q((int) $id));
 
 		$db->setQuery($query);
@@ -139,7 +140,7 @@ class RedproductfinderModelAssociations extends RModelList
 		$query = $db->getQuery(true);
 
 		$query->select($db->qn("a.product_id"))
-		->from($db->qn("#__redproductfinder_associations") . " a")
+		->from($db->qn("#__redproductfinder_associations", "a"))
 		->where($db->qn("a.id") . " = " . $db->q((int) $id));
 
 		$db->setQuery($query);
@@ -200,9 +201,9 @@ class RedproductfinderModelAssociations extends RModelList
 		$query = $db->getQuery(true);
 
 		$query->select($db->qn("c.category_id"))
-		->from($db->qn("#__redproductfinder_associations") . " a")
-		->join("LEFT", $db->qn("#__redshop_product_category_xref") . " pc ON pc.product_id = a.product_id")
-		->join("LEFT", $db->qn("#__redshop_category") . " c ON c.category_id = pc.category_id")
+		->from($db->qn("#__redproductfinder_associations", "a"))
+		->join("LEFT", $db->qn("#__redshop_product_category_xref", "pc") . " ON pc.product_id = a.product_id")
+		->join("LEFT", $db->qn("#__redshop_category", "c") . " ON c.category_id = pc.category_id")
 		->where($db->qn("a.id") . " = " . $db->q((int) $id));
 
 		$db->setQuery($query);
@@ -224,9 +225,9 @@ class RedproductfinderModelAssociations extends RModelList
 		$query = $db->getQuery(true);
 
 		$query->select($db->qn("p.product_id"))
-		->from($db->qn("#__redproductfinder_associations") . " a")
-		->join("LEFT", $db->qn("#__redshop_product_category_xref") . " pc ON pc.product_id = a.product_id")
-		->join("LEFT", $db->qn("#__redshop_product") . " p ON p.product_id = pc.product_id")
+		->from($db->qn("#__redproductfinder_associations", "a"))
+		->join("LEFT", $db->qn("#__redshop_product_category_xref", "pc") . " ON pc.product_id = a.product_id")
+		->join("LEFT", $db->qn("#__redshop_product", "p") . " ON p.product_id = pc.product_id")
 		->where($db->qn("a.id") . " = " . $db->q((int) $id));
 
 		$db->setQuery($query);
@@ -281,8 +282,8 @@ class RedproductfinderModelAssociations extends RModelList
 		{
 			$query = $db->getQuery(true);
 			$query->select("t.id, tag_name")
-				->from($db->qn("#__redproductfinder_tag_type") . " j")
-				->join("LEFT", $db->qn("#__redproductfinder_tags") . " t ON j.tag_id = t.id")
+				->from($db->qn("#__redproductfinder_tag_type", "j"))
+				->join("LEFT", $db->qn("#__redproductfinder_tags", "t") . " ON j.tag_id = t.id")
 				->where("j.type_id = " . $db->q((int) $id))
 				->where("t.published = 1")
 				->order($db->qn("t.ordering"));
@@ -357,8 +358,8 @@ class RedproductfinderModelAssociations extends RModelList
 		$state = "1";
 
 		$query->select("a.*, p.product_name")
-		->from($db->qn("#__redproductfinder_associations") . " a")
-		->join("LEFT", $db->qn("#__redshop_product") . " p ON a.product_id = p.product_id")
+		->from($db->qn("#__redproductfinder_associations", "a"))
+		->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id")
 		->order($db->qn("a.ordering"));
 
 		if ($state == "-2")
