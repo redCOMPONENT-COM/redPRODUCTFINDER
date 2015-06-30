@@ -85,13 +85,14 @@ class RedproductfinderModelTags extends RModelList
 	{
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$filtertype = JRequest::getInt('filtertype', false);
+		$input = JFactory::getApplication()->input;
+		$filtertype = $input->getInt('filtertype', 0);
 
 		/* Get all the fields based on the limits */
 		$query->select("t.*");
 		$query->from($db->qn("#__redproductfinder_tags", "t"));
 		$query->join("LEFT", $db->qn("#__redproductfinder_tag_type", "y") . " ON t.id = y.tag_id");
-		$query->where("y.type_id = " . $filtertype);
+		$query->where("y.type_id = " . (int) $filtertype);
 		$query->group("t.id");
 		$query->order("t.ordering");
 
@@ -109,7 +110,8 @@ class RedproductfinderModelTags extends RModelList
 	{
 		$row = $this->getTable();
 		$my = JFactory::getUser();
-		$id = JRequest::getVar('cid');
+		$input = JFactory::getApplication()->input;
+		$id = $input->getInt('cid', 0);
 
 		/* load the row from the db table */
 		$row->load($id[0]);
@@ -142,7 +144,7 @@ class RedproductfinderModelTags extends RModelList
 
 		$query->select($db->qn("type_id"))
 		->from($db->qn("#__redproductfinder_tag_type"))
-		->where($db->qn("tag_id") . " = " . $db->q($id));
+		->where($db->qn("tag_id") . " = " . $db->q((int) $id));
 
 		$db->setQuery($query);
 
@@ -158,7 +160,8 @@ class RedproductfinderModelTags extends RModelList
 	{
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$id = JRequest::getVar('cid');
+		$input = JFactory::getApplication()->input;
+		$id = $input->getInt('cid', 0);
 
 		$query->select("tag_id, type_name")
 			->from($db->qn("#__redproductfinder_tag_type", "j"))
