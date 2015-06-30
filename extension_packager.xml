@@ -14,6 +14,11 @@
 	<!-- Create packages folder                        -->
 	<!-- ============================================  -->
 	<target name="prepare">
+		<property
+				name="clean-tempdir"
+				value="true"
+				override="false"/>
+
 		<if>
 			<not>
 				<isset property="package.dir" />
@@ -23,17 +28,23 @@
 			</then>
 		</if>
 
-	    <!-- Folder where the redSHOP repository is located  -->
+	    <!-- Folder where the redPRODUCTFINDER repository is located  -->
 	    <property
 	            name="extpath"
 	            value="."
 	            override="true"/>
 
 	    <xmlproperty file="${extpath}/${extension}.xml" prefix="extensionDetails" keepRoot="false" />
+	    <xmlproperty file="${extpath}/redCORE/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
 
 		<property
 				name="version"
 				value="${extensionDetails.version}"
+				override="true"/>
+
+		<property
+				name="redCOREVersion"
+				value="${redCOREDetails.version}"
 				override="true"/>
 
 		<!-- Temp dir to create packages -->
@@ -42,23 +53,33 @@
 				value=".tmp"
 				override="true"/>
 
-		<!-- Check if the temp folder exists. If not, create it -->
 		<if>
-			<available file="${tmpdir}" type="dir"/>
+			<equals arg1="clean-tempdir" arg2="1" />
 			<then>
-				<echo msg="Removing old ${tmpdir}"/>
-				<delete dir="${tmpdir}"/>
+				<!-- Check if the temp folder exists. If not, create it -->
+				<if>
+					<available file="${tmpdir}" type="dir"/>
+					<then>
+						<echo msg="Removing old ${tmpdir}"/>
+						<delete dir="${tmpdir}"/>
+					</then>
+				</if>
+				<echo msg="Making directory to store the temporary packages at ${tmpdir}"/>
+				<mkdir dir="${tmpdir}"/>
 			</then>
 		</if>
-		<echo msg="Making directory to store the temporary packages at ${tmpdir}"/>
-		<mkdir dir="${tmpdir}"/>
 	</target>
+
+	<!-- ============================================  -->
+	<!-- Target: build                                 -->
+	<!-- ============================================  -->
+	<!-- Copy the source files to the target folder -->
 
 	<target name="build" depends="prepare, copyredcore">
 
 		<echo msg="Copying INSTALLER files to build directory..."/>
 		<copy todir="${tmpdir}/${extension}">
-			<fileset dir="${project.basedir}/">
+			<fileset dir="${extpath}/">
 				<include name="LICENSE.txt"/>
 				<include name="redproductfinder.xml"/>
 				<include name="install.php"/>
@@ -67,21 +88,25 @@
 
 		<echo msg="Copying COMPONENT folder to build directory..."/>
 		<copy todir="${tmpdir}/${extension}/component">
-			<fileset dir="${project.basedir}/component">
+			<fileset dir="${extpath}/component">
 				<include name="**"/>
 				<exclude name=".*"/>
 			</fileset>
 		</copy>
 
 		<echo msg="Copying MEDIA folder to build directory..."/>
-		<copy todir="${tmpdir}/${extension}/media/">
-			<fileset dir="${project.basedir}/media">
+		<copy todir="${tmpdir}/${extension}/media/com_${extension}">
+			<fileset dir="${extpath}/media/com_${extension}">
 				<include name="**"/>
 				<exclude name=".*"/>
 			</fileset>
 		</copy>
+
 	</target>
 
+    <!-- ============================================  -->
+    <!-- (redCORE)  Target: copyredcore                -->
+    <!-- ============================================  -->
     <target name="copyredcore">
         <phing phingfile="${project.basedir}/redCORE/redcore_copy_mandatory.xml"
                target="copyframework"
@@ -91,6 +116,9 @@
         </phing>
     </target>
 
+	<!-- ============================================  -->
+	<!-- (DEFAULT)  Target: dist                       -->
+	<!-- ============================================  -->
 	<target name="compress">
 		<echo msg="Creating ZIP archive..."/>
 
@@ -126,6 +154,10 @@
 		<delete dir="${tmpdir}"/>
 	</target>
 
+	<target name="prepare-compress-clean" depends="prepare, compress-clean">
+		<!-- needed for external cleaning and compressing -->
+	</target>
+
 	<target name="compress-clean" depends="compress, clean-tmp">
 		<!-- needed for external cleaning and compressing -->
 	</target>
@@ -159,21 +191,34 @@
 		<property
 				name="package.dir"
 				value=".dist"
-				override="true"/>
+				override="false"/>
 
 		<property
 				name="extension"
-				value="reditem"
-				override="true"/>
+				value="redproductfinder"
+				override="false"/>
+
+		<property
+				name="package.delete"
+				value="true"
+				override="false"/>
+
+		<property
+				name="package.routine"
+				value="dist"
+				override="false"/>
 
 		<if>
-			<available file="${package.dir}" type="dir"/>
+			<and>
+				<available file="${package.dir}" type="dir"/>
+				<equals arg1="${package.delete}" arg2="1" />
+			</and>
 			<then>
 				<echo msg="Removing old autopack folder"/>
 				<delete dir="${package.dir}"/>
 			</then>
 		</if>
 
-		<phingcall target="dist" />
+		<phingcall target="${package.routine}" />
 	</target>
 </project>
