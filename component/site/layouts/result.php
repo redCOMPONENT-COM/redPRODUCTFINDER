@@ -23,26 +23,11 @@ if (!$isredshop)
 	JError::raiseError('500', 'redShop Component is not installed');
 }
 
-// Set path to redshop
-$redshop_site_path = JPATH_SITE . '/components/com_redshop';
-$redshop_admin_path = JPATH_SITE . '/administrator/components/com_redshop';
-
-// Getting the redshop configuration
-if (file_exists(JPATH_ADMINISTRATOR . '/components/com_redshop/helpers/redshop.cfg.php'))
-{
-	require_once JPATH_ADMINISTRATOR . '/components/com_redshop/helpers/redshop.cfg.php';
-}
-
 JLoader::import('redshop.library');
-require_once $redshop_admin_path . '/helpers/template.php';
 JLoader::load('RedshopHelperAdminConfiguration');
+JLoader::load('RedshopHelperAdminTemplate');
 JLoader::load('RedshopHelperAdminStockroom');
-
-require_once $redshop_site_path . '/helpers/helper.php';
-require_once $redshop_admin_path . '/helpers/text_library.php';
-require_once $redshop_site_path . '/models/category.php';
-require_once $redshop_site_path . '/models/manufacturers.php';
-require_once $redshop_site_path . '/models/search.php';
+JLoader::load('RedshopHelperAdminText_Library');
 
 $producthelper = new producthelper;
 
