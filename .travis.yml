@@ -1,0 +1,6 @@
+language: php
+php:
+- 5.4
+notifications:
+  slack:
+    secure: Svbek9BR7pzo7Fjq4i7uCT69dtIujWimWrNu4tu9MbNkI1zpuF6/kXrd3909B0pexnGOwNJbPoBeLEfOyoWIEnbFObpNFcsKlkzUZYLCXcWZghWVTipKDfcXyrs2b+JmY45MLvQ2uhHTENkaehdzSVked7/LDJ7QvoR2c5o7hlY=
