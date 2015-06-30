@@ -1,70 +1,34 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @package    RedPRODUCTFINDER.Backend
  *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-
-jimport('joomla.application.component.controller');
+defined('_JEXEC') or die;
 
 /**
- * forms Controller
+ * RedPRODUCTFINDER Forms controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    2.0
  */
-class RedproductfinderControllerForms extends JController
+class RedproductfinderControllerForms extends RControllerAdmin
 {
 	/**
-	 * Method to display the view
+	 * Proxy for getModel.
 	 *
-	 * @access	public
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  The array of possible config values. Optional.
+	 *
+	 * @return  JModel
 	 */
-	function __construct() {
-		parent::__construct();
-		
-		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('save','forms');
-		$this->registerTask('remove','forms');
-		$this->registerTask('publish','forms');
-		$this->registerTask('unpublish','forms');
-		$this->registerTask('cancel','forms');
-		$this->registerTask('clone','forms');
-		$this->registerTask('importattributes','forms');
-		$this->registerTask('apply','edit');
-	}
-	
-	/**
-	 * Gets a list of IP/IP ranges in the database
-	 */
-	function Forms() {
-		JRequest::setVar('view', 'forms');
-		JRequest::setVar('layout', 'forms');
-		
-		parent::display();
-	}
-	
-	/**
-	 * Editing a form
-	 */
-	function Edit() {
-		JRequest::setVar('hidemainmenu', 1);
-		JRequest::setVar('view', 'forms');
-		JRequest::setVar('layout', 'editform');
-		
-		parent::display();
-	}
-	
-	/**
-	 * Adding a form
-	 */
-	function Add() {
-		JRequest::setVar('hidemainmenu', 1);
-		JRequest::setVar('view', 'forms');
-		JRequest::setVar('layout', 'editform');
-		
-		parent::display();
+	public function getModel($name = 'Form', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }
-?>

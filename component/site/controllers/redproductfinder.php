@@ -15,14 +15,15 @@ jimport('joomla.application.component.controller');
 /**
  * redPRODUCTFINDER Controller
  */
-class RedproductfinderControllerRedproductfinder extends RedproductfinderController {
-
+class RedproductfinderControllerRedproductfinder extends JControllerForm
+{
 	/**
     * Method to display the view
     *
     * @access   public
     */
-   function __construct() {
+   function __construct()
+   {
       parent::__construct();
 
       /* Redirect templates to templates as this is the standard call */
@@ -36,7 +37,8 @@ class RedproductfinderControllerRedproductfinder extends RedproductfinderControl
 	 * @access	public
 	 * @todo rename duplicate model name redproductfinder
 	 */
-	public function Redproductfinder() {
+	public function Redproductfinder()
+	{
 		/* Create the view object */
 		$view = $this->getView('redproductfinder', 'html');
 
@@ -64,7 +66,8 @@ class RedproductfinderControllerRedproductfinder extends RedproductfinderControl
 	 * @access	public
 	 * @todo rename duplicate model name redproductfinder
 	 */
-	public function Redproductfinder_ajax() {
+	public function Redproductfinder_ajax()
+	{
 		/* Create the view object */
 		$view = $this->getView('redproductfinder', 'html');
 
@@ -86,7 +89,8 @@ class RedproductfinderControllerRedproductfinder extends RedproductfinderControl
 		/* Now display the view */
 		$view->display();
 	}
-	public function Findproducts() {
+	public function Findproducts()
+	{
 		/* Set a default view if none exists */
 		JRequest::setVar('view', 'redproductfinder' );
 		JRequest::setVar('layout', 'searchresult' );

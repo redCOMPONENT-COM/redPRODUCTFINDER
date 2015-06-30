@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config addfieldpath="/administrator/components/com_redproductfinder/elements">
-  
+
 	   <fieldset name="basic">
-	
+
 		<field name="form" type="redproductfinderform" default="" label="FORM" description="" />
-			<field name="product_description" type="radio" default="short" label="COM_REDPRODUCTFINDER_PRODUCT_DESCRIPTION" description="COM_REDPRODUCTFINDER_PRODUCT_DESCRIPTION_TIP">
+		<field name="search_by" type="radio" default="0" label="COM_REDPRODUCTFINDER_SEARCH_BY" description="COM_REDPRODUCTFINDER_SEARCH_BY_TIP">
+			<option value="0">COM_REDPRODUCTFINDER_TAG_TYPE</option>
+		    <option value="1">COM_REDPRODUCTFINDER_ATTRIBUTE</option>
+		</field>
+		<field name="product_description" type="radio" default="short" label="COM_REDPRODUCTFINDER_PRODUCT_DESCRIPTION" description="COM_REDPRODUCTFINDER_PRODUCT_DESCRIPTION_TIP">
 		    <option value="short">COM_REDPRODUCTFINDER_SHORT_PRODUCT_DESCRIPTION</option>
 		    <option value="long">COM_REDPRODUCTFINDER_LONG_PRODUCT_DESCRIPTION</option>
 		</field>
@@ -51,5 +55,5 @@
 		    <option value="1">YES</option>
 		</field>
 	</fieldset>
-   
+
 </config>

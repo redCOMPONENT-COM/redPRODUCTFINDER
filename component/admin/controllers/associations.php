@@ -1,71 +1,39 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER.Backend
  *
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-
-jimport('joomla.application.component.controller');
+defined('_JEXEC') or die;
 
 /**
- * Tags Controller
+ * RedPRODUCTFINDER Associations controller.
+ *
+ * @package  RedPRODUCTFINDER.Administrator
+ * @since    2.0
  */
-class RedproductfinderControllerAssociations extends JController {
+class RedproductfinderControllerAssociations extends RControllerAdmin
+{
 	/**
-	 * Method to display the view
+	 * Proxy for getModel.
 	 *
-	 * @access	public
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  The array of possible config values. Optional.
+	 *
+	 * @return  JModel
 	 */
-	function __construct() {
-		parent::__construct();
-
-		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('apply','edit');
-		$this->registerTask('add','edit');
-		$this->registerTask('save','associations');
-		$this->registerTask('cancel','associations');
-		$this->registerTask('remove','associations');
-		$this->registerTask('saveorder','associations');
-		$this->registerTask('publish','associations');
-		$this->registerTask('unpublish','associations');
+	public function getModel($name = 'Association', $prefix = 'RedproductfinderModel', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 
 	/**
-	 * Get the default layout
-	 */
-	function Associations() {
-		JRequest::setVar('view', 'associations');
-		JRequest::setVar('layout', 'associations');
-
-		parent::display();
-	}
-
-	/**
-	 * Get the edit layout
-	 */
-	function Edit() {
-		/* Create the view */
-		$view = $this->getView('associations', 'html');
-
-		/* Add the main model */
-		$view->setModel( $this->getModel( 'associations', 'RedproductfinderModel' ), true );
-
-		/* Add extra models */
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redproductfinder' . DS . 'models' );
-		$view->setModel( $this->getModel( 'tags', 'RedproductfinderModel' ));
-
-		/* Add the layout */
-		$view->setLayout('editassociation');
-
-		/* Display it all */
-		$view->display();
-	}
-	/*
-	 *  Save dependent tags
+	 * Save dependent tags
+	 *
+	 * @return JModel
 	 */
 	function savedependent()
 	{
@@ -75,4 +43,3 @@ class RedproductfinderControllerAssociations extends JController {
 		exit;
 	}
 }
-?>

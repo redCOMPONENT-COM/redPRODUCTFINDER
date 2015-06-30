@@ -1,48 +1,33 @@
 <?php
-error_reporting(0);
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license can be read in this package of software in the file license.txt or 
- * read on http://redcomponent.com/license.txt  
- * Developed by email@recomponent.com - redCOMPONENT.com 
+/**
+ * @package     Joomla.Administrator
+ * @subpackage  com_redproductfinder
  *
- * redPRODUCTFINDER component
+ * @copyright   Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-/* Load the necessary stylesheet */
-$document = JFactory::getDocument();
-$document->addStyleSheet( JURI::root().'administrator/components/com_redproductfinder/helpers/redproductfinder.css' );
-$document->addScript( JURI::root().'administrator/components/com_redproductfinder/helpers/redproductfinder.js' );
+$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
 
-require_once(JPATH_ROOT.DS.'administrator/components'.DS.'com_redproductfinder'.DS.'helpers'.DS.'redproductfinder.php');
-RedproductfinderHelper::addSubmenu('');
-
-// Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
-$controller = JRequest::getCmd('controller', 'redproductfinder');
-
-//set the controller page
-if(!file_exists(JPATH_COMPONENT_ADMINISTRATOR.DS.'controllers'.DS.$controller.'.php')){
-	$controller='redproductfinder';
-	JRequest::setVar('controller','redproductfinder' );
+if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+{
+	throw new Exception(JText::_('COM_REDPRODUCTFINDER_REDCORE_INIT_FAILED'), 404);
 }
 
-// Require specific controller if requested
-if($controller) {
-	require_once (JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php');
+include_once $redcoreLoader;
+
+// Bootstraps redCORE
+RBootstrap::bootstrap();
+
+require_once JPATH_COMPONENT . '/helpers/redproductfinder.php';
+
+if (!JFactory::getUser()->authorise('core.manage', 'com_redproductfinder'))
+{
+	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-// Create the controller
-$classname	= 'RedproductfinderController'.$controller;
-$controller = new $classname( );
-
-// Perform the Request task
-$controller->execute( JRequest::getVar('task', 'redproductfinder'));
-
-// Redirect if set by the controller
+$controller = JControllerLegacy::getInstance('redproductfinder');
+$controller->execute(JFactory::getApplication()->input->get('task'));
 $controller->redirect();
-
-?>
