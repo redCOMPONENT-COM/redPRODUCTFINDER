@@ -297,6 +297,38 @@ class RedproductfinderModelAssociations extends RModelList
 	}
 
 	/**
+	 * Get the list of selected type names for this tag
+	 *
+	 * @return array
+	 */
+	public function getAssociationTagNames()
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$input = JFactory::getApplication()->input;
+		$id = $input->getInt('cid', 0);
+
+		$query->select("association_id, CONCAT(y.type_name, ':', g.tag_name) AS tag_name")
+				->from($db->qn("#__redproductfinder_association_tag", "a"))
+				->join("LEFT", $db->qn("#__redproductfinder_tags", "g") . " ON a.tag_id = g.id")
+				->join("LEFT", $db->qn("#__redproductfinder_types", "y") . " ON a.type_id = y.id");
+
+		$db->setQuery($query);
+		$list = $db->loadObjectList();
+		$sortlist = array();
+
+		if (count($list) > 0)
+		{
+			foreach ($list as $key => $tag)
+			{
+				$sortlist[$tag->association_id][] = $tag->tag_name;
+			}
+		}
+
+		return $sortlist;
+	}
+
+	/**
 	 * save dependent tags
 	 *
 	 * @return void
