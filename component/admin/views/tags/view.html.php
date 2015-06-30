@@ -32,6 +32,7 @@ class RedproductfinderViewTags extends JViewLegacy
 
 		/* Get the pagination */
 		$pagination = $this->get('Pagination');
+		$this->filterForm    = $this->get('Form');
 
 		/* Get the fields list */
 		$tags = $this->get('Tags');

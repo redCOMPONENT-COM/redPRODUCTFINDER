@@ -31,6 +31,12 @@ class RedproductfinderModelTypes extends RModelList
 
 	var $_context = null;
 
+	/** @var integer pagination limit starter */
+	protected $filterFormName = 'filter_types';
+
+	/** @var integer pagination limit */
+	protected $limitField = 'types_limit';
+
 	/**
 	 * Constructor.
 	 *

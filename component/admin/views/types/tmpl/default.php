@@ -66,7 +66,10 @@ if ($saveOrder)
 				</div>
 				<div class="btn-group pull-right hidden-phone">
 					<label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
-					<?php echo $this->pagination->getLimitBox(); ?>
+					<?php
+						$group = $this->filterForm->getGroup('list');
+						echo $group['list_types_limit']->input;
+					?>
 				</div>
 			</div>
 

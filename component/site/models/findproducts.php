@@ -108,7 +108,8 @@ class RedproductfinderModelFindproducts extends RModelList
 				}
 				else
 				{
-					$limit = null;
+					$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+					$limit = $value;
 				}
 			}
 		}
