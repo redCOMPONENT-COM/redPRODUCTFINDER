@@ -108,7 +108,8 @@ class RedproductfinderModelFindproducts extends RModelList
 				}
 				else
 				{
-					$limit = null;
+					$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+					$limit = $value;
 				}
 			}
 		}
@@ -209,6 +210,7 @@ class RedproductfinderModelFindproducts extends RModelList
 				$query->where("(" . $db->qn("pp.property_name") . " IN ('" . $properties . "') OR ps.subattribute_color_name IN ('" . $properties . "'))");
 			}
 		}
+
 		elseif ($searchByComp == 0)
 		{
 			$query->select("a.product_id")
@@ -262,6 +264,7 @@ class RedproductfinderModelFindproducts extends RModelList
 				$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
 			}
 			else
+
 			{
 				if (!$filter)
 				{

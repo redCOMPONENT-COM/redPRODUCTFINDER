@@ -19,7 +19,7 @@ if ($redform)
 else
 {
 	$json = $input->get('jsondata', "", "string");
-	
+
 	// Decode from string to array data
 	$pk = json_decode($json, true);
 }
@@ -37,7 +37,7 @@ if ($count > 0)
 	{
 		$catId = 0;
 	}
-	
+
 	if (isset($pk['manufacturer_id']))
 	{
 		$manufacturerId = $pk['manufacturer_id'];
@@ -46,11 +46,11 @@ if ($count > 0)
 	{
 		$manufacturerId = 0;
 	}
-	
+
 	if (isset($pk['filterprice']))
 	{
 		$filter = $pk['filterprice'];
-		
+
 		$min = $filter['min'];
 		$max = $filter['max'];
 	}
@@ -58,7 +58,7 @@ if ($count > 0)
 	{
 		$filter = array();
 	}
-	
+
 	if ($searchBy == 1)
 	{
 		if (isset($pk['properties']))

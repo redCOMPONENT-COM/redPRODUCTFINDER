@@ -25,7 +25,6 @@ $formid = $param->get('form');
 $range = ModRedproductForms::getRangeMaxMin($cid, $manufacturer_id);;
 
 ?>
-
 <div class="">
 	<form action="<?php echo JRoute::_("index.php?option=com_redproductfinder&view=findproducts"); ?>" method="post" name="adminForm" id="redproductfinder-form" class="form-validate">
 	<div class="form-horizontal">

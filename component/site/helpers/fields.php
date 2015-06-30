@@ -19,7 +19,7 @@ class redPRODUCTFINDERHelperFields
 
         $name_attribute = ' name="'.$name.'"';
 
-     	 $selectbox  = "<select".$name_attribute." ".$extras." class=\"selectbox\">
+         $selectbox  = "<select".$name_attribute." ".$extras." class=\"selectbox\">
                        <option value=\"0\">".JTEXT::_("ALL")."</option>";
         if ($object) //True or false
         {
@@ -29,17 +29,17 @@ class redPRODUCTFINDERHelperFields
                 if (!isset($row->$id)) //If is not set
                 $row->$id = ""; //Set
 
-		        if(is_array($selected_item))
-				{
-					if(in_array($row->id,$selected_item))
-					{
-				   	 $selected ="selected='selected'";
-					}else{
-					 $selected ="";
-					}
-				}else{
-					$selected ="";
-				}
+                if(is_array($selected_item))
+                {
+                    if(in_array($row->id,$selected_item))
+                    {
+                     $selected ="selected='selected'";
+                    }else{
+                     $selected ="";
+                    }
+                }else{
+                    $selected ="";
+                }
 
 
               //  $selected = ($row->id == $selected_item) ? " selected=\"selected\"" : "";
@@ -51,17 +51,17 @@ class redPRODUCTFINDERHelperFields
             //Iterate through array
             for($i = 0; $i < count($data); $i++)
             {
-            	if(is_array($selected_item))
-				{
-					if(in_array($data[$i],$selected_item))
-					{
-				   	 $selected ="selected='selected'";
-					}else{
-					 $selected ="";
-					}
-				}else{
-					$selected ="";
-				}
+                if(is_array($selected_item))
+                {
+                    if(in_array($data[$i],$selected_item))
+                    {
+                     $selected ="selected='selected'";
+                    }else{
+                     $selected ="";
+                    }
+                }else{
+                    $selected ="";
+                }
 
                 //$selected = ($data[$i] == $selected_item) ? " selected = \"selected\"" : "";
                 $selectbox .= '<option value="'.$data[$i].'"'.$selected.'>'.$data[$i].'</option>';
@@ -73,7 +73,7 @@ class redPRODUCTFINDERHelperFields
 
         return $selectbox;
     }
-	function generateSelectBox_dependent($data, $data_row, $name, $id, $selected_item, $object,$extras="")
+    function generateSelectBox_dependent($data, $data_row, $name, $id, $selected_item, $object,$extras="")
     {
         $name_attribute = ' name="'.$name.'"';
         $selectbox  = "<select".$name_attribute." ".$extras." class=\"selectbox\">
@@ -120,21 +120,21 @@ class redPRODUCTFINDERHelperFields
         return $textfield;
     }
 
-	function generateCheckbox($name, $id, $value,$extras="",$chkselected_item="0")
+    function generateCheckbox($name, $id, $value,$extras="",$chkselected_item="0")
     {
 
 
-		if(is_array($chkselected_item))
-		{
-			if(in_array($value,$chkselected_item))
-			{
-		   	 $checks ="checked='checked'";
-			}else{
-			 $checks ="";
-			}
-		}else{
-			$checks ="";
-		}
+        if(is_array($chkselected_item))
+        {
+            if(in_array($value,$chkselected_item))
+            {
+             $checks ="checked='checked'";
+            }else{
+             $checks ="";
+            }
+        }else{
+            $checks ="";
+        }
 
         $checkbox  = '<input type="checkbox" name="'.$name.'" id="'.$id.'" '.$checks.' value="'.$value.'" '.$extras.' />';
 

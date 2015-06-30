@@ -19,52 +19,6 @@ defined('_JEXEC') or die;
 class RedproductfinderModelForm extends RModelAdmin
 {
 	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canDelete($record)
-	{
-		if (!empty($record->id))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Method to test whether a record can have its state edited.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canEditState($record)
-	{
-		// Check against the category.
-		if (!empty($record->catid))
-		{
-			$user = JFactory::getUser();
-
-			return $user->authorise('core.edit.state', 'com_contact.category.' . (int) $record->catid);
-		}
-		// Default to component settings if category not known.
-		else
-		{
-			return parent::canEditState($record);
-		}
-	}
-
-	/**
 	 * Returns a Table object, always creating it
 	 *
 	 * @param   type    $type    The table type to instantiate
@@ -139,41 +93,5 @@ class RedproductfinderModelForm extends RModelAdmin
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Method to save the form data.
-	 *
-	 * @param   array  $data  The form data.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since    3.0
-	 */
-	public function save($data)
-	{
-		$input = JFactory::getApplication()->input;
-
-		if (parent::save($data))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Prepare and sanitise the table prior to saving.
-	 *
-	 * @param   JTable  $table  The JTable object
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function prepareTable($table)
-	{
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
 	}
 }

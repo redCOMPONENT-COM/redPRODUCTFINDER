@@ -748,7 +748,7 @@ class RedproductfinderModelRedproductfinder extends JModelForm
 
 							if (count($condition) > 0)
 							{
-								$conditions[] = '(' . implode(' OR ', $condition) . ')';
+								$conditions[] = '(' . implode(' AND ', $condition) . ')';
 							}
 						}
 						elseif ($type)

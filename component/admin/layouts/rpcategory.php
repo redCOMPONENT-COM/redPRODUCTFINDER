@@ -13,15 +13,15 @@ $catid = $displayData["catid"];
 $input = JFactory::getApplication()->input;
 
 ?>
-			<input type="hidden" name="catid" 
-				value="<?php 
+			<input type="hidden" name="catid"
+				value="<?php
 							if ($selected)
 							{
-								echo $selected[0]; 
+								echo $selected[0];
 							}
 							else
 							{
-								echo "0";							
+								echo "0";
 							}
 						?>">
 

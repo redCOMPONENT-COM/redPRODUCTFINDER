@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `#__redproductfinder_associations` (
   `publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `publish_down` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='redPRODUCTFINDER Associatons' AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='redPRODUCTFINDER Associatons';
 
 
 
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `#__redproductfinder_association_tag` (
   `type_id` int(10) unsigned NOT NULL,
   `quality_score` int(10) unsigned NOT NULL,
   UNIQUE KEY `association_tag` (`association_id`,`tag_id`,`type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='redPRODUCTFINDER Association Tag Cross Reference';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='redPRODUCTFINDER Association Tag Cross Reference';
 
 
 CREATE TABLE IF NOT EXISTS `#__redproductfinder_dependent_tag` (
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `#__redproductfinder_dependent_tag` (
   `type_id` int(11) NOT NULL,
   `dependent_tags` text NOT NULL,
   UNIQUE KEY `product_id` (`product_id`,`tag_id`,`type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='redPRODUCTFINDER dependent tag';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='redPRODUCTFINDER dependent tag';
 
 
 CREATE TABLE IF NOT EXISTS `#__redproductfinder_filters` (
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `#__redproductfinder_filters` (
   `publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `select_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='redPRODUCTFINDER Filters' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='redPRODUCTFINDER Filters';
 
 
 CREATE TABLE IF NOT EXISTS `#__redproductfinder_forms` (
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `#__redproductfinder_forms` (
   `publish_up` datetime DEFAULT '0000-00-00 00:00:00',
   `publish_down` datetime DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='redPRODUCTFINDER Forms' AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='redPRODUCTFINDER Forms';
 
 
 CREATE TABLE IF NOT EXISTS `#__redproductfinder_tags` (
@@ -76,13 +76,13 @@ CREATE TABLE IF NOT EXISTS `#__redproductfinder_tags` (
   `publish_up` datetime DEFAULT '0000-00-00 00:00:00',
   `publish_down` datetime DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='redPRODUCTFINDER Tags' AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='redPRODUCTFINDER Tags';
 
 CREATE TABLE IF NOT EXISTS `#__redproductfinder_tag_type` (
   `tag_id` int(10) unsigned NOT NULL,
   `type_id` int(10) unsigned NOT NULL,
   UNIQUE KEY `tag_type` (`tag_id`,`type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='redPRODUCTFINDER Tag Type Cross Reference';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='redPRODUCTFINDER Tag Type Cross Reference';
 
 
 CREATE TABLE IF NOT EXISTS `#__redproductfinder_types` (
@@ -100,4 +100,4 @@ CREATE TABLE IF NOT EXISTS `#__redproductfinder_types` (
   `publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `publish_down` datetime DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='redPRODUCTFINDER Tags' AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='redPRODUCTFINDER Tags';

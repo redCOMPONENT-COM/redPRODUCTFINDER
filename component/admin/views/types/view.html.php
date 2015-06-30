@@ -31,7 +31,8 @@ class RedproductfinderViewTypes extends JViewLegacy
 		RedproductfinderHelper::addSubmenu("types");
 
 		/* Get the pagination */
-		$pagination = $this->get('Pagination');
+		$pagination    = $this->get('Pagination');
+		$this->filterForm    = $this->get('Form');
 
 		/* Get the fields list */
 		$types = $this->get('Types');

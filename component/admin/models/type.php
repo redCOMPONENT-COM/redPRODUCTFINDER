@@ -9,8 +9,7 @@
 
 defined('_JEXEC') or die;
 
-JLoader::register('RedproductfinderHelper', JPATH_ADMINISTRATOR . '/components/com_redproductfinder/helpers/redproductfinder.php');
-
+require_once JPATH_COMPONENT . '/helpers/redproductfinder.php';
 /**
  * RedPRODUCTFINDER Association controller.
  *
@@ -83,7 +82,7 @@ class RedproductfinderModelType extends RModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		JForm::addFieldPath('JPATH_ADMINISTRATOR/components/com_redproductfinder/models/fields');
+		JForm::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_redproductfinder/models/fields');
 
 		// Get the form.
 		$form = $this->loadForm('com_redproductfinder', 'type', array('control' => 'jform', 'load_data' => $loadData));

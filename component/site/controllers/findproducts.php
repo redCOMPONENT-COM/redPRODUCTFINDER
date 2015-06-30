@@ -43,7 +43,7 @@ class RedproductfinderControllerFindproducts extends JControllerForm
 
 		$model->setState("redform.data", $post);
 		$model->setState("redform.view", $view);
-		
+
 		$list = $model->getItem();
 
 		// Get all product from here

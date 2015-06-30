@@ -27,6 +27,12 @@ class RedproductfinderModelTags extends RModelList
 	/** @var integer pagination limit */
 	protected $_limit = null;
 
+	/** @var integer pagination limit starter */
+	protected $filterFormName = 'filter_tags';
+
+	/** @var integer pagination limit */
+	protected $limitField = 'tags_limit';
+
 	/**
 	 * Constructor
 	 *
