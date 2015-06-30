@@ -171,6 +171,15 @@ class RedproductfinderModelFindproducts extends RModelList
 		$headLineParams = new JRegistry($module->params);
 		$searchByModule = $headLineParams->get('search_by');
 
+		// Filter by cid
+		$cid = $this->getState("catid");
+
+		// Filter by manufacturer_id
+		$manufacturerId = $pk["manufacturer_id"];
+
+		// Filter by filterprice
+		$filter = $pk["filterprice"];
+
 		$orderBy = $this->getState('order_by');
 
 		if ($orderBy == 'pc.ordering ASC' || $orderBy == 'c.ordering ASC')
@@ -278,10 +287,9 @@ class RedproductfinderModelFindproducts extends RModelList
 			}
 		}
 
-		if (isset($pk["filterprice"]))
+		if ($filter)
 		{
 			// Condition min max
-			$filter = $pk["filterprice"];
 			$min = $filter['min'];
 			$max = $filter['max'];
 
@@ -290,10 +298,6 @@ class RedproductfinderModelFindproducts extends RModelList
 			$saleTime = $db->qn('p.discount_stratdate') . ' AND ' . $db->qn('p.discount_enddate');
 			$query->where('IF(' . $query->qn('product_on_sale') . ' = 1 && UNIX_TIMESTAMP() BETWEEN ' . $saleTime . ', ' . $priceDiscount . ', ' . $priceNormal . ')');
 		}
-
-		// Filter by cid
-		$cid = $this->getState("catid");
-		$manufacturerId = $pk["manufacturer_id"];
 
 		if ($cid)
 		{
