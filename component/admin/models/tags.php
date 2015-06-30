@@ -33,26 +33,8 @@ class RedproductfinderModelTags extends RModelList
 	/** @var integer pagination limit */
 	protected $limitField = 'tags_limit';
 
-	/**
-	 * Constructor
-	 *
-	 * @param   array  $config  [description]
-	 *
-	 * @see     JController
-	 */
-	public function __construct($config = array())
-	{
-		if (empty($config['filter_fields']))
-		{
-			$filterFields = array(
-					'ordering', 't.ordering'
-			);
-
-			$config['filter_fields'] = $filterFields;
-		}
-
-		parent::__construct($config);
-	}
+	/** @var integer filter */
+	protected $filter_fields = array('ordering', 't.ordering');
 
 	/**
 	 * Method to auto-populate the model state.
