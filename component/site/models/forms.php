@@ -61,10 +61,10 @@ class RedproductfinderModelForms extends RModel
 		$query = $db->getQuery(true)
 			->select("f.id as formid,t.*, t.id as typeid,tg.*, tg.id as tagid");
 
-		$query->from($db->qn("#__redproductfinder_forms") . " AS f");
-		$query->join("INNER", $db->qn("#__redproductfinder_types") . " AS t ON t.form_id = f.id");
-		$query->join("INNER", $db->qn("#__redproductfinder_tag_type") . " AS tt ON tt.type_id = t.id");
-		$query->join("LEFT", $db->qn("#__redproductfinder_tags") . " AS tg ON tg.id = tt.tag_id");
+		$query->from($db->qn("#__redproductfinder_forms", "f"));
+		$query->join("INNER", $db->qn("#__redproductfinder_types", "t") . " ON t.form_id = f.id");
+		$query->join("INNER", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.type_id = t.id");
+		$query->join("LEFT", $db->qn("#__redproductfinder_tags", "tg") . " ON tg.id = tt.tag_id");
 		$query->where($db->qn("f.id") . "=" . $pk);
 
 		$db->setQuery($query);
@@ -85,7 +85,7 @@ class RedproductfinderModelForms extends RModel
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select("pa.attribute_name, pa.attribute_id")
-		->from($db->qn("#__redshop_product_attribute") . " AS pa")
+		->from($db->qn("#__redshop_product_attribute", "pa"))
 		->where($db->qn("pa.attribute_id") . "IN (SELECT attribute_id FROM #__redshop_product_attribute_property)")
 		->group($db->qn("pa.attribute_name"))
 		->order($db->escape("pa.attribute_name DESC"));
@@ -108,7 +108,7 @@ class RedproductfinderModelForms extends RModel
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select("pp.property_name, pp.attribute_id, pp.property_id")
-		->from($db->qn("#__redshop_product_attribute_property") . " AS pp")
+		->from($db->qn("#__redshop_product_attribute_property", "pp"))
 		->group($db->qn("pp.property_name"));
 
 		$db->setQuery($query);
@@ -129,7 +129,7 @@ class RedproductfinderModelForms extends RModel
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select("ps.subattribute_color_name, ps.subattribute_id")
-		->from($db->qn("#__redshop_product_subattribute_color") . " AS ps")
+		->from($db->qn("#__redshop_product_subattribute_color", "ps"))
 		->group($db->qn("ps.subattribute_color_name"));
 
 		$db->setQuery($query);
@@ -150,8 +150,8 @@ class RedproductfinderModelForms extends RModel
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select("pa.attribute_name")
-		->from($db->qn("#__redshop_product_attribute") . " AS pa")
-		->where($db->qn("pa.attribute_id") . " = " . $id);
+		->from($db->qn("#__redshop_product_attribute", "pa"))
+		->where($db->qn("pa.attribute_id") . " = " . $db->q((int) $id));
 
 		$db->setQuery($query);
 		$data = $db->loadRow();
@@ -171,8 +171,8 @@ class RedproductfinderModelForms extends RModel
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select("pp.property_name")
-		->from($db->qn("#__redshop_product_attribute_property") . " AS pp")
-		->where($db->qn("pp.property_id") . " = " . $id);
+		->from($db->qn("#__redshop_product_attribute_property", "pp"))
+		->where($db->qn("pp.property_id") . " = " . $db->q((int) $id));
 
 		$db->setQuery($query);
 		$data = $db->loadRow();

@@ -98,8 +98,8 @@ class RedproductfinderModelTypes extends RModelList
 
 		/* Get all the fields based on the limits */
 		$query->select("t.*, f.formname AS form_name")
-		->from($db->qn("#__redproductfinder_types") . " t")
-		->join("LEFT", $db->qn("#__redproductfinder_forms") . " f ON t.form_id = f.id")
+		->from($db->qn("#__redproductfinder_types", "t"))
+		->join("LEFT", $db->qn("#__redproductfinder_forms", "f") . " ON t.form_id = f.id")
 		->where($filterForm)
 		->order($db->qn("ordering"));
 
@@ -120,7 +120,7 @@ class RedproductfinderModelTypes extends RModelList
 
 		/* Get all the fields based on the limits */
 		$query->select('t.id, t.type_name')
-		->from($db->qn('#__redproductfinder_types') . 'as t')
+		->from($db->qn('#__redproductfinder_types', "t"))
 		->where($db->qn('published') . ' = 1');
 
 		$db->setQuery($query);
@@ -192,15 +192,15 @@ class RedproductfinderModelTypes extends RModelList
 		$state = "1";
 
 		$query->select("t.*, f.formname AS form_name")
-		->from($db->qn("#__redproductfinder_types") . " t")
-		->join("LEFT", $db->qn("#__redproductfinder_forms") . " f ON t.form_id = f.id");
+		->from($db->qn("#__redproductfinder_types", "t"))
+		->join("LEFT", $db->qn("#__redproductfinder_forms", "f") . " ON t.form_id = f.id");
 
 		// Filter by search in formname.
 		$search = $this->getState('filter.search');
 
 		if (!empty($search))
 		{
-			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->q('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
 			$query->where('(t.type_name LIKE ' . $search . ')');
 		}
 

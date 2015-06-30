@@ -197,12 +197,12 @@ class RedproductfinderModelFindproducts extends RModelList
 		if ($searchByComp == 1)
 		{
 			$query->select("p.product_id")
-			->from($db->qn("#__redshop_product") . " AS p")
-			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
-			->join("LEFT", $db->qn("#__redshop_product_attribute", "pa") . " ON " . "pa.product_id = p.product_id")
-			->join("LEFT", $db->qn("#__redshop_product_attribute_property", "pp") . " ON " . "pp.attribute_id = pa.attribute_id")
-			->join("LEFT", $db->qn("#__redshop_product_subattribute_color", "ps") . " ON " . "ps.subattribute_id = pp.property_id")
-			->where("p.published=1")
+			->from($db->qn("#__redshop_product", "p"))
+			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+			->join("LEFT", $db->qn("#__redshop_product_attribute", "pa") . " ON pa.product_id = p.product_id")
+			->join("LEFT", $db->qn("#__redshop_product_attribute_property", "pp") . " ON pp.attribute_id = pa.attribute_id")
+			->join("LEFT", $db->qn("#__redshop_product_subattribute_color", "ps") . " ON ps.subattribute_id = pp.property_id")
+			->where("p.published = 1")
 			->group($db->qn("p.product_id"));
 
 			if ($attribute)
@@ -214,14 +214,14 @@ class RedproductfinderModelFindproducts extends RModelList
 		elseif ($searchByComp == 0)
 		{
 			$query->select("a.product_id")
-			->from($db->qn("#__redproductfinder_associations") . " AS a")
-			->join("LEFT", $db->qn("#__redproductfinder_association_tag") . " AS at ON a.id = at.association_id")
-			->join("LEFT", $db->qn("#__redproductfinder_types") . " AS tp ON tp.id = at.type_id")
-			->join("LEFT", $db->qn("#__redproductfinder_tags") . " AS tg ON tg.id = at.tag_id")
-			->join("INNER", $db->qn("#__redproductfinder_tag_type") . " AS tt ON tt.tag_id = tg.id and tt.type_id = tp.id")
-			->join("LEFT", $db->qn("#__redshop_product") . " AS p ON a.product_id = p.product_id")
-			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
-			->where("a.published=1")
+			->from($db->qn("#__redproductfinder_associations", "a"))
+			->join("LEFT", $db->qn("#__redproductfinder_association_tag", "at") . " ON a.id = at.association_id")
+			->join("LEFT", $db->qn("#__redproductfinder_types", "tp") . " ON tp.id = at.type_id")
+			->join("LEFT", $db->qn("#__redproductfinder_tags", "tg") . " ON tg.id = at.tag_id")
+			->join("INNER", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.tag_id = tg.id and tt.type_id = tp.id")
+			->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id")
+			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+			->where("a.published = 1")
 			->group($db->qn("a.product_id"));
 
 			unset($pk["filterprice"]);
@@ -271,8 +271,8 @@ class RedproductfinderModelFindproducts extends RModelList
 					$query = $db->getQuery(true);
 					$query->select("p.product_id")
 					->from($db->qn("#__redshop_product", "p"))
-					->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON " . "p.product_id = cat.product_id")
-					->where("p.published=1")
+					->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+					->where("p.published = 1")
 					->group($db->qn("p.product_id"));
 				}
 			}
@@ -403,8 +403,8 @@ class RedproductfinderModelFindproducts extends RModelList
 		$query = $db->getQuery(true);
 
 		$query->select("p.product_id");
-		$query->from("#__redshop_product as p");
-		$query->join("LEFT", "#__redshop_product_category_xref as cat ON p.product_id = cat.product_id");
+		$query->from($db->qn("#__redshop_product", "p"));
+		$query->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
 
 		// If has subTable then begin query by subtable
 		if (count($tables) > 0)
@@ -443,7 +443,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			$query->join("INNER", $subTable . " ON `p`.`product_id` = `table`.`product_id` ");
 		}
 
-		$query->where("p.published=1");
+		$query->where("p.published = 1");
 		$query->group("p.product_id");
 
 		if ($filter)
