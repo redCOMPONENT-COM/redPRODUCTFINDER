@@ -89,15 +89,19 @@ class RedproductfinderModelTypes extends RModelList
 	public function getTypes()
 	{
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
-		$form_id = JRequest::getVar('formfilter', 0);
-		$filterForm = ($form_id > 0) ? " WHERE t.form_id = '" . $form_id . "' ":"";
+		$input = JFactory::getApplication()->input;
+		$form_id = $input->getInt('formfilter', 0);
+
+		$filterForm = ($form_id > 0) ? "t.form_id = '" . (int) $form_id . "' ":"1";
 
 		/* Get all the fields based on the limits */
-		$query = "SELECT t.*, f.formname AS form_name FROM #__redproductfinder_types t
-					LEFT JOIN #__redproductfinder_forms f
-					ON t.form_id = f.id $filterForm
-					ORDER BY ordering";
+		$query->select("t.*, f.formname AS form_name")
+		->from($db->qn("#__redproductfinder_types") . " t")
+		->join("LEFT", $db->qn("#__redproductfinder_forms") . " f ON t.form_id = f.id")
+		->where($filterForm)
+		->order($db->qn("ordering"));
 
 		$db->setQuery($query, $this->_limitstart, $this->_limit);
 
@@ -133,7 +137,8 @@ class RedproductfinderModelTypes extends RModelList
 	{
 		$row = $this->getTable();
 		$my = JFactory::getUser();
-		$id = JRequest::getVar('cid');
+		$input = JFactory::getApplication()->input;
+		$id = $input->getInt('cid', 0);
 
 		// Load the row from the db table
 		$row->load($id[0]);
@@ -160,8 +165,12 @@ class RedproductfinderModelTypes extends RModelList
 	public function getFormList()
 	{
 		$db = JFactory::getDBO();
-		$q = "SELECT id, formname FROM #__redproductfinder_forms";
-		$db->setQuery($q);
+		$query = $db->getQuery(true);
+
+		$query->select("id, formname")
+		->from($db->qn("#__redproductfinder_forms"));
+
+		$db->setQuery($query);
 
 		return $db->loadObjectList();
 	}

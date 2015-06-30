@@ -40,27 +40,6 @@ class RedproductfinderModelFilters extends RModelList
 	}
 
 	/**
-	 * Get the list of selected type names for this tag
-	 *
-	 * @param   int  $typeId  typeid for item
-	 *
-	 * @return Objects
-	 */
-	public function getTags($typeId)
-	{
-		$db = JFactory::getDBO();
-		$id = JRequest::getVar('cid');
-		$q = "SELECT tag_id, tag_name
-			FROM #__redproductfinder_tag_type j, #__redproductfinder_tags t
-			WHERE j.tag_id = t.id AND j.type_id=" . $typeId;
-		$db->setQuery($q);
-
-		$list = $db->loadObjectList();
-
-		return $list;
-	}
-
-	/**
 	 * Show all tag
 	 *
 	 * @return Objects
@@ -68,10 +47,12 @@ class RedproductfinderModelFilters extends RModelList
 	public function getTypes()
 	{
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
 		/* Get all the fields based on the limits */
-		$query = "SELECT id,type_name FROM #__redproductfinder_types
-				ORDER BY ordering";
+		$query->select("id,type_name")
+		->from("#__redproductfinder_types")
+		->order($db->qn("ordering"));
 
 		$db->setQuery($query);
 
