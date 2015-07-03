@@ -158,7 +158,7 @@
 	</target>
 	<target name="red_plg_copy_files" description="Packages the extension for delivery">
 		<!-- Copy plugin files & folder -->
-		<copy todir="${www.dir}/administrator/language" overwrite="true">
+		<copy todir="${www.dir}/language" overwrite="true">
 			<fileset dir="${src}/plugins/${group_name}/${plugin_name}/language">
 				<include name="**"/>
 				<exclude name=".*"/>

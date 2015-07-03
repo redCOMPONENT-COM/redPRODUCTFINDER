@@ -45,6 +45,9 @@ class PlgContentRedproductfinder_Form extends JPlugin
 	 */
 	public function onContentPrepare($context, &$row, &$params, $page=0)
 	{
+		// Load language of component
+		JFactory::getLanguage()->load('plg_content_redproductfinder_form', JPATH_SITE, 'en-GB', true);
+
 		/* Regex to find categorypage references */
 		$regex = "#{redproductfinder}(.*?){/redproductfinder}#s";
 
