@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" client="site" type="plugin" group="content" method="upgrade">
+	<name>PLG_REPRODUCTFINDER_FORM</name>
+	<version>2.0.0</version>
+	<creationDate>July 2015</creationDate>
+	<author>redweb.dk</author>
+	<copyright>redweb.dk</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<description>PLG_REDPRODUCTFINDER_FORM_DESCRIPTION</description>
+	<files>
+		<filename plugin="redproductfinder_form">redproductfinder_form.php</filename>
+	</files>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/en-GB.plg_content_redproductfinder_form.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_content_redproductfinder_form.sys.ini</language>
+		<language tag="da-DK">da-DK/da-DK.plg_content_redproductfinder_form.ini</language>
+		<language tag="da-DK">da-DK/da-DK.plg_content_redproductfinder_form.sys.ini</language>
+	</languages>
+</extension>

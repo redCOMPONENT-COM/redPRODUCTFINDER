@@ -341,7 +341,14 @@ class RedproductfinderModelFindproducts extends RModelList
 		}
 
 		// Condition min max price
-		$filter = $pk["filterprice"];
+		$filter = array();
+		
+		if (isset($pk["filterprice"]))
+		{
+			// Filter by filterprice
+			$filter = $pk["filterprice"];
+		}
+		
 		$min = $filter['min'];
 		$max = $filter['max'];
 
