@@ -78,6 +78,10 @@ $formid = $param->get('form');
 			<?php endif; ?>
 			</div>
 		</div>
+		<div  class="row-fluid">
+			<span><?php echo JText::_("COM_REDPRODUCTFINDER_VIEWS_FORMS_DEFAULT_MIN"); ?></span><span><input type="text" name="redform[filterprice][min]" /></span>
+			<span><?php echo JText::_("COM_REDPRODUCTFINDER_VIEWS_FORMS_DEFAULT_MAX")?></span><span><input type="text" name="redform[filterprice][max]" /></span>
+		</div>
 	</div>
 
 	<input type="submit" name="submit" value="submit" />

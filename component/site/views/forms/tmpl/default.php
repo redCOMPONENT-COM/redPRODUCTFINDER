@@ -1,12 +1,11 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
- * @license can be read in this package of software in the file license.txt or
- * read on http://redcomponent.com/license.txt
- * Developed by email@recomponent.com - redCOMPONENT.com
+ * @package    RedPRODUCTFINDER
  *
- * redPRODUCTFINDER
+ * @copyright  Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
+defined('JPATH_REDCORE') or die;
 
 JLoader::import('forms', JPATH_SITE . '/components/com_redproductfinder/helpers');
 JLoader::import('helper', JPATH_SITE . '/modules/mod_redproductforms');
@@ -22,7 +21,6 @@ $cid = 0;
 $manufacturer_id = 0;
 $template_id = $param->get('prod_template');
 $formid = $param->get('form');
-$range = ModRedproductForms::getRangeMaxMin($cid, $manufacturer_id);;
 
 ?>
 <div class="">
@@ -84,8 +82,8 @@ $range = ModRedproductForms::getRangeMaxMin($cid, $manufacturer_id);;
 			</div>
 		</div>
 		<div  class="row-fluid">
-			<span><?php echo JText::_("COM_REDPRODUCTFINDER_VIEWS_FORMS_DEFAULT_MIN"); ?></span><span><input type="text" name="redform[filterprice][min]" value="<?php echo $range['min'];?>"/></span>
-			<span><?php echo JText::_("COM_REDPRODUCTFINDER_VIEWS_FORMS_DEFAULT_MAX")?></span><span><input type="text" name="redform[filterprice][max]" value="<?php echo $range['max'];?>"/></span>
+			<span><?php echo JText::_("COM_REDPRODUCTFINDER_VIEWS_FORMS_DEFAULT_MIN"); ?></span><span><input type="text" name="redform[filterprice][min]"/></span>
+			<span><?php echo JText::_("COM_REDPRODUCTFINDER_VIEWS_FORMS_DEFAULT_MAX")?></span><span><input type="text" name="redform[filterprice][max]"/></span>
 		</div>
 	</div>
 

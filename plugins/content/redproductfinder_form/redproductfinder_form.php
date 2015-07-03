@@ -24,8 +24,7 @@ include_once $redcoreLoader;
 RBootstrap::bootstrap();
 
 require_once JPATH_SITE . '/components/com_redproductfinder/models/forms.php';
-
-JLoader::import('forms', JPATH_SITE . '/components/com_redproductfinder/helpers');
+require_once JPATH_SITE . '/components/com_redproductfinder/helpers/forms.php';
 
 /**
  * Plugins RedPRODUCTFINDER Form
@@ -44,7 +43,7 @@ class PlgContentRedproductfinder_Form extends JPlugin
 	 *
 	 * @return  boolean
 	 */
-	public function onContentPrepare($context, &$row, &$params, $page=0 )
+	public function onContentPrepare($context, &$row, &$params, $page=0)
 	{
 		/* Regex to find categorypage references */
 		$regex = "#{redproductfinder}(.*?){/redproductfinder}#s";
