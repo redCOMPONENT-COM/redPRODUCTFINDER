@@ -60,9 +60,6 @@ class PlgContentRedproductfinder_Form extends JPlugin
 
 			$modelForms = new RedproductfinderModelForms;
 
-			var_dump($matches);
-			var_dump($id);
-
 			// Get Items
 			$data = $modelForms->getItem($id);
 			$data = RedproductfinderForms::filterForm($data);
