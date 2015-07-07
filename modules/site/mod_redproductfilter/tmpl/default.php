@@ -61,11 +61,10 @@ if ($count > 0)
 						<?php if ($key == $type->id) : ?>
 							<?php foreach($value as $tag_id => $type_tag) : ?>
 								<div id='typename-<?php echo $type->id?>'>
-									<label><?php echo $type->type_name;?></label>
 									<?php foreach($tags as $kt => $tag) : ?>
 										<?php if ($tag->type_id == $type->id) : ?>
 											<?php if ($tag->tag_id == $tag_id) : ?>
-											<br><span> <?php echo $tag->tag_name ?></span>
+											<span> <?php echo $tag->type_name . ' - ' . $tag->tag_name ?></span>
 											<a style="float: right" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > Delete</a>
 											<?php endif; ?>
 										<?php endif; ?>
@@ -84,23 +83,15 @@ if ($count > 0)
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
-				<?php foreach($saveFilter as $key => $value) : ?>
 					<?php foreach($types as $k => $type) :?>
 						<div id='typename-<?php echo $type->id?>'>
 							<label><?php echo $type->type_name;?></label>
 							<?php foreach($tags as $kt => $tag) : ?>
-								<?php foreach($value as $tag_id => $type_tag) : ?>
-										<?php if ($tag->type_id == $type->id) : ?>
-											<?php if ($tag->type_id.$tag->tag_id == $key.$tag_id) : ?>
-											<?php echo ''; ?>
-											<?php else: ?>
-											<br><a href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'add')" > <?php echo $tag->tag_name ?></a>
-											<?php endif; ?>
-										<?php endif; ?>
-								<?php endforeach;?>
+								<?php if ($tag->type_id == $type->id) : ?>
+									<br><a href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'add')" > <?php echo $tag->tag_name ?></a>
+								<?php endif; ?>
 							<?php endforeach;?>
 					<?php endforeach;?>
-				<?php endforeach;?>
 				</div>
 			</div>
 		</div>
