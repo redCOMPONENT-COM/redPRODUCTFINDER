@@ -1,0 +1,81 @@
+
+<?php
+/**
+ * @copyright Copyright (C) 2008-2009 redCOMPONENT.com. All rights reserved.
+ * @license can be read in this package of software in the file license.txt or
+ * read on http://redcomponent.com/license.txt
+ * Developed by email@recomponent.com - redCOMPONENT.com
+ */
+
+defined('_JEXEC') or die('Restricted access');
+JHTML::_('behavior.tooltip');
+?>
+<div class="<?php echo $module_class_sfx; ?>">
+	<form action="<?php echo JRoute::_("index.php?option=com_redproductfinder&view=redproductfilter"); ?>" method="post" name="adminFilterForm" id="redproductfinder-form" class="form-validate">
+	<?php if ($saveFilter) : ?>
+	<div class="form-horizontal">
+		<div class="row-fluid">
+			<div class="span9">
+				<div class="row-fluid form-horizontal-desktop">
+				<?php foreach($saveFilter as $key => $value) : ?>
+					<?php foreach($types as $k => $type) :?>
+						<?php if ($key == $type->id) : ?>
+							<?php foreach($value as $tag_id => $type_tag) : ?>
+								<div id='typename-<?php echo $type->id?>'>
+									<label><?php echo $type->type_name;?></label>
+									<?php foreach($tags as $kt => $tag) : ?>
+										<?php if ($tag->type_id == $type->id) : ?>
+											<?php if ($tag->tag_id == $tag_id) : ?>
+											<br><span> <?php echo $tag->tag_name ?></span>
+											<a style="float: right" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > Delete</a>
+											<?php endif; ?>
+										<?php endif; ?>
+									<?php endforeach;?>
+								</div>
+							<?php endforeach;?>
+						<?php endif; ?>
+					<?php endforeach;?>
+				<?php endforeach;?>
+			</div>
+		</div>
+	</div>
+	<a href="javascript:void(0)" onclick="submitForm('', '', 'clear')" > Clear All</a>
+	<hr>
+	<?php endif; ?>
+	<div class="form-horizontal">
+		<div class="row-fluid">
+			<div class="span9">
+				<div class="row-fluid form-horizontal-desktop">
+					<?php foreach($types as $k => $type) :?>
+						<div id='typename-<?php echo $type->id?>'>
+							<label><?php echo $type->type_name;?></label>
+							<?php foreach($tags as $kt => $tag) : ?>
+								<?php if ($tag->type_id == $type->id) : ?>
+									<br><a href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'add')" > <?php echo $tag->tag_name ?></a>
+								<?php endif; ?>
+							<?php endforeach;?>
+					<?php endforeach;?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<input type="hidden" name="limitstart" value="0" />
+	<input type="hidden" name="Itemid" value="<?php echo $Itemid; ?>" >
+	<input type="hidden" name="tempType" value="<?php echo $tempType; ?>"/>
+	<input type="hidden" name="tempTag" value="<?php echo $tempTag; ?>"/>
+	<input type="hidden" name="act" value="<?php echo $act; ?>"/>
+</form>
+</div>
+
+<script type="text/javascript">
+	function submitForm(typeId, tagId, action)
+	{
+		var form = document.adminFilterForm;
+
+		document.adminFilterForm.tempType.value = typeId;
+		document.adminFilterForm.tempTag.value = tagId;
+		document.adminFilterForm.act.value = action;
+
+		form.submit();
+	}
+</script>
