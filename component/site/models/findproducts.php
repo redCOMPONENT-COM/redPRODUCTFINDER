@@ -133,6 +133,59 @@ class RedproductfinderModelFindproducts extends RModelList
 	}
 
 	/**
+	 * Set session
+	 *
+	 * @return array
+	 */
+	public function addFilterStateData()
+	{
+		$input = JFactory::getApplication()->input;
+		$act = $input->getString("act");
+		$tempType = $input->getInt("tempType");
+		$tempTag = $input->getInt("tempTag");
+
+		$session = JFactory::getSession();
+		$saveFilter = $session->get('saveFilter');
+
+		if ($tempTag)
+		{
+			if (!$saveFilter)
+			{
+				$saveFilter = array();
+			}
+
+			if (!$saveFilter)
+			{
+				$saveFilter[$tempType] = array();
+				$saveFilter[$tempType][$tempTag] = array("typeid" => $tempType, "tagid" => $tempTag);
+			}
+			else
+			{
+				$saveFilter[$tempType][$tempTag] = array("typeid" => $tempType, "tagid" => $tempTag);
+			}
+
+			$session->set("saveFilter", $saveFilter);
+		}
+
+		if ($act == 'delete')
+		{
+			unset($saveFilter[$tempType][$tempTag]);
+
+			if ($saveFilter[$tempType] == null)
+			{
+				unset($saveFilter[$tempType]);
+			}
+
+			$session->set("saveFilter", $saveFilter);
+		}
+
+		if ($act == 'clear')
+		{
+			$session->clear('saveFilter');
+		}
+	}
+
+	/**
 	 * Get List from product
 	 *
 	 * @return array
@@ -163,7 +216,14 @@ class RedproductfinderModelFindproducts extends RModelList
 	 */
 	public function getListQueryByOr($param)
 	{
+		// Add filter data for filter state
+		$this->addFilterStateData();
+
 		$pk = (!empty($pk)) ? $pk : $this->getState('redform.data');
+
+		// Session filter
+		$session = JFactory::getSession();
+		$saveFilter = $session->get('saveFilter');
 
 		$searchByComp = $param->get('search_by');
 
@@ -178,7 +238,10 @@ class RedproductfinderModelFindproducts extends RModelList
 		$manufacturerId = $pk["manufacturer_id"];
 
 		// Filter by filterprice
-		$filter = $pk["filterprice"];
+		if ($pk["filterprice"])
+		{
+			$filter = $pk["filterprice"];
+		}
 
 		$orderBy = $this->getState('order_by');
 
@@ -241,16 +304,19 @@ class RedproductfinderModelFindproducts extends RModelList
 			// Add tag id
 			$keyTags = array();
 
-			foreach ( $pk as $k => $value )
+			if ($pk)
 			{
-				if (!isset($value["tags"]))
+				foreach ( $pk as $k => $value )
 				{
-					continue;
-				}
+					if (!isset($value["tags"]))
+					{
+						continue;
+					}
 
-				foreach ( $value["tags"] as $k_t => $tag )
-				{
-					$keyTags[] = $tag;
+					foreach ( $value["tags"] as $k_t => $tag )
+					{
+						$keyTags[] = $tag;
+					}
 				}
 			}
 
@@ -272,8 +338,25 @@ class RedproductfinderModelFindproducts extends RModelList
 				$keyTagString = implode(",", $keyTags);
 				$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
 			}
-			else
+			elseif ($saveFilter)
+			{
+				foreach ($saveFilter as $type_id => $value)
+				{
+					$typeId[] = $type_id;
 
+					foreach ($value as $tag_id => $value1)
+					{
+						$tagId[] = $tag_id;
+					}
+				}
+
+				$keyTypeString = implode(",", $typeId);
+				$keyTagString = implode(",", $tagId);
+
+				$query->where($db->qn("at.type_id") . " IN (" . $keyTypeString . ")")
+				->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
+			}
+			else
 			{
 				if (!$filter)
 				{
