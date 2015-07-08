@@ -597,7 +597,7 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			$query->order($db->escape($orderBy));
 		}
-echo $query->dump();
+
 		return $query;
 	}
 
