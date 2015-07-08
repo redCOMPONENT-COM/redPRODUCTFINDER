@@ -101,12 +101,14 @@ if ($count > 0)
 										<input <?php
 										foreach ($values as $key => $value) :
 											if ($value['typeid'] == $type['typeid']) :
-												foreach ($value['tags'] as $keyTag) :
-													if ($keyTag == $tag["tagid"])
-														echo 'checked="checked"';
-													else
-														echo '';
-												endforeach;
+												if (isset($value['tags'])) :
+													foreach ($value['tags'] as $keyTag) :
+														if ($keyTag == $tag["tagid"])
+															echo 'checked="checked"';
+														else
+															echo '';
+													endforeach;
+												endif;
 											endif;
 										endforeach; ?>
 										 type="checkbox" name="redform[<?php echo $type["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
