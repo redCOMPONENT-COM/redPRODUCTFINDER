@@ -7,6 +7,11 @@
  */
 defined('JPATH_REDCORE') or die;
 
+// Load language of redshop
+$language = JFactory::getLanguage();
+$language->load('com_redshop'); // this loads the original
+$language->load('com_redshop', JPATH_SITE, $language->getTag(), true); // this loads our own version
+
 $products = $displayData["products"];
 $param = JComponentHelper::getParams('com_redproductfinder');
 $template_id = $param->get('prod_template');
@@ -188,11 +193,15 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 			$data_add = str_replace("{manufacturer_product_link}", $manufacturerPLink, $data_add);
 		}
 
-		if ($product->manufacturer_name != '')
+		if (strstr($data_add, '{manufacturer_name}'))
 		{
-			if (strstr($data_add, '{manufacturer_name}'))
+			if ($product->manufacturer_name != "")
+ 			{
+ 				$data_add = str_replace("{manufacturer_name}", $product->manufacturer_name, $data_add);
+ 			}
+			else
 			{
-				$data_add = str_replace("{manufacturer_name}", $product->manufacturer_name, $data_add);
+				$data_add = str_replace("{manufacturer_name}", "", $data_add);
 			}
 		}
 
@@ -393,6 +402,19 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 		$data_add = $producthelper->replaceAttributeData($product->product_id, 0, 0, $attributes, $data_add, $attribute_template, $isChilds);
 
+		// Replace attribute with null value if it exist
+		$attribute_template = $redTemplate->getTemplate("attribute_template");
+		
+		foreach ($attribute_template as $i => $item)
+		{
+			$templateAttribute = "{attribute_template:" . $item->template_name . "}";
+		
+			if (strstr($data_add, $templateAttribute))
+			{
+				$data_add = str_replace($templateAttribute, "", $data_add);
+			}
+		}
+		
 		/* get cart tempalte */
 		$data_add = $producthelper->replaceCartTemplate($product->product_id, $catid, 0, 0, $data_add, $isChilds, $userfieldArr, $totalatt, $totacc, $count_no_user_field);
 
