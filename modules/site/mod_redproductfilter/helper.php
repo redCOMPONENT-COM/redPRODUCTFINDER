@@ -12,15 +12,11 @@ defined('_JEXEC') or die;
 require_once JPATH_SITE . '/administrator/components/com_redshop/helpers/redshop.cfg.php';
 
 JLoader::import('redshop.library');
-JLoader::import('product', JPATH_SITE . '/components/com_redshop/helpers');
-JLoader::import('helper', JPATH_SITE . '/components/com_redshop/helpers');
-JLoader::import('user', JPATH_SITE . '/components/com_redshop/helpers');
-
 JLoader::load('RedshopHelperAdminStockroom');
 JLoader::load('RedshopHelperAdminConfiguration');
 JLoader::load('RedshopHelperUser');
 JLoader::load('RedshopHelperProduct');
-
+JLoader::load('RedshopHelperHelper');
 
 // Define some variable that make show warning error
 $Redconfiguration = new Redconfiguration;

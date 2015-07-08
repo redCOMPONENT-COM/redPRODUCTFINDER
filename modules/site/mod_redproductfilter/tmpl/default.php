@@ -65,7 +65,7 @@ if ($count > 0)
 										<?php if ($tag->type_id == $type->id) : ?>
 											<?php if ($tag->tag_id == $tag_id) : ?>
 											<span> <?php echo $tag->type_name . ' - ' . $tag->tag_name ?></span>
-											<a style="float: right" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > Delete</a>
+											<a style="float: right" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > <?php echo JText::_("MOD_REDPRODUCTFILTER_DELETE"); ?></a>
 											<?php endif; ?>
 										<?php endif; ?>
 									<?php endforeach;?>
@@ -77,7 +77,7 @@ if ($count > 0)
 			</div>
 		</div>
 	</div>
-	<a href="javascript:void(0)" onclick="submitForm('', '', 'clear')" > Clear All</a>
+	<a href="javascript:void(0)" onclick="submitForm('', '', 'clear')" > <?php echo JText::_("MOD_REDPRODUCTFILTER_CLEAR_ALL"); ?></a>
 	<hr>
 	<div class="form-horizontal">
 		<div class="row-fluid">

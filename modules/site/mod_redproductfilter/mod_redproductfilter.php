@@ -11,7 +11,8 @@ defined('_JEXEC') or die('Restricted access');
 
 JLoader::import('redshop.library');
 JLoader::load('RedshopHelperHelper');
-JLoader::import('helper', JPATH_SITE . '/modules/mod_redproductfilter');
+
+require_once JPATH_SITE . '/modules/mod_redproductfilter/helper.php';
 
 $db = JFactory::getDBO();
 

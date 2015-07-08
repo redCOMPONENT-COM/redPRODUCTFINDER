@@ -409,6 +409,13 @@ class RedproductfinderModelFindproducts extends RModelList
 	 */
 	public function getListQueryByAnd($param)
 	{
+		// Add filter data for filter state
+		$this->addFilterStateData();
+
+		// Session filter
+		$session = JFactory::getSession();
+		$saveFilter = $session->get('saveFilter');
+
 		$pk = (!empty($pk)) ? $pk : $this->getState('redform.data');
 
 		$db = JFactory::getDbo();
@@ -446,43 +453,78 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			// Get how many type
 			$types = array_keys($pk);
-		}
 
-		// Begin sub query
-		foreach ($types as $k => $type)
-		{
-			if (!isset($pk[$type]["tags"]))
+			// Begin sub query
+			foreach ($types as $k => $type)
 			{
-				continue;
+				if (!isset($pk[$type]["tags"]))
+				{
+					continue;
+				}
+
+				foreach ($pk[$type]["tags"] as $i => $tag)
+				{
+					$tables[$increase]["alias"] = "tbl" . $increase;
+
+					// Begin query
+					$tables[$increase]["select"] = " ( ";
+					$tables[$increase]["select"] .= "
+						SELECT ac.product_id, ac_t.type_id `type`, ac_t.tag_id `tag`
+						FROM #__redproductfinder_associations  as ac";
+
+					$tables[$increase]["select"] .= "
+						LEFT JOIN #__redproductfinder_association_tag as ac_t
+						ON ac.id = ac_t.association_id";
+
+					$tables[$increase]["select"] .= "
+						WHERE ac_t.type_id = " . $type . "
+						AND ac_t.tag_id = " . $tag;
+
+					$tables[$increase]["select"] .= " GROUP BY `ac`.`product_id` ";
+
+					$tables[$increase]["select"] .= "\n ) ";
+
+					$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+
+					// End query
+
+					$increase++;
+				}
 			}
-
-			foreach ($pk[$type]["tags"] as $i => $tag)
+		}
+		elseif (isset($saveFilter))
+		{
+			// Begin sub query
+			foreach ($saveFilter as $type_id => $value)
 			{
-				$tables[$increase]["alias"] = "tbl" . $increase;
+				foreach ($value as $tag_id => $value1)
+				{
+					$tables[$increase]["alias"] = "tbl" . $increase;
 
-				// Begin query
-				$tables[$increase]["select"] = " ( ";
-				$tables[$increase]["select"] .= "
-					SELECT ac.product_id, ac_t.type_id `type`, ac_t.tag_id `tag`
-					FROM #__redproductfinder_associations  as ac";
+					// Begin query
+					$tables[$increase]["select"] = " ( ";
+					$tables[$increase]["select"] .= "
+						SELECT ac.product_id, ac_t.type_id `type`, ac_t.tag_id `tag`
+						FROM #__redproductfinder_associations  as ac";
 
-				$tables[$increase]["select"] .= "
-					LEFT JOIN #__redproductfinder_association_tag as ac_t
-					ON ac.id = ac_t.association_id";
+					$tables[$increase]["select"] .= "
+						LEFT JOIN #__redproductfinder_association_tag as ac_t
+						ON ac.id = ac_t.association_id";
 
-				$tables[$increase]["select"] .= "
-					WHERE ac_t.type_id = " . $type . "
-					AND ac_t.tag_id = " . $tag;
+					$tables[$increase]["select"] .= "
+						WHERE ac_t.type_id = " . $type_id . "
+						AND ac_t.tag_id = " . $tag_id;
 
-				$tables[$increase]["select"] .= " GROUP BY `ac`.`product_id` ";
+					$tables[$increase]["select"] .= " GROUP BY `ac`.`product_id` ";
 
-				$tables[$increase]["select"] .= "\n ) ";
+					$tables[$increase]["select"] .= "\n ) ";
 
-				$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+					$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
 
-				// End query
+					// End query
 
-				$increase++;
+					$increase++;
+				}
 			}
 		}
 
@@ -555,7 +597,7 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			$query->order($db->escape($orderBy));
 		}
-
+echo $query->dump();
 		return $query;
 	}
 
