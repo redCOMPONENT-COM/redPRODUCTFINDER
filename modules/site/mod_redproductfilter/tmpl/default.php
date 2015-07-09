@@ -56,24 +56,25 @@ if ($count > 0)
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
-				<?php foreach($saveFilter as $key => $value) : ?>
-					<?php foreach($types as $k => $type) :?>
-						<?php if ($key == $type->id) : ?>
-							<?php foreach($value as $tag_id => $type_tag) : ?>
-								<div id='typename-<?php echo $type->id?>'>
-									<?php foreach($tags as $kt => $tag) : ?>
-										<?php if ($tag->type_id == $type->id) : ?>
-											<?php if ($tag->tag_id == $tag_id) : ?>
-											<span> <?php echo $tag->type_name . ' - ' . $tag->tag_name ?></span>
-											<a style="float: right" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > <?php echo JText::_("MOD_REDPRODUCTFILTER_DELETE"); ?></a>
+					<?php foreach($saveFilter as $key => $value) : ?>
+						<?php foreach($types as $k => $type) :?>
+							<?php if ($key == $type->id) : ?>
+								<?php foreach($value as $tag_id => $type_tag) : ?>
+									<div id='typename-<?php echo $type->id?>'>
+										<?php foreach($tags as $kt => $tag) : ?>
+											<?php if ($tag->type_id == $type->id) : ?>
+												<?php if ($tag->tag_id == $tag_id) : ?>
+												<span> <?php echo $tag->type_name . ' - ' . $tag->tag_name ?></span>
+												<a style="float: right" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > <?php echo JText::_("MOD_REDPRODUCTFILTER_DELETE"); ?></a>
+												<?php endif; ?>
 											<?php endif; ?>
-										<?php endif; ?>
-									<?php endforeach;?>
-								</div>
-							<?php endforeach;?>
-						<?php endif; ?>
+										<?php endforeach;?>
+									</div>
+								<?php endforeach;?>
+							<?php endif; ?>
+						<?php endforeach;?>
 					<?php endforeach;?>
-				<?php endforeach;?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -91,6 +92,7 @@ if ($count > 0)
 									<br><a href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'add')" > <?php echo $tag->tag_name ?></a>
 								<?php endif; ?>
 							<?php endforeach;?>
+						</div>
 					<?php endforeach;?>
 				</div>
 			</div>
@@ -109,6 +111,7 @@ if ($count > 0)
 									<br><a href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'add')" > <?php echo $tag->tag_name ?></a>
 								<?php endif; ?>
 							<?php endforeach;?>
+						</div>
 					<?php endforeach;?>
 				</div>
 			</div>
@@ -123,7 +126,7 @@ if ($count > 0)
 	<input type="hidden" name="tempType" value="<?php echo $tempType; ?>"/>
 	<input type="hidden" name="tempTag" value="<?php echo $tempTag; ?>"/>
 	<input type="hidden" name="act" value="<?php echo $act; ?>"/>
-</form>
+	</form>
 </div>
 
 <script type="text/javascript">
