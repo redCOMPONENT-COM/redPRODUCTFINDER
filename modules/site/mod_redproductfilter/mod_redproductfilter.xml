@@ -16,6 +16,7 @@
 	</files>
 	<languages>
 		<language tag="en-GB">language/en-GB/en-GB.mod_redproductfilter.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_redproductfilter.sys.ini</language>
 		<language tag="da-DK">language/da-DK/da-DK.mod_redproductfilter.ini</language>
 	</languages>
 	<config>
