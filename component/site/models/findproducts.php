@@ -243,9 +243,9 @@ class RedproductfinderModelFindproducts extends RModelList
 
 			foreach ( $pk as $k => $value )
 			{
-				if (!isset($value["tags"]))
+				if (isset($value["tags"]))
 				{
-					continue;
+					$keyTypes[] = $value['typeid'];
 				}
 
 				foreach ( $value["tags"] as $k_t => $tag )
@@ -256,9 +256,6 @@ class RedproductfinderModelFindproducts extends RModelList
 
 			if (count($keyTags) != 0)
 			{
-				// Add type id
-				$keyTypes = array_keys($pk);
-
 				if ($keyTypes)
 				{
 					$keyTypeString = implode(",", $keyTypes);
