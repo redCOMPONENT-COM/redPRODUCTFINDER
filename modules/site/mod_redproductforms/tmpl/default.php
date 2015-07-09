@@ -99,18 +99,20 @@ if ($count > 0)
 									<li>
 										<span class='taginput' data-aliases='<?php echo $tag["aliases"];?>'>
 										<input <?php
-										foreach ($values as $key => $value) :
-											if ($value['typeid'] == $type['typeid']) :
-												if (isset($value['tags'])) :
-													foreach ($value['tags'] as $keyTag) :
-														if ($keyTag == $tag["tagid"])
-															echo 'checked="checked"';
-														else
-															echo '';
-													endforeach;
+										if (isset($value)):
+											foreach ($values as $key => $value) :
+												if ($value['typeid'] == $type['typeid']) :
+													if (isset($value['tags'])) :
+														foreach ($value['tags'] as $keyTag) :
+															if ($keyTag == $tag["tagid"])
+																echo 'checked="checked"';
+															else
+																echo '';
+														endforeach;
+													endif;
 												endif;
-											endif;
-										endforeach; ?>
+											endforeach;
+										endif; ?>
 										 type="checkbox" name="redform[<?php echo $type["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
 										<span class='tagname'><?php echo $tag["tagname"]; ?></span>
 									</li>
