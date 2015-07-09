@@ -306,25 +306,19 @@ class RedproductfinderModelFindproducts extends RModelList
 
 			if ($pk)
 			{
-				foreach ( $pk as $k => $value )
+				if (isset($value["tags"]))
 				{
-					if (!isset($value["tags"]))
-					{
-						continue;
-					}
+					$keyTypes[] = $value['typeid'];
+				}
 
-					foreach ( $value["tags"] as $k_t => $tag )
-					{
-						$keyTags[] = $tag;
-					}
+				foreach ( $value["tags"] as $k_t => $tag )
+				{
+					$keyTags[] = $tag;
 				}
 			}
 
 			if (count($keyTags) != 0)
 			{
-				// Add type id
-				$keyTypes = array_keys($pk);
-
 				if ($keyTypes)
 				{
 					$keyTypeString = implode(",", $keyTypes);
@@ -431,7 +425,14 @@ class RedproductfinderModelFindproducts extends RModelList
 		}
 
 		// Condition min max price
-		$filter = $pk["filterprice"];
+		$filter = array();
+
+		if (isset($pk["filterprice"]))
+		{
+			// Filter by filterprice
+			$filter = $pk["filterprice"];
+		}
+
 		$min = $filter['min'];
 		$max = $filter['max'];
 
