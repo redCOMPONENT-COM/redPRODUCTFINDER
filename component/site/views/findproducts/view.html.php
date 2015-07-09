@@ -36,9 +36,13 @@ class RedproductfinderViewFindProducts extends RViewSite
 		$user       = JFactory::getUser();
 		$dispatcher	= RFactory::getDispatcher();
 
-		// Add redBox
-		JHtml::script('com_redshop/redbox.js', false, true);
+		JHtml::_('redshopjquery.framework');
 
+		// Add redBox
+		JHtml::script('com_redshop/redbox.js', false, true);		
+		JHtml::script('com_redshop/attribute.js', false, true);
+		JHtml::script('com_redshop/common.js', false, true);
+		
 		$this->item  		= $this->get('Item');
 		$this->state 		= $this->get('State');
 		$this->Itemid 		= $input->getInt('Itemid', null);

@@ -70,6 +70,8 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_d2 = explode("{product_loop_end}", $template_d1[1]);
 	$template_product = $template_d2[0];
 
+	$attribute_template = $producthelper->getAttributeTemplate($template_product);
+	
 	// Loop product lists
 	foreach ($this->products as $key => $pd)
 	{
@@ -394,9 +396,6 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		$data_add = $producthelper->replaceProductInStock($product->product_id, $data_add, $attributes, $attribute_template);
 
 		$data_add = $producthelper->replaceAttributeData($product->product_id, 0, 0, $attributes, $data_add, $attribute_template, $isChilds);
-
-		// Replace attribute with null value if it exist
-		$attribute_template = $redTemplate->getTemplate("attribute_template");
 		
 		foreach ($attribute_template as $i => $item)
 		{
