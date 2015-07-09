@@ -24,6 +24,7 @@ if (!$isredshop)
 }
 
 JLoader::import('redshop.library');
+JLoader::load('RedshopHelperProduct');
 JLoader::load('RedshopHelperAdminConfiguration');
 JLoader::load('RedshopHelperAdminTemplate');
 JLoader::load('RedshopHelperAdminStockroom');
@@ -40,17 +41,17 @@ $stockroomhelper = new rsstockroomhelper;
 $redTemplate = new Redtemplate;
 $texts = new text_library;
 
-// $url = JURI::base();
-$order_data            = $objhelper->getOrderByList();
-$getorderby            = JRequest::getString('order_by', DEFAULT_PRODUCT_ORDERING_METHOD);
+$order_data = $objhelper->getOrderByList();
+$getorderby = JRequest::getString('order_by', DEFAULT_PRODUCT_ORDERING_METHOD);
 $lists['order_select'] = JHTML::_('select.genericlist', $order_data, 'order_by', 'class="inputbox" size="1" onchange="document.orderby_form.submit();" ', 'value', 'text', $getorderby);
 $option = 'com_redshop';
 $loadCategorytemplate = '';
-$attribute_template = '';
-$userfieldArr = '';
-$count_no_user_field = '';
+$layout = JRequest::getCmd('layout', '');
+$model = $this->getModel('findproducts');
+$catid = $model->getState('catid');
+$count_no_user_field = 0;
 $product_data = '';
-$extraFieldName = '';
+$extraFieldName = $extraField->getSectionFieldNameArray(1, 1, 1);
 
 // Check Itemid on pagination
 $Itemid = $input->get('Itemid', 0, "int");
@@ -61,6 +62,7 @@ $fieldArray = $extraField->getSectionFieldList(17, 0, 0);
 
 $template_array = $redTemplate->getTemplate("redproductfinder", $template_id);
 $template_desc = $template_array[0]->template_desc;
+$attribute_template = $producthelper->getAttributeTemplate($template_desc);
 
 // Begin replace template
 $template_desc = str_replace("{total_product_lbl}", JText::_('COM_REDSHOP_TOTAL_PRODUCT'), $template_desc);
@@ -387,6 +389,9 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 			$attributes = array_merge($attributes, $attributes_set);
 		}
 
+		$returnArr = $producthelper->getProductUserfieldFromTemplate($data_add);
+		$userfieldArr = $returnArr[1];
+
 		/* Product attribute  Start */
 		$totalatt = count($attributes);
 		/* check product for not for sale */
@@ -399,19 +404,19 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 		// Replace attribute with null value if it exist
 		$attribute_template = $redTemplate->getTemplate("attribute_template");
-		
+
 		foreach ($attribute_template as $i => $item)
 		{
 			$templateAttribute = "{attribute_template:" . $item->template_name . "}";
-		
+
 			if (strstr($data_add, $templateAttribute))
 			{
 				$data_add = str_replace($templateAttribute, "", $data_add);
 			}
 		}
-		
+
 		/* get cart tempalte */
-		$data_add = $producthelper->replaceCartTemplate($product->product_id, $catid, 0, 0, $data_add, $isChilds, $userfieldArr, $totalatt, $totacc, $count_no_user_field);
+		$data_add = $producthelper->replaceCartTemplate($product->product_id, $catid, 0, 0, $data_add, $isChilds, $userfieldArr, $totalatt, $totacc, $count_no_user_field, "");
 
 		$product_data .= $data_add;
 	}
