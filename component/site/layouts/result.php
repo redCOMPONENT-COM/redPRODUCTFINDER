@@ -195,9 +195,9 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		if (strstr($data_add, '{manufacturer_name}'))
 		{
 			if ($product->manufacturer_name != "")
- 			{
- 				$data_add = str_replace("{manufacturer_name}", $product->manufacturer_name, $data_add);
- 			}
+			{
+				$data_add = str_replace("{manufacturer_name}", $product->manufacturer_name, $data_add);
+			}
 			else
 			{
 				$data_add = str_replace("{manufacturer_name}", "", $data_add);
