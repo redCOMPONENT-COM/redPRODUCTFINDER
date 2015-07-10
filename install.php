@@ -103,7 +103,7 @@ class Com_RedProductfinderInstallerScript extends Com_RedcoreInstallerScript
 		echo '<p><img src="' . JUri::root() . '/media/com_redproductfinder/images/redproductfinder_logo_400width.png" alt="redPRODUCTFINDER Logo" width="500"></p>';
 		echo '<br /><br /><p>Remember to check for updates at:<br />';
 		echo '<a href="http://www.redcomponent.com/" target="_new">';
-		echo '<img src="' . JUri::root() . '/media/com_reditem/images/redcomponent_logo.jpg" alt="">';
+		echo '<img src="' . JUri::root() . '/media/com_redproductfinder/images/redcomponent_logo.jpg" alt="">';
 		echo '</a></p>';
 	}
 }
