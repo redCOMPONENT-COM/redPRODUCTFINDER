@@ -42,6 +42,7 @@ $option = 'com_redshop';
 $loadCategorytemplate = '';
 $layout = JRequest::getCmd('layout', '');
 $model = $this->getModel('findproducts');
+$cid = $model->getState('catid');
 $count_no_user_field = 0;
 $product_data = '';
 $extraFieldName = $extraField->getSectionFieldNameArray(1, 1, 1);
@@ -420,12 +421,12 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$db    = JFactory::getDbo();
 	$query = 'SELECT category_name'
 	. ' FROM #__redshop_category  '
-	. 'WHERE category_id=' . $catid;
+	. 'WHERE category_id=' . $cid;
 	$db->setQuery($query);
 
 	$cat_name = null;
 
-	if ($catid)
+	if ($cid)
 	{
 		if ($catname_array = $db->loadObjectList())
 		{
@@ -437,14 +438,14 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$query = 'SELECT category_name, category_id'
 	. ' FROM #__redshop_category AS c '
 	. ' INNER JOIN #__redshop_category_xref AS cx ON cx.category_parent_id = c.category_id'
-	. ' WHERE cx.category_child_id = ' . $catid;
+	. ' WHERE cx.category_child_id = ' . $cid;
 	$db->setQuery($query);
 
 	// Order By
 	$limitstart = $model->getState("list.start");
 	$orderby = $model->getState("order_by");
 
-	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $catid . "&limitstart=" . $limitstart);
+	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $cid . "&limitstart=" . $limitstart);
 
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='" . $linkOrderBy . "' method='post' >";

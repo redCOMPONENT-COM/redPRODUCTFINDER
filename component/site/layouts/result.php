@@ -11,7 +11,7 @@ $products = $displayData["products"];
 $param = JComponentHelper::getParams('com_redproductfinder');
 $template_id = $param->get('prod_template');
 $post = $displayData["post"];
-$catid = $post["cid"];
+$cid = $post["cid"];
 $input = JFactory::getApplication()->input;
 $redform = $input->post->get('redform', array(), "filter");
 $jsondata = json_encode($redform);
@@ -429,10 +429,10 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$db    = JFactory::getDbo();
 	$query = 'SELECT category_name'
 			. ' FROM #__redshop_category  '
-			. 'WHERE category_id=' . $catid;
+			. 'WHERE category_id=' . $cid;
 	$db->setQuery($query);
 
-	if ($catid)
+	if ($cid)
 	{
 		if ($catname_array = $db->loadObjectList())
 		{
@@ -441,7 +441,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	}
 
 	// Order By
-	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $catid . "&limitstart=" . $start);
+	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $cid . "&limitstart=" . $start);
 
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='" . $linkOrderBy . "' method='post' >";
@@ -457,7 +457,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	{
 		$pagination = $displayData["getPagination"];
 
-		$pagination->setAdditionalUrlParam('cid', $catid);
+		$pagination->setAdditionalUrlParam('cid', $cid);
 		$pagination->setAdditionalUrlParam('view', "findproducts");
 
 		$template_desc = str_replace("{pagination}", $pagination->getListFooter(), $template_desc);
