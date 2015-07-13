@@ -48,7 +48,6 @@ $option = 'com_redshop';
 $loadCategorytemplate = '';
 $layout = JRequest::getCmd('layout', '');
 $model = $this->getModel('findproducts');
-$catid = $model->getState('catid');
 $count_no_user_field = 0;
 $product_data = '';
 $extraFieldName = $extraField->getSectionFieldNameArray(1, 1, 1);
@@ -81,6 +80,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	foreach ($products as $k => $pid)
 	{
 		$product = $producthelper->getProductById($pid);
+		$catid = $producthelper->getCategoryProduct($pid);
 
 		// Count accessory
 		$accessorylist = $producthelper->getProductAccessory(0, $product->product_id);
