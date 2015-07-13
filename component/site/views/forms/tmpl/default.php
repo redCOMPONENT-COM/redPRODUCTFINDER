@@ -88,7 +88,7 @@ $filterPriceMax = $param->get("filter_price_max_value", 100);
 		</div>
 	</div>
 
-	<input type="submit" name="submit" value="submit" />
+	<input type="submit" name="submit" value="<?php echo JText::_("COM_REDPRODUCTFINDER_FORM_FORMS_SUBMIT_FORM"); ?>" />
 	<input type="hidden" name="view" value="findproducts" />
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
 	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
