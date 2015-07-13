@@ -169,8 +169,8 @@ if ($count > 0)
 			</div>
 		</div>
 		<div  class="row-fluid">
-			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MIN"); ?></span><span><input type="number" min="0" name="redform[filterprice][min]" value="<?php echo $range['min'];?>" required/></span><br>
-			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MAX"); ?></span><span><input type="number" min="0" name="redform[filterprice][max]" value="<?php echo $range['max'];?>" required/></span>
+			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MIN"); ?></span><span><input type="number" class="span12" min="0" name="redform[filterprice][min]" value="<?php echo $range['min'];?>" required/></span><br>
+			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MAX"); ?></span><span><input type="number" class="span12" min="0" name="redform[filterprice][max]" value="<?php echo $range['max'];?>" required/></span>
 		</div>
 	</div>
 	<input type="submit" name="submit" value="submit" />

@@ -54,11 +54,12 @@ $fieldArray = $extraField->getSectionFieldList(17, 0, 0);
 
 $template_array = $redTemplate->getTemplate("redproductfinder", $template_id);
 $template_desc = $template_array[0]->template_desc;
+$attribute_template = $producthelper->getAttributeTemplate($template_desc);
 
 // Begin replace template
 $template_desc = str_replace("{total_product_lbl}", JText::_('COM_REDSHOP_TOTAL_PRODUCT'), $template_desc);
 $template_desc = str_replace("{total_product}", count($this->products), $template_desc);
-$attribute_template = $producthelper->getAttributeTemplate($template_desc);
+
 
 if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{product_loop_end}"))
 {
@@ -66,8 +67,6 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_d1 = explode("{product_loop_start}", $template_desc);
 	$template_d2 = explode("{product_loop_end}", $template_d1[1]);
 	$template_product = $template_d2[0];
-
-	$attribute_template = $producthelper->getAttributeTemplate($template_product);
 
 	// Loop product lists
 	foreach ($this->products as $key => $pd)
@@ -397,13 +396,16 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 		$data_add = $producthelper->replaceAttributeData($product->product_id, 0, 0, $attributes, $data_add, $attribute_template, $isChilds);
 
-		foreach ($attribute_template as $i => $item)
+		if (isset($attribute_template))
 		{
-			$templateAttribute = "{attribute_template:" . $item->template_name . "}";
-
-			if (strstr($data_add, $templateAttribute))
+			foreach ($attribute_template as $i => $item)
 			{
-				$data_add = str_replace($templateAttribute, "", $data_add);
+				$templateAttribute = "{attribute_template:" . $item->template_name . "}";
+
+				if (strstr($data_add, $templateAttribute))
+				{
+					$data_add = str_replace($templateAttribute, "", $data_add);
+				}
 			}
 		}
 
