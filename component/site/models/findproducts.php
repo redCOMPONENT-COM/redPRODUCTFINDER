@@ -383,29 +383,20 @@ class RedproductfinderModelFindproducts extends RModelList
 
 								// Begin query
 								$tables[$increase]["select"] = " ( ";
-								$tables[$increase]["select"] .= "
-									SELECT pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name
-									FROM #__redshop_product_attribute  as pa";
 
-								$tables[$increase]["select"] .= "
-									LEFT JOIN #__redshop_product_attribute_property as pp
-									ON pa.attribute_id = pp.attribute_id";
+								$subQuery = $db->getQuery(true)
+								->select('pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name')
+								->from($db->qn('#__redshop_product_attribute', 'pa'))
+								->leftJoin($db->qn('#__redshop_product_attribute_property', 'pp') . ' ON pa.attribute_id = pp.attribute_id')
+								->leftJoin($db->qn('#__redshop_product_subattribute_color', 'ps') . ' ON pp.property_id = ps.subattribute_id')
+								->where('pa.attribute_name = ' . $db->q($att))
+								->where('pp.property_name = ' . $db->q($k))
+								->where('ps.subattribute_color_name = ' . $db->q($s))
+								->group('pa.product_id');
 
-								$tables[$increase]["select"] .= "
-									LEFT JOIN #__redshop_product_subattribute_color as ps
-									ON pp.property_id = ps.subattribute_id";
+								$tables[$increase]["select"] .= $subQuery;
 
-								$tables[$increase]["select"] .= "
-									WHERE pa.attribute_name = '" . $att . "'
-									AND pp.property_name = '" . $k . "'";
-
-								$tables[$increase]["select"] .= " AND ps.subattribute_color_name = '" . $s . "'";
-
-								$tables[$increase]["select"] .= " GROUP BY `pa`.`product_id` ";
-
-								$tables[$increase]["select"] .= "\n ) ";
-
-								$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+								$tables[$increase]["select"] .= " ) AS " . $tables[$increase]["alias"];
 
 								// End query
 
@@ -423,27 +414,19 @@ class RedproductfinderModelFindproducts extends RModelList
 
 								// Begin query
 								$tables[$increase]["select"] = " ( ";
-								$tables[$increase]["select"] .= "
-									SELECT pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name
-									FROM #__redshop_product_attribute  as pa";
 
-								$tables[$increase]["select"] .= "
-									LEFT JOIN #__redshop_product_attribute_property as pp
-									ON pa.attribute_id = pp.attribute_id";
+								$subQuery = $db->getQuery(true)
+								->select('pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name')
+								->from($db->qn('#__redshop_product_attribute', 'pa'))
+								->leftJoin($db->qn('#__redshop_product_attribute_property', 'pp') . ' ON pa.attribute_id = pp.attribute_id')
+								->leftJoin($db->qn('#__redshop_product_subattribute_color', 'ps') . ' ON pp.property_id = ps.subattribute_id')
+								->where('pa.attribute_name = ' . $db->q($att))
+								->where('pp.property_name = ' . $db->q($pro))
+								->group('pa.product_id');
 
-								$tables[$increase]["select"] .= "
-									LEFT JOIN #__redshop_product_subattribute_color as ps
-									ON pp.property_id = ps.subattribute_id";
+								$tables[$increase]["select"] .= $subQuery;
 
-								$tables[$increase]["select"] .= "
-									WHERE pa.attribute_name = '" . $att . "'
-									AND pp.property_name = '" . $pro . "'";
-
-								$tables[$increase]["select"] .= " GROUP BY `pa`.`product_id` ";
-
-								$tables[$increase]["select"] .= "\n ) ";
-
-								$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+								$tables[$increase]["select"] .= " ) AS " . $tables[$increase]["alias"];
 
 								// End query
 
@@ -459,29 +442,20 @@ class RedproductfinderModelFindproducts extends RModelList
 
 											// Begin query
 											$tables[$increase]["select"] = " ( ";
-											$tables[$increase]["select"] .= "
-												SELECT pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name
-												FROM #__redshop_product_attribute  as pa";
 
-											$tables[$increase]["select"] .= "
-												LEFT JOIN #__redshop_product_attribute_property as pp
-												ON pa.attribute_id = pp.attribute_id";
+											$subQuery = $db->getQuery(true)
+											->select('pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name')
+											->from($db->qn('#__redshop_product_attribute', 'pa'))
+											->leftJoin($db->qn('#__redshop_product_attribute_property', 'pp') . ' ON pa.attribute_id = pp.attribute_id')
+											->leftJoin($db->qn('#__redshop_product_subattribute_color', 'ps') . ' ON pp.property_id = ps.subattribute_id')
+											->where('pa.attribute_name = ' . $db->q($att))
+											->where('pp.property_name = ' . $db->q($pro))
+											->where('ps.subattribute_color_name = ' . $db->q($s))
+											->group('pa.product_id');
 
-											$tables[$increase]["select"] .= "
-												LEFT JOIN #__redshop_product_subattribute_color as ps
-												ON pp.property_id = ps.subattribute_id";
+											$tables[$increase]["select"] .= $subQuery;
 
-											$tables[$increase]["select"] .= "
-												WHERE pa.attribute_name = '" . $att . "'
-												AND pp.property_name = '" . $pro . "'";
-
-											$tables[$increase]["select"] .= " AND ps.subattribute_color_name = '" . $s . "'";
-
-											$tables[$increase]["select"] .= " GROUP BY `pa`.`product_id` ";
-
-											$tables[$increase]["select"] .= "\n ) ";
-
-											$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+											$tables[$increase]["select"] .= " ) AS " . $tables[$increase]["alias"];
 
 											// End query
 
@@ -496,27 +470,20 @@ class RedproductfinderModelFindproducts extends RModelList
 
 								// Begin query
 								$tables[$increase]["select"] = " ( ";
-								$tables[$increase]["select"] .= "
-									SELECT pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name
-									FROM #__redshop_product_attribute  as pa";
 
-								$tables[$increase]["select"] .= "
-									LEFT JOIN #__redshop_product_attribute_property as pp
-									ON pa.attribute_id = pp.attribute_id";
+								$subQuery = $db->getQuery(true)
+								->select('pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name')
+								->from($db->qn('#__redshop_product_attribute', 'pa'))
+								->leftJoin($db->qn('#__redshop_product_attribute_property', 'pp') . ' ON pa.attribute_id = pp.attribute_id')
+								->leftJoin($db->qn('#__redshop_product_subattribute_color', 'ps') . ' ON pp.property_id = ps.subattribute_id')
+								->where('pa.attribute_name = ' . $db->q($att))
+								->where('pp.property_name = ' . $db->q($pro))
+								->where('ps.subattribute_color_name = ' . $db->q($s))
+								->group('pa.product_id');
 
-								$tables[$increase]["select"] .= "
-									LEFT JOIN #__redshop_product_subattribute_color as ps
-									ON pp.property_id = ps.subattribute_id";
+								$tables[$increase]["select"] .= $subQuery;
 
-								$tables[$increase]["select"] .= "
-									WHERE pa.attribute_name = '" . $att . "'
-									AND pp.property_name = '" . $pro . "'";
-
-								$tables[$increase]["select"] .= " GROUP BY `pa`.`product_id` ";
-
-								$tables[$increase]["select"] .= "\n ) ";
-
-								$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+								$tables[$increase]["select"] .= " ) AS " . $tables[$increase]["alias"];
 
 								// End query
 
@@ -544,10 +511,9 @@ class RedproductfinderModelFindproducts extends RModelList
 				// Begin merger
 				if (count($tables) > 1)
 				{
-					$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
-					$subTable .= " FROM  ";
-
-					$subTable .= $tables[0]["select"];
+					$subTable .= $db->getQuery(true)
+						->select($tables[0]["alias"] . ".product_id")
+						->from($tables[0]["select"]);
 
 					for ($i = 1; $i < count($tables); $i++)
 					{
@@ -558,10 +524,9 @@ class RedproductfinderModelFindproducts extends RModelList
 				}
 				else
 				{
-					$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
-					$subTable .= " FROM  ";
-
-					$subTable .= $tables[0]["select"];
+					$subTable .= $db->getQuery(true)
+						->select($tables[0]["alias"] . ".product_id")
+						->from($tables[0]["select"]);
 				}
 
 				$subTable .= " ) ";
@@ -605,23 +570,18 @@ class RedproductfinderModelFindproducts extends RModelList
 
 					// Begin query
 					$tables[$increase]["select"] = " ( ";
-					$tables[$increase]["select"] .= "
-						SELECT ac.product_id, ac_t.type_id `type`, ac_t.tag_id `tag`
-						FROM #__redproductfinder_associations  as ac";
 
-					$tables[$increase]["select"] .= "
-						LEFT JOIN #__redproductfinder_association_tag as ac_t
-						ON ac.id = ac_t.association_id";
+					$subQuery = $db->getQuery(true)
+						->select('ac.product_id, ac_t.type_id AS type, ac_t.tag_id AS tag')
+						->from($db->qn('#__redproductfinder_associations', 'ac'))
+						->leftJoin($db->qn('#__redproductfinder_association_tag', 'ac_t') . ' ON ac.id = ac_t.association_id')
+						->where('ac_t.type_id = ' . $db->q($type))
+						->where('ac_t.tag_id = ' . $db->q($tag))
+						->group('ac.product_id');
 
-					$tables[$increase]["select"] .= "
-						WHERE ac_t.type_id = " . $type . "
-						AND ac_t.tag_id = " . $tag;
+					$tables[$increase]["select"] .= $subQuery;
 
-					$tables[$increase]["select"] .= " GROUP BY `ac`.`product_id` ";
-
-					$tables[$increase]["select"] .= "\n ) ";
-
-					$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+					$tables[$increase]["select"] .= " ) AS " . $tables[$increase]["alias"];
 
 					// End query
 
@@ -645,10 +605,9 @@ class RedproductfinderModelFindproducts extends RModelList
 				// Begin merger
 				if (count($tables) > 1)
 				{
-					$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
-					$subTable .= " FROM  ";
-
-					$subTable .= $tables[0]["select"];
+					$subTable .= $db->getQuery(true)
+						->select($tables[0]["alias"] . ".product_id")
+						->from($tables[0]["select"]);
 
 					for ($i = 1; $i < count($tables); $i++)
 					{
@@ -659,10 +618,9 @@ class RedproductfinderModelFindproducts extends RModelList
 				}
 				else
 				{
-					$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
-					$subTable .= " FROM  ";
-
-					$subTable .= $tables[0]["select"];
+					$subTable .= $db->getQuery(true)
+						->select($tables[0]["alias"] . ".product_id")
+						->from($tables[0]["select"]);
 				}
 
 				$subTable .= " ) ";
