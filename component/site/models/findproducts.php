@@ -167,10 +167,6 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		$searchByComp = $param->get('search_by');
 
-		$module = JModuleHelper::getModule('mod_redproductforms');
-		$headLineParams = new JRegistry($module->params);
-		$searchByModule = $headLineParams->get('search_by');
-
 		// Filter by cid
 		$cid = $this->getState("catid");
 
@@ -326,10 +322,9 @@ class RedproductfinderModelFindproducts extends RModelList
 		$pk = (!empty($pk)) ? $pk : $this->getState('redform.data');
 
 		$db = JFactory::getDbo();
+
 		$searchByComp = $param->get('search_by');
-		$module = JModuleHelper::getModule('mod_redproductforms');
-		$headLineParams = new JRegistry($module->params);
-		$searchByModule = $headLineParams->get('search_by');
+
 		$orderBy = $this->getState('order_by');
 
 		if ($orderBy == 'pc.ordering ASC' || $orderBy == 'c.ordering ASC')
@@ -339,116 +334,344 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		// Condition min max price
 		$filter = array();
-		
+
 		if (isset($pk["filterprice"]))
 		{
 			// Filter by filterprice
 			$filter = $pk["filterprice"];
 		}
-		
+
 		$min = $filter['min'];
 		$max = $filter['max'];
 
 		$cid = $this->getState("catid");
 		$manufacturerId = $pk["manufacturer_id"];
 
-		// Remove some field
-		unset($pk["filterprice"]);
-		unset($pk["template_id"]);
-		unset($pk["manufacturer_id"]);
-		unset($pk["cid"]);
-
-		// Create arrays variable
-		$tables = array();
-		$increase = 0;
-		$types = array();
-
-		if ($pk != null)
+		if ($searchByComp == 1)
 		{
-			// Get how many type
-			$types = array_keys($pk);
-		}
+			// Create arrays variable
+			$tables = array();
+			$increase = 0;
+			$atts = array();
 
-		// Begin sub query
-		foreach ($types as $k => $type)
-		{
-			if (!isset($pk[$type]["tags"]))
+			if (isset($pk["attribute"]))
 			{
-				continue;
-			}
+				$attribute = $pk["attribute"];
 
-			foreach ($pk[$type]["tags"] as $i => $tag)
-			{
-				$tables[$increase]["alias"] = "tbl" . $increase;
-
-				// Begin query
-				$tables[$increase]["select"] = " ( ";
-				$tables[$increase]["select"] .= "
-					SELECT ac.product_id, ac_t.type_id `type`, ac_t.tag_id `tag`
-					FROM #__redproductfinder_associations  as ac";
-
-				$tables[$increase]["select"] .= "
-					LEFT JOIN #__redproductfinder_association_tag as ac_t
-					ON ac.id = ac_t.association_id";
-
-				$tables[$increase]["select"] .= "
-					WHERE ac_t.type_id = " . $type . "
-					AND ac_t.tag_id = " . $tag;
-
-				$tables[$increase]["select"] .= " GROUP BY `ac`.`product_id` ";
-
-				$tables[$increase]["select"] .= "\n ) ";
-
-				$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
-
-				// End query
-
-				$increase++;
-			}
-		}
-
-		// Main query
-		$query = $db->getQuery(true);
-
-		$query->select("p.product_id");
-		$query->from($db->qn("#__redshop_product", "p"));
-		$query->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
-
-		// If has subTable then begin query by subtable
-		if (count($tables) > 0)
-		{
-			// Create subtable
-			$subTable = " ( ";
-
-			// Begin merger
-			if (count($tables) > 1)
-			{
-				$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
-				$subTable .= " FROM  ";
-
-				$subTable .= $tables[0]["select"];
-
-				for ($i = 1; $i < count($tables); $i++)
+				// Begin sub query
+				foreach ($attribute as $att => $pros)
 				{
-					$subTable .= " INNER JOIN ";
-					$tables[$i]["select"] .= " ON " . $tables[$i - 1]["alias"] . ".product_id = " . $tables[$i]["alias"] . ".product_id ";
-					$subTable .= $tables[$i]["select"];
+					$isAtt = $att;
+
+					if (isset($pros["subproperty"]))
+					{
+						foreach ($pros["subproperty"] as $k_s => $s_n)
+						{
+							$subName[$k_s] = $s_n;
+						}
+					}
+
+				unset($pros["subproperty"]);
+
+					if (empty($pros))
+					{
+						foreach ($subName as $k => $sub)
+						{
+							foreach ($sub as $s)
+							{
+								$tables[$increase]["alias"] = "tbl" . $increase;
+
+								// Begin query
+								$tables[$increase]["select"] = " ( ";
+								$tables[$increase]["select"] .= "
+									SELECT pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name
+									FROM #__redshop_product_attribute  as pa";
+
+								$tables[$increase]["select"] .= "
+									LEFT JOIN #__redshop_product_attribute_property as pp
+									ON pa.attribute_id = pp.attribute_id";
+
+								$tables[$increase]["select"] .= "
+									LEFT JOIN #__redshop_product_subattribute_color as ps
+									ON pp.property_id = ps.subattribute_id";
+
+								$tables[$increase]["select"] .= "
+									WHERE pa.attribute_name = '" . $att . "'
+									AND pp.property_name = '" . $k . "'";
+
+								$tables[$increase]["select"] .= " AND ps.subattribute_color_name = '" . $s . "'";
+
+								$tables[$increase]["select"] .= " GROUP BY `pa`.`product_id` ";
+
+								$tables[$increase]["select"] .= "\n ) ";
+
+								$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+
+								// End query
+
+								$increase++;
+							}
+						}
+					}
+					else
+					{
+						foreach ($pros as $i => $pro)
+						{
+							if (isset($subName))
+							{
+								$tables[$increase]["alias"] = "tbl" . $increase;
+
+								// Begin query
+								$tables[$increase]["select"] = " ( ";
+								$tables[$increase]["select"] .= "
+									SELECT pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name
+									FROM #__redshop_product_attribute  as pa";
+
+								$tables[$increase]["select"] .= "
+									LEFT JOIN #__redshop_product_attribute_property as pp
+									ON pa.attribute_id = pp.attribute_id";
+
+								$tables[$increase]["select"] .= "
+									LEFT JOIN #__redshop_product_subattribute_color as ps
+									ON pp.property_id = ps.subattribute_id";
+
+								$tables[$increase]["select"] .= "
+									WHERE pa.attribute_name = '" . $att . "'
+									AND pp.property_name = '" . $pro . "'";
+
+								$tables[$increase]["select"] .= " GROUP BY `pa`.`product_id` ";
+
+								$tables[$increase]["select"] .= "\n ) ";
+
+								$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+
+								// End query
+
+								$increase++;
+
+								foreach ($subName as $k => $sub)
+								{
+									foreach ($sub as $s)
+									{
+										if ($k == $pro)
+										{
+											$tables[$increase]["alias"] = "tbl" . $increase;
+
+											// Begin query
+											$tables[$increase]["select"] = " ( ";
+											$tables[$increase]["select"] .= "
+												SELECT pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name
+												FROM #__redshop_product_attribute  as pa";
+
+											$tables[$increase]["select"] .= "
+												LEFT JOIN #__redshop_product_attribute_property as pp
+												ON pa.attribute_id = pp.attribute_id";
+
+											$tables[$increase]["select"] .= "
+												LEFT JOIN #__redshop_product_subattribute_color as ps
+												ON pp.property_id = ps.subattribute_id";
+
+											$tables[$increase]["select"] .= "
+												WHERE pa.attribute_name = '" . $att . "'
+												AND pp.property_name = '" . $pro . "'";
+
+											$tables[$increase]["select"] .= " AND ps.subattribute_color_name = '" . $s . "'";
+
+											$tables[$increase]["select"] .= " GROUP BY `pa`.`product_id` ";
+
+											$tables[$increase]["select"] .= "\n ) ";
+
+											$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+
+											// End query
+
+											$increase++;
+										}
+									}
+								}
+							}
+							else
+							{
+								$tables[$increase]["alias"] = "tbl" . $increase;
+
+								// Begin query
+								$tables[$increase]["select"] = " ( ";
+								$tables[$increase]["select"] .= "
+									SELECT pa.product_id, pa.attribute_name, pp.property_name, ps.subattribute_color_name
+									FROM #__redshop_product_attribute  as pa";
+
+								$tables[$increase]["select"] .= "
+									LEFT JOIN #__redshop_product_attribute_property as pp
+									ON pa.attribute_id = pp.attribute_id";
+
+								$tables[$increase]["select"] .= "
+									LEFT JOIN #__redshop_product_subattribute_color as ps
+									ON pp.property_id = ps.subattribute_id";
+
+								$tables[$increase]["select"] .= "
+									WHERE pa.attribute_name = '" . $att . "'
+									AND pp.property_name = '" . $pro . "'";
+
+								$tables[$increase]["select"] .= " GROUP BY `pa`.`product_id` ";
+
+								$tables[$increase]["select"] .= "\n ) ";
+
+								$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+
+								// End query
+
+								$increase++;
+							}
+						}
+					}
 				}
 			}
-			else
-			{
-				$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
-				$subTable .= " FROM  ";
 
-				$subTable .= $tables[0]["select"];
+			// Main query
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select("p.product_id");
+			$query->from($db->qn("#__redshop_product", "p"));
+			$query->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
+
+			// If has subTable then begin query by subtable
+			if (count($tables) > 0)
+			{
+				// Create subtable
+				$subTable = " ( ";
+
+				// Begin merger
+				if (count($tables) > 1)
+				{
+					$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
+					$subTable .= " FROM  ";
+
+					$subTable .= $tables[0]["select"];
+
+					for ($i = 1; $i < count($tables); $i++)
+					{
+						$subTable .= " INNER JOIN ";
+						$tables[$i]["select"] .= " ON " . $tables[$i - 1]["alias"] . ".product_id = " . $tables[$i]["alias"] . ".product_id ";
+						$subTable .= $tables[$i]["select"];
+					}
+				}
+				else
+				{
+					$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
+					$subTable .= " FROM  ";
+
+					$subTable .= $tables[0]["select"];
+				}
+
+				$subTable .= " ) ";
+				$subTable .= " AS `table`";
+
+				// End subtable intersect
+
+				$query->join("INNER", $subTable . " ON `p`.`product_id` = `table`.`product_id` ");
+			}
+		}
+		elseif ($searchByComp == 0)
+		{
+			// Remove some field
+			unset($pk["filterprice"]);
+			unset($pk["template_id"]);
+			unset($pk["manufacturer_id"]);
+			unset($pk["cid"]);
+
+			// Create arrays variable
+			$tables = array();
+			$increase = 0;
+			$types = array();
+
+			if ($pk != null)
+			{
+				// Get how many type
+				$types = array_keys($pk);
 			}
 
-			$subTable .= " ) ";
-			$subTable .= " AS `table`";
+			// Begin sub query
+			foreach ($types as $k => $type)
+			{
+				if (!isset($pk[$type]["tags"]))
+				{
+					continue;
+				}
 
-			// End subtable intersect
+				foreach ($pk[$type]["tags"] as $i => $tag)
+				{
+					$tables[$increase]["alias"] = "tbl" . $increase;
 
-			$query->join("INNER", $subTable . " ON `p`.`product_id` = `table`.`product_id` ");
+					// Begin query
+					$tables[$increase]["select"] = " ( ";
+					$tables[$increase]["select"] .= "
+						SELECT ac.product_id, ac_t.type_id `type`, ac_t.tag_id `tag`
+						FROM #__redproductfinder_associations  as ac";
+
+					$tables[$increase]["select"] .= "
+						LEFT JOIN #__redproductfinder_association_tag as ac_t
+						ON ac.id = ac_t.association_id";
+
+					$tables[$increase]["select"] .= "
+						WHERE ac_t.type_id = " . $type . "
+						AND ac_t.tag_id = " . $tag;
+
+					$tables[$increase]["select"] .= " GROUP BY `ac`.`product_id` ";
+
+					$tables[$increase]["select"] .= "\n ) ";
+
+					$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+
+					// End query
+
+					$increase++;
+				}
+			}
+
+			// Main query
+			$query = $db->getQuery(true);
+
+			$query->select("p.product_id");
+			$query->from($db->qn("#__redshop_product", "p"));
+			$query->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
+
+			// If has subTable then begin query by subtable
+			if (count($tables) > 0)
+			{
+				// Create subtable
+				$subTable = " ( ";
+
+				// Begin merger
+				if (count($tables) > 1)
+				{
+					$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
+					$subTable .= " FROM  ";
+
+					$subTable .= $tables[0]["select"];
+
+					for ($i = 1; $i < count($tables); $i++)
+					{
+						$subTable .= " INNER JOIN ";
+						$tables[$i]["select"] .= " ON " . $tables[$i - 1]["alias"] . ".product_id = " . $tables[$i]["alias"] . ".product_id ";
+						$subTable .= $tables[$i]["select"];
+					}
+				}
+				else
+				{
+					$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
+					$subTable .= " FROM  ";
+
+					$subTable .= $tables[0]["select"];
+				}
+
+				$subTable .= " ) ";
+				$subTable .= " AS `table`";
+
+				// End subtable intersect
+
+				$query->join("INNER", $subTable . " ON `p`.`product_id` = `table`.`product_id` ");
+			}
 		}
 
 		$query->where("p.published = 1");
