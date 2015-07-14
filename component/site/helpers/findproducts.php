@@ -39,4 +39,50 @@ class RedproductfinderFindProducts
 		// Get template name
 		return $db->loadResult();
 	}
+
+	/**
+	 * This method get name of tag
+	 *
+	 * @param   int  $id  tag id
+	 *
+	 * @return array
+	 */
+	public static function getTagName($id)
+	{
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+
+		$query->select("tag_name");
+		$query->from("#__redproductfinder_tags");
+		$query->where("id = " . $db->q($id));
+
+		$db->setQuery($query);
+
+		// Get tag name
+		return $db->loadResult();
+	}
+
+	/**
+	 * This method get name of type
+	 *
+	 * @param   int  $id  type id
+	 *
+	 * @return array
+	 */
+	public static function getTypeName($id)
+	{
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+
+		$query->select("type_name");
+		$query->from("#__redproductfinder_types");
+		$query->where("id = " . $db->q($id));
+
+		$db->setQuery($query);
+
+		// Get type name
+		return $db->loadResult();
+	}
 }

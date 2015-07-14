@@ -8,17 +8,45 @@
 defined('_JEXEC') or die;
 
 $param = JComponentHelper::getParams('com_redproductfinder');
+$searchBy = $param->get("search_by");
 $template_id = $param->get('prod_template');
+$showPrice = $param->get("show_price");
+$showCart = $param->get("show_add_to_cart");
 $input = JFactory::getApplication()->input;
-$redform = $input->post->get('redform', array(), "filter");
 $isredshop = JComponentHelper::isEnabled('com_redshop');
-$app = JFactory::getApplication();
+$redform = $input->get('redform', array(), "array");
+
+if ($redform)
+{
+	$pk = $redform;
+}
+else
+{
+	$json = $input->get('jsondata', "", "string");
+
+	// Decode from string to array data
+	$pk = json_decode($json, true);
+}
+
+unset($pk["filterprice"]);
+unset($pk["template_id"]);
+unset($pk["manufacturer_id"]);
+unset($pk["cid"]);
+
+foreach ( $pk as $k => $value )
+{
+	if (isset($value['tags']))
+	{
+		$values[] = $value;
+	}
+}
 
 if (!$isredshop)
 {
 	JError::raiseError('500', 'redShop Component is not installed');
 }
 
+JLoader::import('findproducts', JPATH_SITE . '/components/com_redproductfinder/helpers');
 JLoader::import('redshop.library');
 JLoader::load('RedshopHelperAdminConfiguration');
 JLoader::load('RedshopHelperAdminTemplate');
@@ -71,7 +99,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_product = $template_d2[0];
 
 	$attribute_template = $producthelper->getAttributeTemplate($template_product);
-	
+
 	// Loop product lists
 	foreach ($this->products as $key => $pd)
 	{
@@ -105,6 +133,15 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		$data_add = str_replace("{product_number_lbl}", JText::_('COM_REDSHOP_PRODUCT_NUMBER_LBL'), $data_add);
 		$product_number_output = '<span id="product_number_variable' . $product->product_id . '">' . $product->product_number . '</span>';
 		$data_add = str_replace("{product_number}", $product_number_output, $data_add);
+
+		if ($showPrice == 1)
+		{
+			$data_add = str_replace("{product_price}", $producthelper->getProductFormattedPrice($product->product_price), $data_add);
+		}
+		else
+		{
+			$data_add = str_replace("{product_price}", '', $data_add);
+		}
 
 		// Replace VAT information
 		$data_add = $producthelper->replaceVatinfo($data_add);
@@ -191,9 +228,9 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		if (strstr($data_add, '{manufacturer_name}'))
 		{
 			if ($product->manufacturer_name != "")
- 			{
- 				$data_add = str_replace("{manufacturer_name}", $product->manufacturer_name, $data_add);
- 			}
+			{
+				$data_add = str_replace("{manufacturer_name}", $product->manufacturer_name, $data_add);
+			}
 			else
 			{
 				$data_add = str_replace("{manufacturer_name}", "", $data_add);
@@ -396,17 +433,22 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		$data_add = $producthelper->replaceProductInStock($product->product_id, $data_add, $attributes, $attribute_template);
 
 		$data_add = $producthelper->replaceAttributeData($product->product_id, 0, 0, $attributes, $data_add, $attribute_template, $isChilds);
-		
+
 		foreach ($attribute_template as $i => $item)
 		{
 			$templateAttribute = "{attribute_template:" . $item->template_name . "}";
-				
+
 			if (strstr($data_add, $templateAttribute))
 			{
 				$data_add = str_replace($templateAttribute, "", $data_add);
 			}
 		}
-		
+
+		if ($showCart == 0)
+		{
+			$data_add = str_replace("{form_addtocart:add_to_cart1}", "", $data_add);
+		}
+
 		/* get cart tempalte */
 		$data_add = $producthelper->replaceCartTemplate($product->product_id, $catid, 0, 0, $data_add, $isChilds, $userfieldArr, $totalatt, $totacc, $count_no_user_field);
 
@@ -414,6 +456,24 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	}
 
 	$product_tmpl = $product_data;
+
+	if (strstr($template_desc, "{display_tag}"))
+	{
+		foreach ($values as $value)
+		{
+			$typeName = RedproductfinderFindProducts::getTypeName($value['typeid']);
+
+			foreach ($value['tags'] as $tags)
+			{
+				$tagName = RedproductfinderFindProducts::getTagName($tags);
+				$displayTag[] = "<span><strong>" . $typeName . " - " . $tagName . "</strong></span><br>";
+			}
+		}
+
+		$display = implode('<br>', $displayTag);
+
+		$template_desc = str_replace("{display_tag}", $display, $template_desc);
+	}
 
 	$db    = JFactory::getDbo();
 	$query = 'SELECT category_name'
