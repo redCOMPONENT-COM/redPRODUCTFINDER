@@ -185,14 +185,9 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		$attribute = "";
 
-		if (isset($pk["properties"]))
+		if (isset($pk["attribute"]))
 		{
-			$attribute = $pk["properties"];
-		}
-
-		if ($attribute != "")
-		{
-			$properties = implode("','", $attribute);
+			$attribute = $pk["attribute"];
 		}
 
 		$view = $this->getState("redform.view");
@@ -210,9 +205,42 @@ class RedproductfinderModelFindproducts extends RModelList
 			->where("p.published = 1")
 			->group($db->qn("p.product_id"));
 
-			if ($attribute)
+			if (isset($attribute))
 			{
-				$query->where("(" . $db->qn("pp.property_name") . " IN ('" . $properties . "') OR ps.subattribute_color_name IN ('" . $properties . "'))");
+				foreach ($attribute as $k => $value)
+				{
+					$att[] = $k;
+					$pro[] = $value;
+				}
+
+				foreach ($pro as $k_p => $v_p)
+				{
+					if (isset($v_p["subproperty"]))
+					{
+						foreach ($v_p["subproperty"] as $k_sp => $v_sp)
+						{
+							foreach ($v_sp as $sp)
+							{
+								$subName[] = $sp;
+							}
+						}
+
+						$subString = implode("','", $subName);
+						$subQuery = "OR ps.subattribute_color_name IN ('" . $subString . "')";
+					}
+
+					unset($v_p["subproperty"]);
+
+					foreach ($v_p as $k_vp => $v_vp)
+					{
+						$proName[] = $v_vp;
+					}
+				}
+
+				$attString = implode("','", $att);
+				$proString = implode("','", $proName);
+
+				$query->where("( pp.property_name IN ('" . $proString . "') " . $subQuery . ")");
 			}
 		}
 
@@ -589,6 +617,7 @@ class RedproductfinderModelFindproducts extends RModelList
 	public function getItem($pk = null)
 	{
 		$query = $this->getListQuery();
+		echo $query->dump();
 		$db = JFactory::getDbo();
 		$start = $this->getState('list.start');
 		$limit = $this->getState('list.limit');
