@@ -227,10 +227,6 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		$searchByComp = $param->get('search_by');
 
-		$module = JModuleHelper::getModule('mod_redproductforms');
-		$headLineParams = new JRegistry($module->params);
-		$searchByModule = $headLineParams->get('search_by');
-
 		// Filter by cid
 		$cid = $this->getState("catid");
 
@@ -238,7 +234,7 @@ class RedproductfinderModelFindproducts extends RModelList
 		$manufacturerId = $pk["manufacturer_id"];
 
 		// Filter by filterprice
-		if ($pk["filterprice"])
+		if (isset($pk["filterprice"]))
 		{
 			$filter = $pk["filterprice"];
 		}
@@ -252,21 +248,41 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		$attribute = "";
 
-		if (isset($pk["properties"]))
+		if (isset($pk["attribute"]))
 		{
-			$attribute = $pk["properties"];
-		}
-
-		if ($attribute != "")
-		{
-			$properties = implode("','", $attribute);
+			$attribute = $pk["attribute"];
 		}
 
 		$view = $this->getState("redform.view");
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		if ($searchByComp == 1)
+		if ($saveFilter)
+		{
+			$query = $db->getQuery(true);
+			$query->select("a.product_id")
+			->from($db->qn("#__redproductfinder_associations", "a"))
+			->join("LEFT", $db->qn("#__redproductfinder_association_tag", "at") . " ON a.id = at.association_id")
+			->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id")
+			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
+
+			foreach ($saveFilter as $type_id => $value)
+			{
+				$typeId[] = $type_id;
+
+				foreach ($value as $tag_id => $value1)
+				{
+					$tagId[] = $tag_id;
+				}
+			}
+
+			$keyTypeString = implode(",", $typeId);
+			$keyTagString = implode(",", $tagId);
+
+			$query->where($db->qn("at.type_id") . " IN (" . $keyTypeString . ")")
+			->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
+		}
+		elseif ($searchByComp == 1 && isset($pk["attribute"]))
 		{
 			$query->select("p.product_id")
 			->from($db->qn("#__redshop_product", "p"))
@@ -277,20 +293,49 @@ class RedproductfinderModelFindproducts extends RModelList
 			->where("p.published = 1")
 			->group($db->qn("p.product_id"));
 
-			if ($attribute)
+			if (isset($attribute))
 			{
-				$query->where("(" . $db->qn("pp.property_name") . " IN ('" . $properties . "') OR ps.subattribute_color_name IN ('" . $properties . "'))");
+				foreach ($attribute as $k => $value)
+				{
+					$att[] = $k;
+					$pro[] = $value;
+				}
+
+				foreach ($pro as $k_p => $v_p)
+				{
+					if (isset($v_p["subproperty"]))
+					{
+						foreach ($v_p["subproperty"] as $k_sp => $v_sp)
+						{
+							foreach ($v_sp as $sp)
+							{
+								$subName[] = $sp;
+							}
+						}
+
+						$subString = implode("','", $subName);
+						$subQuery = "OR ps.subattribute_color_name IN ('" . $subString . "')";
+					}
+
+					unset($v_p["subproperty"]);
+
+					foreach ($v_p as $k_vp => $v_vp)
+					{
+						$proName[] = $v_vp;
+					}
+				}
+
+				$attString = implode("','", $att);
+				$proString = implode("','", $proName);
+
+				$query->where("( pp.property_name IN ('" . $proString . "') " . $subQuery . ")");
 			}
 		}
-
 		elseif ($searchByComp == 0)
 		{
 			$query->select("a.product_id")
 			->from($db->qn("#__redproductfinder_associations", "a"))
 			->join("LEFT", $db->qn("#__redproductfinder_association_tag", "at") . " ON a.id = at.association_id")
-			->join("LEFT", $db->qn("#__redproductfinder_types", "tp") . " ON tp.id = at.type_id")
-			->join("LEFT", $db->qn("#__redproductfinder_tags", "tg") . " ON tg.id = at.tag_id")
-			->join("INNER", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.tag_id = tg.id and tt.type_id = tp.id")
 			->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id")
 			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
 			->where("a.published = 1")
@@ -306,14 +351,17 @@ class RedproductfinderModelFindproducts extends RModelList
 
 			if ($pk)
 			{
-				if (isset($value["tags"]))
+				foreach ($pk as $k => $value )
 				{
-					$keyTypes[] = $value['typeid'];
-				}
+					if (isset($value["tags"]))
+					{
+						$keyTypes[] = $value['typeid'];
 
-				foreach ( $value["tags"] as $k_t => $tag )
-				{
-					$keyTags[] = $tag;
+						foreach ( $value["tags"] as $k_t => $tag )
+						{
+							$keyTags[] = $tag;
+						}
+					}
 				}
 			}
 
@@ -332,39 +380,21 @@ class RedproductfinderModelFindproducts extends RModelList
 				$keyTagString = implode(",", $keyTags);
 				$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
 			}
-			elseif ($saveFilter)
+		}
+		else
+		{
+			if (!isset($filter))
 			{
-				foreach ($saveFilter as $type_id => $value)
-				{
-					$typeId[] = $type_id;
-
-					foreach ($value as $tag_id => $value1)
-					{
-						$tagId[] = $tag_id;
-					}
-				}
-
-				$keyTypeString = implode(",", $typeId);
-				$keyTagString = implode(",", $tagId);
-
-				$query->where($db->qn("at.type_id") . " IN (" . $keyTypeString . ")")
-				->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
-			}
-			else
-			{
-				if (!$filter)
-				{
-					$query = $db->getQuery(true);
-					$query->select("p.product_id")
-					->from($db->qn("#__redshop_product", "p"))
-					->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
-					->where("p.published = 1")
-					->group($db->qn("p.product_id"));
-				}
+				$query = $db->getQuery(true);
+				$query->select("p.product_id")
+				->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+				->where("p.published = 1")
+				->group($db->qn("p.product_id"));
 			}
 		}
 
-		if ($filter)
+		if (isset($filter))
 		{
 			// Condition min max
 			$min = $filter['min'];
@@ -413,10 +443,9 @@ class RedproductfinderModelFindproducts extends RModelList
 		$pk = (!empty($pk)) ? $pk : $this->getState('redform.data');
 
 		$db = JFactory::getDbo();
+
 		$searchByComp = $param->get('search_by');
-		$module = JModuleHelper::getModule('mod_redproductforms');
-		$headLineParams = new JRegistry($module->params);
-		$searchByModule = $headLineParams->get('search_by');
+
 		$orderBy = $this->getState('order_by');
 
 		if ($orderBy == 'pc.ordering ASC' || $orderBy == 'c.ordering ASC')
@@ -431,146 +460,251 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			// Filter by filterprice
 			$filter = $pk["filterprice"];
+			$min = $filter['min'];
+			$max = $filter['max'];
 		}
-
-		$min = $filter['min'];
-		$max = $filter['max'];
 
 		$cid = $this->getState("catid");
 		$manufacturerId = $pk["manufacturer_id"];
 
-		// Remove some field
-		unset($pk["filterprice"]);
-		unset($pk["template_id"]);
-		unset($pk["manufacturer_id"]);
-		unset($pk["cid"]);
-
-		// Create arrays variable
-		$tables = array();
-		$increase = 0;
-		$types = array();
-
-		if ($pk != null)
+		if ($searchByComp == 1)
 		{
-			// Get how many type
-			$types = array_keys($pk);
+			// Main query
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
 
-			// Begin sub query
-			foreach ($types as $k => $type)
+			$query->select("p.product_id");
+			$query->from($db->qn("#__redshop_product", "p"));
+			$query->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
+
+			// Create arrays variable
+			$tables = array();
+			$increaseJoin = 0;
+			$increaseWhere = 0;
+			$atts = array();
+
+			if (isset($pk["attribute"]))
 			{
-				if (!isset($pk[$type]["tags"]))
+				$attribute = $pk["attribute"];
+
+				// Begin sub query
+				foreach ($attribute as $att => $pros)
 				{
-					continue;
-				}
+					$isAtt = $att;
 
-				foreach ($pk[$type]["tags"] as $i => $tag)
-				{
-					$tables[$increase]["alias"] = "tbl" . $increase;
+					if (isset($pros["subproperty"]))
+					{
+						foreach ($pros["subproperty"] as $k_s => $s_n)
+						{
+							$subName[$k_s] = $s_n;
+						}
+					}
 
-					// Begin query
-					$tables[$increase]["select"] = " ( ";
-					$tables[$increase]["select"] .= "
-						SELECT ac.product_id, ac_t.type_id `type`, ac_t.tag_id `tag`
-						FROM #__redproductfinder_associations  as ac";
+				unset($pros["subproperty"]);
 
-					$tables[$increase]["select"] .= "
-						LEFT JOIN #__redproductfinder_association_tag as ac_t
-						ON ac.id = ac_t.association_id";
+					// Begin query from
+					if (empty($pros))
+					{
+						foreach ($subName as $k => $sub)
+						{
+							foreach ($sub as $s)
+							{
+								$query->join("LEFT", $db->qn("#__redshop_product_attribute", "pa" . $increaseJoin) . " ON p.product_id = pa" . $increaseJoin . ".product_id")
+									->join("LEFT", $db->qn("#__redshop_product_attribute_property", "pp" . $increaseJoin) . " ON pp" . $increaseJoin . ".attribute_id = pa" . $increaseJoin . ".attribute_id")
+									->join("LEFT", $db->qn("#__redshop_product_subattribute_color", "ps" . $increaseJoin) . " ON pp" . $increaseJoin . ".property_id = ps" . $increaseJoin . ".subattribute_id");
 
-					$tables[$increase]["select"] .= "
-						WHERE ac_t.type_id = " . $type . "
-						AND ac_t.tag_id = " . $tag;
+								$increaseJoin++;
+							}
+						}
+					}
+					else
+					{
+						foreach ($pros as $i => $pro)
+						{
+							if (isset($subName))
+							{
+								$query->join("LEFT", $db->qn("#__redshop_product_attribute", "pa" . $increaseJoin) . " ON p.product_id = pa" . $increaseJoin . ".product_id")
+									->join("LEFT", $db->qn("#__redshop_product_attribute_property", "pp" . $increaseJoin) . " ON pp" . $increaseJoin . ".attribute_id = pa" . $increaseJoin . ".attribute_id");
 
-					$tables[$increase]["select"] .= " GROUP BY `ac`.`product_id` ";
+								$increaseJoin++;
 
-					$tables[$increase]["select"] .= "\n ) ";
+								foreach ($subName as $k => $sub)
+								{
+									foreach ($sub as $s)
+									{
+										if ($k == $pro)
+										{
+											$query->join("LEFT", $db->qn("#__redshop_product_attribute", "pa" . $increaseJoin) . " ON p.product_id = pa" . $increaseJoin . ".product_id")
+												->join("LEFT", $db->qn("#__redshop_product_attribute_property", "pp" . $increaseJoin) . " ON pp" . $increaseJoin . ".attribute_id = pa" . $increaseJoin . ".attribute_id")
+												->join("LEFT", $db->qn("#__redshop_product_subattribute_color", "ps" . $increaseJoin) . " ON pp" . $increaseJoin . ".property_id = ps" . $increaseJoin . ".subattribute_id");
 
-					$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
+											$increaseJoin++;
+										}
+									}
+								}
+							}
+							else
+							{
+								$query->join("LEFT", $db->qn("#__redshop_product_attribute", "pa" . $increaseJoin) . " ON p.product_id = pa" . $increaseJoin . ".product_id")
+									->join("LEFT", $db->qn("#__redshop_product_attribute_property", "pp" . $increaseJoin) . " ON pp" . $increaseJoin . ".attribute_id = pa" . $increaseJoin . ".attribute_id")
+									->join("LEFT", $db->qn("#__redshop_product_subattribute_color", "ps" . $increaseJoin) . " ON pp" . $increaseJoin . ".property_id = ps" . $increaseJoin . ".subattribute_id");
 
-					// End query
+								$increaseJoin++;
+							}
+						}
+					}
 
-					$increase++;
+					// Begin query where
+					if (empty($pros))
+					{
+						foreach ($subName as $k => $sub)
+						{
+							foreach ($sub as $s)
+							{
+								$query->where('pa' . $increaseWhere . '.attribute_name = ' . $db->q($att))
+									->where('pp' . $increaseWhere . '.property_name = ' . $db->q($k))
+									->where('ps' . $increaseWhere . '.subattribute_color_name = ' . $db->q($s));
+
+								$increaseWhere++;
+							}
+						}
+					}
+					else
+					{
+						foreach ($pros as $i => $pro)
+						{
+							if (isset($subName))
+							{
+								$query->where('pa' . $increaseWhere . '.attribute_name = ' . $db->q($att))
+									->where('pp' . $increaseWhere . '.property_name = ' . $db->q($pro));
+
+								$increaseWhere++;
+
+								foreach ($subName as $k => $sub)
+								{
+									foreach ($sub as $s)
+									{
+										if ($k == $pro)
+										{
+											$query->where('pa' . $increaseWhere . '.attribute_name = ' . $db->q($att))
+												->where('pp' . $increaseWhere . '.property_name = ' . $db->q($pro))
+												->where('ps' . $increaseWhere . '.subattribute_color_name = ' . $db->q($s));
+
+											$increaseWhere++;
+										}
+									}
+								}
+							}
+							else
+							{
+								$query->where('pa' . $increaseWhere . '.attribute_name = ' . $db->q($att))
+									->where('pp' . $increaseWhere . '.property_name = ' . $db->q($pro))
+									->where('ps' . $increaseWhere . '.subattribute_color_name = ' . $db->q($s));
+
+								$increaseWhere++;
+							}
+						}
+					}
 				}
 			}
 		}
-		elseif (isset($saveFilter))
+		elseif ($searchByComp == 0)
 		{
-			// Begin sub query
+			// Remove some field
+			unset($pk["filterprice"]);
+			unset($pk["template_id"]);
+			unset($pk["manufacturer_id"]);
+			unset($pk["cid"]);
+
+			// Main query
+			$query = $db->getQuery(true);
+
+			$query->select("p.product_id");
+			$query->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+				->join("LEFT", $db->qn("#__redproductfinder_associations", "ac") . " ON p.product_id = ac.product_id");
+
+			// Create arrays variable
+			$tables = array();
+			$increaseJoin = 0;
+			$increaseWhere = 0;
+			$types = array();
+
+			if ($pk != null)
+			{
+				// Get how many type
+				$types = array_keys($pk);
+
+				// Begin join query
+				foreach ($types as $k => $type)
+				{
+					if (!isset($pk[$type]["tags"]))
+					{
+						continue;
+					}
+
+					foreach ($pk[$type]["tags"] as $i => $tag)
+					{
+						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $increaseJoin) . ' ON ac.id = ac_t' . $increaseJoin . '.association_id');
+
+						$increaseJoin++;
+					}
+				}
+
+				// Begin where query
+				foreach ($types as $k => $type)
+				{
+					if (!isset($pk[$type]["tags"]))
+					{
+						continue;
+					}
+
+					foreach ($pk[$type]["tags"] as $i => $tag)
+					{
+						$query->where('(ac_t' . $increaseWhere . '.type_id = ' . $db->q($type))
+							->where('ac_t' . $increaseWhere . '.tag_id = ' . $db->q($tag) . ')');
+
+						$increaseWhere++;
+					}
+				}
+			}
+		}
+
+		if (isset($saveFilter))
+		{
+			// Main query
+			$query = $db->getQuery(true);
+
+			$query->select("p.product_id");
+			$query->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+				->join("LEFT", $db->qn("#__redproductfinder_associations", "ac") . " ON p.product_id = ac.product_id");
+
+			$increaseJoin = 0;
+			$increaseWhere = 0;
+
+			// Begin join query
 			foreach ($saveFilter as $type_id => $value)
 			{
 				foreach ($value as $tag_id => $value1)
 				{
-					$tables[$increase]["alias"] = "tbl" . $increase;
+					$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $increaseJoin) . ' ON ac.id = ac_t' . $increaseJoin . '.association_id');
 
-					// Begin query
-					$tables[$increase]["select"] = " ( ";
-					$tables[$increase]["select"] .= "
-						SELECT ac.product_id, ac_t.type_id `type`, ac_t.tag_id `tag`
-						FROM #__redproductfinder_associations  as ac";
-
-					$tables[$increase]["select"] .= "
-						LEFT JOIN #__redproductfinder_association_tag as ac_t
-						ON ac.id = ac_t.association_id";
-
-					$tables[$increase]["select"] .= "
-						WHERE ac_t.type_id = " . $type_id . "
-						AND ac_t.tag_id = " . $tag_id;
-
-					$tables[$increase]["select"] .= " GROUP BY `ac`.`product_id` ";
-
-					$tables[$increase]["select"] .= "\n ) ";
-
-					$tables[$increase]["select"] .= " AS " . $tables[$increase]["alias"];
-
-					// End query
-
-					$increase++;
+					$increaseJoin++;
 				}
 			}
-		}
 
-		// Main query
-		$query = $db->getQuery(true);
-
-		$query->select("p.product_id");
-		$query->from($db->qn("#__redshop_product", "p"));
-		$query->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
-
-		// If has subTable then begin query by subtable
-		if (count($tables) > 0)
-		{
-			// Create subtable
-			$subTable = " ( ";
-
-			// Begin merger
-			if (count($tables) > 1)
+			// Begin where query
+			foreach ($saveFilter as $type_id => $value)
 			{
-				$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
-				$subTable .= " FROM  ";
-
-				$subTable .= $tables[0]["select"];
-
-				for ($i = 1; $i < count($tables); $i++)
+				foreach ($value as $tag_id => $value1)
 				{
-					$subTable .= " INNER JOIN ";
-					$tables[$i]["select"] .= " ON " . $tables[$i - 1]["alias"] . ".product_id = " . $tables[$i]["alias"] . ".product_id ";
-					$subTable .= $tables[$i]["select"];
+					$query->where('(ac_t' . $increaseWhere . '.type_id = ' . $db->q($type_id))
+						->where('ac_t' . $increaseWhere . '.tag_id = ' . $db->q($tag_id) . ')');
+
+					$increaseWhere++;
 				}
 			}
-			else
-			{
-				$subTable .= " SELECT " . $tables[0]["alias"] . ".product_id" . "\n";
-				$subTable .= " FROM  ";
-
-				$subTable .= $tables[0]["select"];
-			}
-
-			$subTable .= " ) ";
-			$subTable .= " AS `table`";
-
-			// End subtable intersect
-
-			$query->join("INNER", $subTable . " ON `p`.`product_id` = `table`.`product_id` ");
 		}
 
 		$query->where("p.published = 1");

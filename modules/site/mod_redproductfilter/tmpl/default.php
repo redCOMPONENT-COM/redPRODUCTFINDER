@@ -48,6 +48,37 @@ if ($count > 0)
 	}
 }
 
+if (isset($saveFilter))
+{
+	foreach ($saveFilter as $typeId => $value)
+	{
+		foreach($value as $tag_id => $type_tag)
+		{
+			$newArr[] = $typeId . '.' . $tag_id;
+		}
+	}
+
+	foreach ($types as $k_t => $type)
+	{
+		foreach($tags as $k_tg => $tag)
+		{
+			if ($type->id == $tag->type_id)
+			{
+				$newArr2[] = $tag->type_id . '.' . $tag->tag_id;
+			}
+		}
+	}
+
+	if (isset($newArr))
+	{
+		$result = array_diff_assoc($newArr2, $newArr);
+
+		foreach ($result as $key => $value)
+		{
+			$id[] = explode('.', $value);
+		}
+	}
+}
 ?>
 <div class="<?php echo $module_class_sfx; ?>">
 	<form action="<?php echo JRoute::_("index.php?option=com_redproductfinder&view=findproducts&Itemid=" . $Itemid); ?>" method="post" name="adminFilterForm" id="redproductfinder-form" class="form-validate">
@@ -64,7 +95,7 @@ if ($count > 0)
 										<?php foreach($tags as $kt => $tag) : ?>
 											<?php if ($tag->type_id == $type->id) : ?>
 												<?php if ($tag->tag_id == $tag_id) : ?>
-												<span> <?php echo $tag->type_name . ' - ' . $tag->tag_name ?></span>
+												<span> <?php echo "<strong>" . $tag->type_name . '</strong> - ' . $tag->tag_name ?></span>
 												<a style="float: right" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > <?php echo JText::_("MOD_REDPRODUCTFILTER_DELETE"); ?></a>
 												<?php endif; ?>
 											<?php endif; ?>
@@ -84,14 +115,9 @@ if ($count > 0)
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
-					<?php foreach($types as $k => $type) :?>
-						<div id='typename-<?php echo $type->id?>'>
-							<label><?php echo $type->type_name;?></label>
-							<?php foreach($tags as $kt => $tag) : ?>
-								<?php if ($tag->type_id == $type->id) : ?>
-									<br><a href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'add')" > <?php echo $tag->tag_name ?></a>
-								<?php endif; ?>
-							<?php endforeach;?>
+					<?php foreach($id as $k => $value) :?>
+						<div id='typename-<?php echo $value[0]?>'>
+							<br><span><strong><?php echo ModRedproductFilter::getTypeName($value[0]) . " - " ?></strong></span><a href="javascript:void(0)" onclick="submitForm('<?php echo $value[0] ?>', '<?php echo $value[1] ?>', 'add')" > <?php echo ModRedproductFilter::getTagName($value[1])  ?></a>
 						</div>
 					<?php endforeach;?>
 				</div>
@@ -105,13 +131,14 @@ if ($count > 0)
 				<div class="row-fluid form-horizontal-desktop">
 					<?php foreach($types as $k => $type) :?>
 						<div id='typename-<?php echo $type->id?>'>
-							<label><?php echo $type->type_name;?></label>
+							<label><strong><?php echo $type->type_name;?></strong></label>
 							<?php foreach($tags as $kt => $tag) : ?>
 								<?php if ($tag->type_id == $type->id) : ?>
 									<br><a href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'add')" > <?php echo $tag->tag_name ?></a>
 								<?php endif; ?>
 							<?php endforeach;?>
 						</div>
+						<hr>
 					<?php endforeach;?>
 				</div>
 			</div>
