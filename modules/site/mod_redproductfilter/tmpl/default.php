@@ -54,29 +54,40 @@ if (isset($saveFilter))
 	{
 		foreach($value as $tag_id => $type_tag)
 		{
-			$newArr[] = $typeId . '.' . $tag_id;
+			$arrTag[] = $typeId . '.' . $tag_id;
 		}
 	}
 
 	foreach ($types as $k_t => $type)
 	{
+		$arrTypes[] = $type->id;
+
 		foreach($tags as $k_tg => $tag)
 		{
 			if ($type->id == $tag->type_id)
 			{
-				$newArr2[] = $tag->type_id . '.' . $tag->tag_id;
+				$arrTags[] = $tag->type_id . '.' . $tag->tag_id;
 			}
 		}
 	}
 
-	if (isset($newArr))
+	if (isset($arrTag))
 	{
-		$result = array_diff_assoc($newArr2, $newArr);
+		sort($arrTag);
+		sort($arrTags);
+		$result = array_diff($arrTags, $arrTag);
 
 		foreach ($result as $key => $value)
 		{
 			$id[] = explode('.', $value);
 		}
+
+		foreach ($id as $k => $type_id)
+		{
+			$arrTypeId[] = $type_id[0];
+		}
+
+		$arrTypeIds = array_unique($arrTypeId);
 	}
 }
 ?>
@@ -115,11 +126,19 @@ if (isset($saveFilter))
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
-					<?php foreach($id as $k => $value) :?>
-						<div id='typename-<?php echo $value[0]?>'>
-							<br><span><strong><?php echo ModRedproductFilter::getTypeName($value[0]) . " - " ?></strong></span><a href="javascript:void(0)" onclick="submitForm('<?php echo $value[0] ?>', '<?php echo $value[1] ?>', 'add')" > <?php echo ModRedproductFilter::getTagName($value[1])  ?></a>
-						</div>
-					<?php endforeach;?>
+					<?php if (isset($id)) : ?>
+						<?php foreach($arrTypes as $type) :?>
+							<div id='typename-<?php echo $type?>'>
+								<label><strong><?php echo ModRedproductFilter::getTypeName($type);?></strong></label>
+								<?php foreach($id as $k => $value) : ?>
+									<?php if ($value[0] == $type) : ?>
+										<br><a href="javascript:void(0)" onclick="submitForm('<?php echo $value[0] ?>', '<?php echo $value[1]?>', 'add')" > <?php echo ModRedproductFilter::getTagName($value[1]) ?></a>
+									<?php endif; ?>
+								<?php endforeach;?>
+							</div>
+							<hr>
+						<?php endforeach;?>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
