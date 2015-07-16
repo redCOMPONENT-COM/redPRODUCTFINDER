@@ -251,9 +251,6 @@ class RedproductfinderModelFindproducts extends RModelList
 			$query->select("a.product_id")
 			->from($db->qn("#__redproductfinder_associations", "a"))
 			->join("LEFT", $db->qn("#__redproductfinder_association_tag", "at") . " ON a.id = at.association_id")
-			->join("LEFT", $db->qn("#__redproductfinder_types", "tp") . " ON tp.id = at.type_id")
-			->join("LEFT", $db->qn("#__redproductfinder_tags", "tg") . " ON tg.id = at.tag_id")
-			->join("INNER", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.tag_id = tg.id and tt.type_id = tp.id")
 			->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id")
 			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
 			->where("p.published = 1")
@@ -539,10 +536,14 @@ class RedproductfinderModelFindproducts extends RModelList
 				->join("LEFT", $db->qn("#__redproductfinder_associations", "ac") . " ON p.product_id = ac.product_id");
 
 			// Create arrays variable
-			$tables = array();
-			$increaseJoin = 0;
-			$increaseWhere = 0;
 			$types = array();
+			$count = count($pk);
+			$j = 0;
+
+			for ($i = 0; $i < $count; $i++)
+			{
+				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
+			}
 
 			if ($pk != null)
 			{
@@ -553,34 +554,14 @@ class RedproductfinderModelFindproducts extends RModelList
 			// Begin join query
 			foreach ($types as $k => $type)
 			{
-				if (!isset($pk[$type]["tags"]))
+				$typeString = implode(',', $pk[$type]["tags"]);
+
+				if (isset($pk[$type]["tags"]))
 				{
-					continue;
+					$query->where('ac_t' . $j . '.tag_id IN (' . $typeString . ")");
 				}
 
-				foreach ($pk[$type]["tags"] as $i => $tag)
-				{
-					$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $increaseJoin) . ' ON ac.id = ac_t' . $increaseJoin . '.association_id');
-
-					$increaseJoin++;
-				}
-			}
-
-			// Begin where query
-			foreach ($types as $k => $type)
-			{
-				if (!isset($pk[$type]["tags"]))
-				{
-					continue;
-				}
-
-				foreach ($pk[$type]["tags"] as $i => $tag)
-				{
-					$query->where('(ac_t' . $increaseWhere . '.type_id = ' . $db->q($type))
-						->where('ac_t' . $increaseWhere . '.tag_id = ' . $db->q($tag) . ')');
-
-					$increaseWhere++;
-				}
+				$j++;
 			}
 		}
 
