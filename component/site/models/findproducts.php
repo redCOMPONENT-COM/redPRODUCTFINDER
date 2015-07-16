@@ -539,11 +539,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			$types = array();
 			$count = count($pk);
 			$j = 0;
-
-			for ($i = 0; $i < $count; $i++)
-			{
-				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
-			}
+			$i = 0;
 
 			if ($pk != null)
 			{
@@ -554,6 +550,8 @@ class RedproductfinderModelFindproducts extends RModelList
 				{
 					if (isset($pk[$type]['tags']))
 					{
+						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
+
 						$typeString = implode(',', $pk[$type]["tags"]);
 
 						if (isset($pk[$type]["tags"]))
@@ -562,6 +560,7 @@ class RedproductfinderModelFindproducts extends RModelList
 						}
 
 						$j++;
+						$i++;
 					}
 				}
 			}
@@ -608,6 +607,7 @@ class RedproductfinderModelFindproducts extends RModelList
 	public function getItem($pk = null)
 	{
 		$query = $this->getListQuery();
+		echo $query->dump();
 		$db = JFactory::getDbo();
 		$start = $this->getState('list.start');
 		$limit = $this->getState('list.limit');
