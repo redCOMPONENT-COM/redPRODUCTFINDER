@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Redproductfinder" default="site" basedir=".">
 	<import file="./redCORE/build.xml"/>
-	
+
 	<!-- Do initialization stuff -->
 	<target name="init" >
 		<if>
@@ -18,7 +18,7 @@
 		</if>
 		<property name="src" value="./" />
 	</target>
-	
+
 	<!-- Do initialization stuff -->
     <target name="prepare" >
         <property file="build.properties"  override="true"/>
@@ -34,7 +34,7 @@
     </target>
 
 	<property name="src" value="./" />
-	
+
 	<target name="sites" description="Copies files to a existing joomla site" depends="init, redCORE-submodule, prepare">
 		<echo message="---------------- || PLUGIN || ----------------"/>
 
@@ -59,7 +59,7 @@
             </fileset>
 		</copy>
 	</target>
-	
+
 	<target name="site" description="Copies files to a existing joomla site" depends="init, redCORE-submodule, prepare">
 	        <echo message="Copying administrator component..." />
 
@@ -107,13 +107,20 @@
 	            </fileset>
 	        </copy>
 
+	        <!-- Libraries -->
+			<copy todir="${www.dir}/libraries" overwrite="true">
+	            <fileset dir="${src}/libraries">
+	                <include name="**" />
+	            </fileset>
+			</copy>
+
 	        <!-- Media -->
 	        <copy todir="${www.dir}/media" overwrite="true">
 	            <fileset dir="${src}/media">
 	                <include name="**" />
 	            </fileset>
 	        </copy>
-		
+
 			<!-- Modules - Site -->
 			<echo message="Copying frontend modules..." />
 			<copy todir="${www.dir}/modules" overwrite="true">
@@ -121,14 +128,14 @@
 					<include name="**" />
 				</fileset>
 			</copy>
-			
+
 			<!-- Modules - Languages -->
 			<copy todir="${www.dir}/language" overwrite="true">
 				<fileset dir="${src}/modules/site/mod_redproductforms/language">
 					<include name="**" />
 				</fileset>
 			</copy>
-		
+
 			<!-- Plugins -->
 			<echo message="Copying redPRODUCTFINDER plugins..." />
 			<copy todir="${www.dir}/plugins" overwrite="true">
@@ -146,7 +153,7 @@
 				</fileset>
 			</foreach>
 	</target>
-		
+
 	<target name="red_plg_copy" description="Loops through plugins folders inside groups">
 		<!-- Loop through plugins -->
 		<foreach param="plugin_name" target="red_plg_copy_files">

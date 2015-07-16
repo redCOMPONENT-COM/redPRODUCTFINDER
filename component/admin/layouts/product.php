@@ -9,9 +9,11 @@ defined('JPATH_REDCORE') or die;
 
 $products = $displayData["products"];
 $selected = $displayData["selected"];
+JHtml::_('formbehavior2.select2', '.product');
 
 ?>
-			<select id="select-products" name="jform[product_id]">
+<div style="background-color: #f5f5f5;" class="bs-docs-example">
+			<select class="product" style="width: 220px;" id="select-products" name="jform[product_id]">
 				<option><?php echo JText::_('COM_REDPRODUCTFINDER_MODELS_FORMS_ASSOCIATION_PRODUCT_ID_LABEL') ?></option>
 				<?php foreach ($products as $product) :?>
 
@@ -29,3 +31,4 @@ $selected = $displayData["selected"];
 				<option value="<?php echo $product['product_id'] ?>" <?php echo $isSelected; ?>><?php echo $product['full_product_name'] ?></option>
 				<?php endforeach; ?>
 			</select>
+</div>

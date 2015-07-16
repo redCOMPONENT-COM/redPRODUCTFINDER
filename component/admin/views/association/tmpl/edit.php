@@ -14,9 +14,9 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.keepalive');
 JHtml::_('rbootstrap.tooltip');
-JHtml::_('rjquery.chosen', 'select');
 JHtml::_('behavior.modal', 'a.modal-thumb');
 JHtml::_('behavior.formvalidator');
+JHtml::_('formbehavior2.select2', '.product');
 
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
