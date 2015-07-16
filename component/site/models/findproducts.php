@@ -549,19 +549,21 @@ class RedproductfinderModelFindproducts extends RModelList
 			{
 				// Get how many type
 				$types = array_keys($pk);
-			}
 
-			// Begin join query
-			foreach ($types as $k => $type)
-			{
-				$typeString = implode(',', $pk[$type]["tags"]);
-
-				if (isset($pk[$type]["tags"]))
+				foreach ($types as $k => $type)
 				{
-					$query->where('ac_t' . $j . '.tag_id IN (' . $typeString . ")");
-				}
+					if (isset($pk[$type]['tags']))
+					{
+						$typeString = implode(',', $pk[$type]["tags"]);
 
-				$j++;
+						if (isset($pk[$type]["tags"]))
+						{
+							$query->where('ac_t' . $j . '.tag_id IN (' . $typeString . ")");
+						}
+
+						$j++;
+					}
+				}
 			}
 		}
 
