@@ -195,6 +195,14 @@ class RedproductfinderModelTypes extends RModelList
 		->from($db->qn("#__redproductfinder_types", "t"))
 		->join("LEFT", $db->qn("#__redproductfinder_forms", "f") . " ON t.form_id = f.id");
 
+		// Filter by Forms
+		$formId = $this->getState('filter.forms');
+
+		if (is_numeric($formId))
+		{
+			$query->where('t.form_id = ' . (int) $formId);
+		}
+
 		// Filter by search in formname.
 		$search = $this->getState('filter.search');
 
