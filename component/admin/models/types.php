@@ -27,7 +27,13 @@ class RedproductfinderModelTypes extends RModelList
 	/** @var integer pagination limit */
 	protected $_limit = null;
 
-	protected $filter_fields = array('ordering', 't.ordering');
+	protected $filter_fields = array('id', 't.id',
+									'published', 't.published',
+									'ordering', 't.ordering',
+									'type_name', 't.type_name',
+									'type_select','t.type_select',
+									'form_id', 't.form_id'
+									);
 
 	var $_context = null;
 

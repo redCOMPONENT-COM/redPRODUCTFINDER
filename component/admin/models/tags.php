@@ -33,8 +33,11 @@ class RedproductfinderModelTags extends RModelList
 	/** @var integer pagination limit */
 	protected $limitField = 'tags_limit';
 
-	/** @var integer filter */
-	protected $filter_fields = array('ordering', 't.ordering');
+	protected $filter_fields = array('id', 't.id',
+									'tt.type_id',
+									'tag_name', 't.tag_name',
+									'ordering', 't.ordering',
+									'published', 't.published');
 
 	/**
 	 * Method to auto-populate the model state.
@@ -220,8 +223,9 @@ class RedproductfinderModelTags extends RModelList
 		 */
 		$state = "1";
 
-		$query->select("t.*")
-			->from($db->qn("#__redproductfinder_tags", "t"));
+		$query->select("t.*, tt.type_id")
+			->from($db->qn("#__redproductfinder_tags", "t"))
+			->join("LEFT", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.tag_id = t.id");
 
 		// Filter by search
 		$search = $this->getState('filter.search');

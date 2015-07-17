@@ -52,7 +52,7 @@ if ($saveOrder)
 }
 
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=tags'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
@@ -83,16 +83,16 @@ if ($saveOrder)
 					<?php echo JHtml::_('grid.checkall'); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_TAG_NAME'); ?>
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_TAG_NAME', 't.tag_name', $listDirn, $listOrder); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_TYPE_NAME'); ?>
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_TYPE_NAME', 'tt.type_id', $listDirn, $listOrder); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('Published'); ?>
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 't.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="20">
-					<?php echo JText::_('ID'); ?>
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_ID', 't.id', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 			</thead>

@@ -55,7 +55,7 @@ JFactory::getDocument()->addScriptDeclaration('
 ');
 
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=associations'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
@@ -84,16 +84,16 @@ JFactory::getDocument()->addScriptDeclaration('
 					<?php echo JHtml::_('grid.checkall'); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_ASSOCIATION'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_ASSOCIATION', 'a.product_id', $listDirn, $listOrder); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_TAG_NAME'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_TAG_NAME', 'a.id', $listDirn, $listOrder); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('Published'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_ID'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_ID', 'a.id', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 		</thead>
@@ -105,10 +105,10 @@ JFactory::getDocument()->addScriptDeclaration('
 					for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 					{
 						$item = $this->items[$i];
-						
+
 						JFilterOutput::objectHTMLSafe($item);
 						$link 	= JRoute::_('index.php?option=com_redproductfinder&task=association.edit&id='. $item->id);
-					
+
 						$checked = JHTML::_('grid.checkedout',  $item, $i);
 						$my  = JFactory::getUser();
 						?>
@@ -158,7 +158,7 @@ JFactory::getDocument()->addScriptDeclaration('
 									</tr>
 									<?php
 									$k = 1 - $k;
-								}	
+								}
 				}
 			?>
 		</tbody>

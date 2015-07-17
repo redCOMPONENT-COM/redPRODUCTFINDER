@@ -18,6 +18,10 @@ defined('_JEXEC') or die;
  */
 class RedproductfinderModelForms extends RModelList
 {
+	protected $filter_fields = array('id', 'a.id',
+									'formname', 'a.formname',
+									'published', 'a.published');
+
 	/**
 	 * Method to auto-populate the model state.
 	 *

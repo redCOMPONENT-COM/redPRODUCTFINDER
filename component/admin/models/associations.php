@@ -18,6 +18,9 @@ defined('_JEXEC') or die;
  */
 class RedproductfinderModelAssociations extends RModelList
 {
+	protected $filter_fields = array('id', 'a.id',
+									'product_id', 'a.product_id',
+									'published', 'a.published');
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -30,7 +33,7 @@ class RedproductfinderModelAssociations extends RModelList
 	 *
 	 * @since   1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.id', $direction = 'asc')
 	{
 		$app = JFactory::getApplication();
 
@@ -46,8 +49,16 @@ class RedproductfinderModelAssociations extends RModelList
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
+		$value = $app->getUserStateFromRequest('global.list.limit', $this->paginationPrefix . 'limit', $app->getCfg('list_limit'), 'uint');
+		$limit = $value;
+		$this->setState('list.limit', $limit);
+
+		$value = $app->getUserStateFromRequest($this->context . '.limitstart', $this->paginationPrefix . 'limitstart', 0);
+		$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
+		$this->setState('list.start', $limitstart);
+
 		// List state information.
-		parent::populateState('p.product_name', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
@@ -391,8 +402,7 @@ class RedproductfinderModelAssociations extends RModelList
 
 		$query->select("a.*, p.product_name")
 		->from($db->qn("#__redproductfinder_associations", "a"))
-		->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id")
-		->order($db->qn("a.ordering"));
+		->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id");
 
 		if ($state == "-2")
 		{
@@ -413,7 +423,7 @@ class RedproductfinderModelAssociations extends RModelList
 		}
 
 		// Add the list ordering clause.
-		$orderCol = $this->state->get('list.ordering', 't.type_name');
+		$orderCol = $this->state->get('list.ordering', 'a.id');
 		$orderDirn = $this->state->get('list.direction', 'asc');
 
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));

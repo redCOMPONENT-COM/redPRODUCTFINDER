@@ -46,7 +46,7 @@ JFactory::getDocument()->addScriptDeclaration('
 	};
 ');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=filters'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
@@ -61,21 +61,6 @@ JFactory::getDocument()->addScriptDeclaration('
 				<label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
 				<?php echo $this->pagination->getLimitBox(); ?>
 			</div>
-			<div class="btn-group pull-right hidden-phone">
-				<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
-				<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
-					<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC');?></option>
-					<option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
-					<option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
-				</select>
-			</div>
-			<div class="btn-group pull-right">
-				<label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
-				<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-					<option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-					<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
-				</select>
-			</div>
 		</div>
 
 		<div class="clearfix"></div>
@@ -83,24 +68,20 @@ JFactory::getDocument()->addScriptDeclaration('
 		<table class="table table-striped" id="filterslist" class="adminlist">
 			<thead>
 			<tr>
-				<th width="20">
-				<?php echo JText::_('COM_REDPRODUCTFINDER_ID'); ?>
+				<th width="2%">
+				#
 				</th>
-				<th width="20">
-				<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->filters ); ?>);" />
+				<th width="2%">
+					<?php echo JHtml::_('grid.checkall'); ?>
 				</th>
-				<th class="title">
-				<?php echo JText::_('COM_REDPRODUCTFINDER_FILTER_NAME'); ?>
+				<th width="30%">
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_FILTER_NAME', 'f.filter_name', $listDirn, $listOrder); ?>
 				</th>
-				<th class="title">
-				<?php echo JText::_('COM_REDPRODUCTFINDER_TAGS'); ?>
+				<th width="50%">
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_TAGS', 'f.tag_id', $listDirn, $listOrder); ?>
 				</th>
-				<th class="title">
-				<?php echo JText::_('Ordering'); ?>
-				<?php echo JHTML::_('grid.order',  $this->filters ); ?>
-				</th>
-				<th class="title">
-				<?php echo JText::_('Published'); ?>
+				<th width="16%">
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 'f.published', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 			</thead>
@@ -144,9 +125,6 @@ JFactory::getDocument()->addScriptDeclaration('
 						<?php
 							echo $model->getTagname($row->tag_id);
 						 ?>
-					</td>
-					<td>
-						<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />
 					</td>
 					<td width="10%" align="center">
 					<?php echo JHtml::_('jgrid.published', $row->published, $i, 'filters.', 1, 'cb', $row->publish_up, $row->publish_down); ?>

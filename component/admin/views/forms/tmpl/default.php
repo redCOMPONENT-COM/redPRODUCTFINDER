@@ -43,7 +43,7 @@ JFactory::getDocument()->addScriptDeclaration('
 	};
 ');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=forms'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
@@ -69,13 +69,13 @@ JFactory::getDocument()->addScriptDeclaration('
 					<?php echo JHtml::_('grid.checkall'); ?>
 				</th>
 				<th width="20%" class="title">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_FORM_NAME'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_FORM_NAME', 'a.formname', $listDirn, $listOrder); ?>
 				</th>
 				<th width="3%" class="title center">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="20%" class="title">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_TAG'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_TAG', 'a.id', $listDirn, $listOrder); ?>
 				</th>
 				<th width="2%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>

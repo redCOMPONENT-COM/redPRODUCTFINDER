@@ -27,10 +27,6 @@ class RedproductfinderViewFilters extends JViewLegacy
 	 */
 	function display($tpl = null)
 	{
-		global $mainframe;
-		/* Get the task */
-		$task = JRequest::getCmd('task');
-
 		/* add submenu here */
 		RedproductfinderHelper::addSubmenu("filters");
 
@@ -43,7 +39,7 @@ class RedproductfinderViewFilters extends JViewLegacy
 		/* Check if there are any forms */
 		$countfilters = $this->get('Total');
 
-		$items = $this->get("items");
+		$items = $this->get("Items");
 		$state = $this->get("State");
 
 		$this->assignRef('pagination', $pagination);
