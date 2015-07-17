@@ -83,10 +83,5 @@
 			<language tag="da-DK">da-DK/da-DK.com_redproductfinder.sys.ini</language>
 		</languages>
 
-		<!-- Libraries to install with the component -->
-		<libraries>
-			<library name="cms"/>
-		</libraries>
-
 	</administration>
 </extension>

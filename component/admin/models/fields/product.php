@@ -10,6 +10,7 @@
 defined('JPATH_BASE') or die;
 
 jimport('joomla.form.formfield');
+JLoader::load('RedshopHelperProduct');
 
 /**
  * Form Field class for the Joomla Framework.
@@ -33,6 +34,7 @@ class JFormFieldProduct extends JFormField
 		$id = $input->get("id", 0, "INT");
 		$catid = $input->get("catid", 0, "INT");
 		$modelAssociations = JModelLegacy::getInstance("Associations", "RedproductfinderModel");
+		$producthelper = new producthelper;
 		$products = 0;
 
 		if ($id != 0)
@@ -51,6 +53,7 @@ class JFormFieldProduct extends JFormField
 		}
 		else
 		{
+			$productId = $modelAssociations->getProductByAssociation($id);
 			$products = $modelAssociations->getProductByCategory($catid);
 		}
 
@@ -74,7 +77,9 @@ class JFormFieldProduct extends JFormField
 		$html = $layout->render(
 			array(
 				"selected" => $selected,
-				"products" => $products
+				"products" => $products,
+				"product_id" => $productId,
+				"producthelper" => $producthelper,
 			)
 		);
 

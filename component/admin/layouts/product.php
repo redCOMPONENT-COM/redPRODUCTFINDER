@@ -9,24 +9,14 @@ defined('JPATH_REDCORE') or die;
 
 $products = $displayData["products"];
 $selected = $displayData["selected"];
-JHtml::_('formbehavior2.select2', '.product');
+$product_id = $displayData["product_id"];
+$producthelper = $displayData["producthelper"];
 
-?>
-			<select class="product" id="select-products" name="jform[product_id]">
-				<option><?php echo JText::_('COM_REDPRODUCTFINDER_MODELS_FORMS_ASSOCIATION_PRODUCT_ID_LABEL') ?></option>
-				<?php foreach ($products as $product) :?>
-
-					<?php
-					$isSelected = "";
-						foreach ($selected as $select) :
-
-							if ($select == $product['product_id'])
-							{
-								$isSelected = "selected";
-							}
-
-						endforeach;
-					?>
-				<option value="<?php echo $product['product_id'] ?>" <?php echo $isSelected; ?>><?php echo $product['full_product_name'] ?></option>
-				<?php endforeach; ?>
-			</select>
+echo JHtml::_('redshopselect.search', $producthelper->getProductById($product_id), 'product_id',
+	array(
+		'select2.options' => array('multiple' => 'false', 'placeholder' => JText::_('COM_REDPRODUCTFINDER_MODELS_FORMS_ASSOCIATION_PRODUCT_ID_LABEL')),
+		'option.key' => 'product_id',
+		'option.text' => 'product_name',
+		'select2.ajaxOptions' => array('product_id:' . $product_id)
+	)
+);

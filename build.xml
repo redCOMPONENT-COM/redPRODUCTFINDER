@@ -107,13 +107,6 @@
 	            </fileset>
 	        </copy>
 
-	        <!-- Libraries -->
-			<copy todir="${www.dir}/libraries" overwrite="true">
-	            <fileset dir="${src}/libraries">
-	                <include name="**" />
-	            </fileset>
-			</copy>
-
 	        <!-- Media -->
 	        <copy todir="${www.dir}/media" overwrite="true">
 	            <fileset dir="${src}/media">
