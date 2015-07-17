@@ -35,49 +35,12 @@ class JFormFieldProduct extends JFormField
 		$catid = $input->get("catid", 0, "INT");
 		$modelAssociations = JModelLegacy::getInstance("Associations", "RedproductfinderModel");
 		$producthelper = new producthelper;
-		$products = 0;
-
-		if ($id != 0)
-		{
-			$productId = $modelAssociations->getProductByAssociation($id);
-
-			if ($catid)
-			{
-				$products = $modelAssociations->getProductByCategory($catid);
-			}
-			else
-			{
-				$catid = $modelAssociations->getCategoryById($productId);
-				$products = $modelAssociations->getProductByCategory($catid);
-			}
-		}
-		else
-		{
-			$productId = $modelAssociations->getProductByAssociation($id);
-			$products = $modelAssociations->getProductByCategory($catid);
-		}
+		$productId = $modelAssociations->getProductByAssociation($id);
 
 		$layout = new JLayoutFile('product');
-		$selected = array();
-
-		// Get association ID
-		if ($id != 0)
-		{
-			$proSelected = $modelAssociations->getAssociationProduct($id);
-
-			if (count($proSelected) > 0)
-			{
-				foreach ($proSelected as $k => $pro)
-				{
-					$selected[] = $pro["product_id"];
-				}
-			}
-		}
 
 		$html = $layout->render(
 			array(
-				"selected" => $selected,
-				"products" => $products,
 				"product_id" => $productId,
 				"producthelper" => $producthelper,
 			)

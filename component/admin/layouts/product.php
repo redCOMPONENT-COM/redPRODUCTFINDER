@@ -7,8 +7,6 @@
  */
 defined('JPATH_REDCORE') or die;
 
-$products = $displayData["products"];
-$selected = $displayData["selected"];
 $product_id = $displayData["product_id"];
 $producthelper = $displayData["producthelper"];
 
