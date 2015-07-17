@@ -36,27 +36,8 @@ class RedproductfinderModelForms extends RModelList
 	 */
 	protected function populateState($ordering = 'a.formname', $direction = 'asc')
 	{
-		$app = JFactory::getApplication();
-
-		// Adjust the context to support modal layouts.
-		if ($layout = $app->input->get('layout'))
-		{
-			$this->context .= '.' . $layout;
-		}
-
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-
-		$value = $app->getUserStateFromRequest('global.list.limit', $this->paginationPrefix . 'limit', $app->getCfg('list_limit'), 'uint');
-		$limit = $value;
-		$this->setState('list.limit', $limit);
-
-		$value = $app->getUserStateFromRequest($this->context . '.limitstart', $this->paginationPrefix . 'limitstart', 0);
-		$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-		$this->setState('list.start', $limitstart);
 
 		// List state information.
 		parent::populateState($ordering, $direction);
