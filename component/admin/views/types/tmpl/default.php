@@ -94,10 +94,10 @@ if ($saveOrder)
 						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_TYPE_SELECT', 't.type_select', $listDirn, $listOrder); ?>
 					</th>
 					<th class="title">
-						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 't.published', $listDirn, $listOrder); ?>
+						<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
 					</th>
 					<th width="1%">
-						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_ID', 't.id', $listDirn, $listOrder); ?>
+						<?php echo JText::_('COM_REDPRODUCTFINDER_ID'); ?>
 					</th>
 				</tr>
 			</thead>

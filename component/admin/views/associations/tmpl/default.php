@@ -87,13 +87,13 @@ JFactory::getDocument()->addScriptDeclaration('
 					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_ASSOCIATION', 'a.product_id', $listDirn, $listOrder); ?>
 				</th>
 				<th class="title">
-					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_TAG_NAME', 'a.id', $listDirn, $listOrder); ?>
+					<?php echo JText::_('COM_REDPRODUCTFINDER_TAG_NAME'); ?>
 				</th>
 				<th class="title">
-					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 'a.published', $listDirn, $listOrder); ?>
+					<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
 				</th>
 				<th width="1%">
-					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_ID', 'a.id', $listDirn, $listOrder); ?>
+					<?php echo JText::_('COM_REDPRODUCTFINDER_ID'); ?>
 				</th>
 			</tr>
 		</thead>
