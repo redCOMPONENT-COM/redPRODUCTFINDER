@@ -34,11 +34,13 @@ $filterPriceMax = $param->get("filter_price_max_value", 100);
 					<?php foreach($data as $key => $value) :?>
 						<div id='typename-<?php echo $value["typeid"];?>'>
 							<label><?php echo $value["typename"];?></label>
-							<ul class='taglist'>
+							<ul class='taglist' style="list-style: none">
 								<?php foreach ($value["tags"] as $k_t => $tag) :?>
 									<li>
+										<label>
 										<span class='taginput' data-aliases='<?php echo $tag["aliases"];?>'><input type="checkbox" name="redform[<?php echo $value["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
 										<span class='tagname'><?php echo $tag["tagname"]; ?></span>
+										</label>
 									</li>
 								<?php endforeach; ?>
 							</ul>
@@ -51,24 +53,27 @@ $filterPriceMax = $param->get("filter_price_max_value", 100);
 					<?php foreach($attributes as $k_a => $attribute) :?>
 						<div id='typename-<?php echo $attribute->attribute_id;?>'>
 							<label><?php echo $attribute->attribute_name;?></label>
-							<ul class='taglist'>
+							<ul class='taglist' style="list-style: none">
 								<?php foreach($attributeProperties as $k_p => $property) :?>
 									<?php
 									$attname = $model->getAttributeName($property->attribute_id);
 									if ($attname[0] == $attribute->attribute_name) { ?>
 										<li>
-											<span class='taginput' data-aliases='<?php echo $attribute->attribute_name;?>'>
-											<input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][]" value="<?php echo $property->property_name; ?>"></span>
+											<label>
+											<span class='taginput'><input type="checkbox" name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
-											<ul class='taglist'>
-											<?php foreach($attributeSubProperties as $k_sp => $subproperty) :?>
+											</label>
+											<ul class='taglist' style="list-style: none">
+											<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 												<?php
 													$proname = $model->getPropertyName($subproperty->subattribute_id);
 													if ($proname[0] == $property->property_name) { ?>
 												<li>
-													<span class='taginput' data-aliases='<?php echo $property->property_name;?>'>
-													<input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name; ?>][]" value="<?php echo $subproperty->subattribute_color_name; ?>"></span>
-													<span class='tagname'><?php echo $subproperty->subattribute_color_name; ?></span>
+													<label>
+													<span class='taginput'>
+													<input type="checkbox" name="redform[properties][]" value="<?php echo $subProperty->subattribute_color_name; ?>"></span>
+													<span class='tagname'><?php echo $subProperty->subattribute_color_name; ?></span>
+													</label>
 												</li>
 												<?php } ?>
 											<?php endforeach;?>
