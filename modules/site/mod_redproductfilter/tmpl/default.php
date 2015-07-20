@@ -82,12 +82,15 @@ if (isset($saveFilter))
 			$id[] = explode('.', $value);
 		}
 
-		foreach ($id as $k => $type_id)
+		if (isset($id))
 		{
-			$arrTypeId[] = $type_id[0];
-		}
+			foreach ($id as $k => $type_id)
+			{
+				$arrTypeId[] = $type_id[0];
+			}
 
-		$arrTypeIds = array_unique($arrTypeId);
+			$arrTypeIds = array_unique($arrTypeId);
+		}
 	}
 }
 ?>
