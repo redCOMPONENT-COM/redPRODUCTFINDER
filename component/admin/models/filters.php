@@ -172,7 +172,7 @@ class RedproductfinderModelFilters extends RModelList
 
 		if (!empty($search))
 		{
-			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
 			$query->where('(f.filter_name LIKE ' . $search . ')');
 		}
 

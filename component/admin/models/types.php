@@ -183,7 +183,7 @@ class RedproductfinderModelTypes extends RModelList
 
 		if (!empty($search))
 		{
-			$search = $db->q('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
 			$query->where('(t.type_name LIKE ' . $search . ')');
 		}
 

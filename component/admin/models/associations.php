@@ -399,7 +399,7 @@ class RedproductfinderModelAssociations extends RModelList
 
 		if (!empty($search))
 		{
-			$search = $db->q('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
 			$query->where('(p.product_name LIKE ' . $search . ')');
 		}
 

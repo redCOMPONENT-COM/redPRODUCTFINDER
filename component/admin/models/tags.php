@@ -213,7 +213,7 @@ class RedproductfinderModelTags extends RModelList
 
 		if (!empty($search))
 		{
-			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
 			$query->where('(t.tag_name LIKE ' . $search . ')');
 		}
 

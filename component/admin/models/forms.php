@@ -70,7 +70,7 @@ class RedproductfinderModelForms extends RModelList
 
 		if (!empty($search))
 		{
-			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
 			$query->where('(a.formname LIKE ' . $search . ')');
 		}
 

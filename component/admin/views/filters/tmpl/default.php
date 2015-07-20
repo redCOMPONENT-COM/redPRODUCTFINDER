@@ -81,7 +81,7 @@ JFactory::getDocument()->addScriptDeclaration('
 					<?php echo JText::_('COM_REDPRODUCTFINDER_TAGS'); ?>
 				</th>
 				<th width="16%">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 'f.published', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 			</thead>
