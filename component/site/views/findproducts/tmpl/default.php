@@ -438,7 +438,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$query = 'SELECT category_name, category_id'
 	. ' FROM #__redshop_category AS c '
 	. ' INNER JOIN #__redshop_category_xref AS cx ON cx.category_parent_id = c.category_id'
-	. ' WHERE cx.category_child_id = ' . $cid;
+	. ' WHERE cx.category_child_id = ' . (int) $cid;
 	$db->setQuery($query);
 
 	// Order By
