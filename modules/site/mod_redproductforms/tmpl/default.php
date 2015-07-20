@@ -100,18 +100,20 @@ if ($count > 0)
 										<label>
 										<span class='taginput' data-aliases='<?php echo $tag["aliases"];?>'>
 										<input <?php
-										foreach ($values as $key => $value) :
-											if ($value['typeid'] == $type['typeid']) :
-												if (isset($value['tags'])) :
-													foreach ($value['tags'] as $keyTag) :
-														if ($keyTag == $tag["tagid"])
-															echo 'checked="checked"';
-														else
-															echo '';
-													endforeach;
+										if (isset($value)):
+											foreach ($values as $key => $value) :
+												if ($value['typeid'] == $type['typeid']) :
+													if (isset($value['tags'])) :
+														foreach ($value['tags'] as $keyTag) :
+															if ($keyTag == $tag["tagid"])
+																echo 'checked="checked"';
+															else
+																echo '';
+														endforeach;
+													endif;
 												endif;
-											endif;
-										endforeach; ?>
+											endforeach;
+										endif; ?>
 										 type="checkbox" name="redform[<?php echo $type["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
 										<span class='tagname'><?php echo $tag["tagname"]; ?></span>
 										</label>
@@ -173,8 +175,8 @@ if ($count > 0)
 			</div>
 		</div>
 		<div  class="row-fluid">
-			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MIN"); ?></span><span><input class="span12" type="text" name="redform[filterprice][min]" value="<?php echo $range['min'];?>"/></span>
-			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MAX"); ?></span><span><input class="span12" type="text" name="redform[filterprice][max]" value="<?php echo $range['max'];?>"/></span>
+			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MIN"); ?></span><span><input type="number" class="span12" min="0" name="redform[filterprice][min]" value="<?php echo $range['min'];?>" required/></span><br>
+			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MAX"); ?></span><span><input type="number" class="span12" min="0" name="redform[filterprice][max]" value="<?php echo $range['max'];?>" required/></span>
 		</div>
 	</div>
 	<input type="submit" name="submit" value="<?php echo JText::_("MOD_REDPRODUCTFORM_FORM_FORMS_SUBMIT_FORM"); ?>" />

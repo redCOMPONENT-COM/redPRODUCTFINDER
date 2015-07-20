@@ -246,11 +246,11 @@ class RedproductfinderModelFindproducts extends RModelList
 				if (isset($value["tags"]))
 				{
 					$keyTypes[] = $value['typeid'];
-				}
 
-				foreach ( $value["tags"] as $k_t => $tag )
-				{
-					$keyTags[] = $tag;
+					foreach ( $value["tags"] as $k_t => $tag )
+					{
+						$keyTags[] = $tag;
+					}
 				}
 			}
 
@@ -270,7 +270,6 @@ class RedproductfinderModelFindproducts extends RModelList
 				$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
 			}
 			else
-
 			{
 				if (!$filter)
 				{
@@ -339,15 +338,14 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		// Condition min max price
 		$filter = array();
-		
+
 		if (isset($pk["filterprice"]))
 		{
 			// Filter by filterprice
 			$filter = $pk["filterprice"];
+			$min = $filter['min'];
+			$max = $filter['max'];
 		}
-		
-		$min = $filter['min'];
-		$max = $filter['max'];
 
 		$cid = $this->getState("catid");
 		$manufacturerId = $pk["manufacturer_id"];
