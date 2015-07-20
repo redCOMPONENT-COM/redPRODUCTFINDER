@@ -110,7 +110,7 @@ if (isset($saveFilter))
 											<?php if ($tag->type_id == $type->id) : ?>
 												<?php if ($tag->tag_id == $tag_id) : ?>
 												<span> <?php echo "<strong>" . $tag->type_name . '</strong> - ' . $tag->tag_name ?></span>
-												<a style="float: right" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > <?php echo JText::_("MOD_REDPRODUCTFILTER_DELETE"); ?></a>
+												<a class="filter-delete" href="javascript:void(0)" onclick="submitForm('<?php echo $tag->type_id ?>', '<?php echo $tag->tag_id?>', 'delete')" > <?php echo JText::_("MOD_REDPRODUCTFILTER_DELETE"); ?></a>
 												<?php endif; ?>
 											<?php endif; ?>
 										<?php endforeach;?>
