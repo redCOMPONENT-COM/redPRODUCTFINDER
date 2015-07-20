@@ -384,10 +384,7 @@ class RedproductfinderModelFindproducts extends RModelList
 				$keyTagString = implode(",", $keyTags);
 				$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
 			}
-		}
-		else
-		{
-			if (!isset($filter))
+			else
 			{
 				$query = $db->getQuery(true);
 				$query->select("p.product_id")

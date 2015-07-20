@@ -71,6 +71,7 @@ class RedproductfinderViewForms extends JViewLegacy
 		JToolbarHelper::unpublish('forms.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 		// JToolbarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields and values?'), 'forms.delete', 'JTOOLBAR_EMPTY_TRASH');
 		JToolbarHelper::deleteList('Are you sure you want to delete items', 'forms.delete');
+		JToolBarHelper::preferences('com_redproductfinder', '300');
 	}
 
 	/**
