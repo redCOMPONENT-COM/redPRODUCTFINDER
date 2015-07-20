@@ -94,7 +94,7 @@ if ($count > 0)
 					<?php foreach($lists as $k => $type) :?>
 						<div id='typename-<?php echo $type["typeid"];?>'>
 							<label><?php echo $type["typename"];?></label>
-							<ul class='taglist' style="list-style: none">
+							<ul class='taglist'>
 								<?php foreach ($type["tags"] as $k_t => $tag) :?>
 									<li>
 										<label>
@@ -129,7 +129,7 @@ if ($count > 0)
 					<?php foreach($attributes as $k_a => $attribute) :?>
 						<div id='typename-<?php echo $attribute->attribute_id;?>'>
 							<label><?php echo $attribute->attribute_name;?></label>
-							<ul class='taglist' style="list-style: none">
+							<ul class='taglist'>
 								<?php foreach($attributeProperties as $k_p => $property) :?>
 									<?php
 									$attname = $model->getAttributeName($property->attribute_id);
