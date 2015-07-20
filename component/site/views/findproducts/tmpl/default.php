@@ -399,14 +399,11 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 		if (isset($attribute_template))
 		{
-			foreach ($attribute_template as $i => $item)
-			{
-				$templateAttribute = "{attribute_template:" . $item->template_name . "}";
+			$templateAttribute = "{attribute_template:" . $attribute_template->template_name . "}";
 
-				if (strstr($data_add, $templateAttribute))
-				{
-					$data_add = str_replace($templateAttribute, "", $data_add);
-				}
+			if (strstr($data_add, $templateAttribute))
+			{
+				$data_add = str_replace($templateAttribute, "", $data_add);
 			}
 		}
 
