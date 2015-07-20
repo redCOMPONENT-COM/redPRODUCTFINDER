@@ -421,7 +421,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$db    = JFactory::getDbo();
 	$query = 'SELECT category_name'
 	. ' FROM #__redshop_category  '
-	. 'WHERE category_id=' . $cid;
+	. 'WHERE category_id=' . (int) $cid;
 	$db->setQuery($query);
 
 	$cat_name = null;
