@@ -329,13 +329,12 @@ class RedproductfinderModelFindproducts extends RModelList
 
 						$proString = implode("','", $property);
 						$subString = implode("','", $subproperty);
-						$arrQuery1[] = "pa" . $j . ".attribute_name = '" . $k . "'";
-						$arrQuery1[] .= "pp" . $j . ".property_name IN ('" . $proString . "')";
+						$arrQuery1[] = "pp" . $j . ".property_name IN ('" . $proString . "')";
 						$arrQuery1[] .= "ps" . $j . ".subattribute_color_name IN ('" . $subString . "')";
 
 						unset($attribute[$k]);
 						$where1 = implode(" OR ", $arrQuery1);
-						$query->where($where1);
+						$arrWhere[] = $where1;
 					}
 					else
 					{
@@ -345,15 +344,18 @@ class RedproductfinderModelFindproducts extends RModelList
 						}
 
 						$proString1 = implode("','", $property1);
-						$arrQuery2[] = "pa" . $j . ".attribute_name = '" . $k . "'";
-						$arrQuery2[] .= "pp" . $j . ".property_name IN ('" . $proString1 . "')";
+						$arrQuery2[] = "pp" . $j . ".property_name IN ('" . $proString1 . "')";
 						$where2 = implode(" OR ", $arrQuery2);
-						$query->where($where2);
+						$arrWhere[] .= $where2;
 					}
+
+					$where3 = implode(" OR ", $arrWhere);
 
 					$i++;
 					$j++;
 				}
+
+				$query->where($where3);
 			}
 		}
 		elseif ($searchByComp == 0)
@@ -551,6 +553,8 @@ class RedproductfinderModelFindproducts extends RModelList
 
 			$j = 0;
 			$i = 0;
+			$arrQuery1 = array();
+			$arrQuery2 = array();
 
 			if (isset($pk['attribute']))
 			{
@@ -574,11 +578,12 @@ class RedproductfinderModelFindproducts extends RModelList
 
 						$proString = implode("','", $property);
 						$subString = implode("','", $subproperty);
-						$query->where("pa" . $j . ".attribute_name = '" . $k . "'")
-							->where("pp" . $j . ".property_name IN ('" . $proString . "')")
-							->where("ps" . $j . ".subattribute_color_name IN ('" . $subString . "')");
+						$arrQuery1[] = "pp" . $j . ".property_name IN ('" . $proString . "')";
+						$arrQuery1[] .= "ps" . $j . ".subattribute_color_name IN ('" . $subString . "')";
 
 						unset($attribute[$k]);
+						$where1 = implode(" OR ", $arrQuery1);
+						$query->where($where1);
 					}
 					else
 					{
@@ -588,8 +593,9 @@ class RedproductfinderModelFindproducts extends RModelList
 						}
 
 						$proString1 = implode("','", $property1);
-						$query->where("pa" . $j . ".attribute_name = '" . $k . "'")
-							->where("pp" . $j . ".property_name IN ('" . $proString1 . "')");
+						$arrQuery2[] = "pp" . $j . ".property_name IN ('" . $proString1 . "')";
+						$where2 = implode(" OR ", $arrQuery2);
+						$query->where($where2);
 					}
 
 					$i++;
