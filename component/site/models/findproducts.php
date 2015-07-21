@@ -306,6 +306,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			$i = 0;
 			$arrQuery1 = array();
 			$arrQuery2 = array();
+			$arrWhere = array();
 
 			if (isset($pk['attribute']))
 			{
