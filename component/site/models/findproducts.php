@@ -762,7 +762,6 @@ class RedproductfinderModelFindproducts extends RModelList
 	public function getItem($pk = null)
 	{
 		$query = $this->getListQuery();
-		echo $query->dump();
 		$db = JFactory::getDbo();
 		$start = $this->getState('list.start');
 		$limit = $this->getState('list.limit');
