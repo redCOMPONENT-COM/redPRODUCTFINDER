@@ -334,6 +334,8 @@ class RedproductfinderModelFindproducts extends RModelList
 						$arrQuery1[] .= "ps" . $j . ".subattribute_color_name IN ('" . $subString . "')";
 
 						unset($attribute[$k]);
+						$where1 = implode(" OR ", $arrQuery1);
+						$query->where($where1);
 					}
 					else
 					{
@@ -345,17 +347,13 @@ class RedproductfinderModelFindproducts extends RModelList
 						$proString1 = implode("','", $property1);
 						$arrQuery2[] = "pa" . $j . ".attribute_name = '" . $k . "'";
 						$arrQuery2[] .= "pp" . $j . ".property_name IN ('" . $proString1 . "')";
+						$where2 = implode(" OR ", $arrQuery2);
+						$query->where($where2);
 					}
-
-					$where1 = implode(" OR ", $arrQuery1);
-					$where2 = implode(" OR ", $arrQuery2);
 
 					$i++;
 					$j++;
 				}
-
-				$query->where($where1)
-					->where($where2);
 			}
 		}
 		elseif ($searchByComp == 0)
@@ -497,6 +495,13 @@ class RedproductfinderModelFindproducts extends RModelList
 			$max = $filter['max'];
 		}
 
+		$attribute = "";
+
+		if (isset($pk["attribute"]))
+		{
+			$attribute = $pk["attribute"];
+		}
+
 		$cid = $this->getState("catid");
 		$manufacturerId = $pk["manufacturer_id"];
 
@@ -538,6 +543,8 @@ class RedproductfinderModelFindproducts extends RModelList
 		}
 		elseif ($searchByComp == 1)
 		{
+			$query = $db->getQuery(true);
+
 			$query->select("p.product_id")
 			->from($db->qn("#__redshop_product", "p"))
 			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
