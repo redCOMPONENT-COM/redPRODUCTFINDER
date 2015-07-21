@@ -60,18 +60,18 @@ $filterPriceMax = $param->get("filter_price_max_value", 100);
 									if ($attname[0] == $attribute->attribute_name) { ?>
 										<li>
 											<label>
-											<span class='taginput'><input type="checkbox" name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
+											<span class='taginput'><input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
 											</label>
 											<ul class='taglist' style="list-style: none">
 											<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 												<?php
-													$proname = $model->getPropertyName($subproperty->subattribute_id);
+													$proname = $model->getPropertyName($subProperty->subattribute_id);
 													if ($proname[0] == $property->property_name) { ?>
 												<li>
 													<label>
 													<span class='taginput'>
-													<input type="checkbox" name="redform[properties][]" value="<?php echo $subProperty->subattribute_color_name; ?>"></span>
+													<input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name;?>][]" value="<?php echo $subProperty->subattribute_color_name; ?>"></span>
 													<span class='tagname'><?php echo $subProperty->subattribute_color_name; ?></span>
 													</label>
 												</li>

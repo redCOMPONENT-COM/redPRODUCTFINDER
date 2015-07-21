@@ -34,6 +34,8 @@ $view   = $input->getCmd('view');
 
 JLoader::import('joomla.html.pagination');
 
+RHelperAsset::load('redproductfinder.min.css');
+
 $controller = JControllerLegacy::getInstance('Redproductfinder');
 $controller->execute(JFactory::getApplication()->input->get('task'));
 $controller->redirect();

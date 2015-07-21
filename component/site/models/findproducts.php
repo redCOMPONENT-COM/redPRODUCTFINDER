@@ -133,12 +133,68 @@ class RedproductfinderModelFindproducts extends RModelList
 	}
 
 	/**
+	 * Set session
+	 *
+	 * @return array
+	 */
+	public function addFilterStateData()
+	{
+		$input = JFactory::getApplication()->input;
+		$act = $input->getString("act");
+		$tempType = $input->getInt("tempType");
+		$tempTag = $input->getInt("tempTag");
+
+		$session = JFactory::getSession();
+		$saveFilter = $session->get('saveFilter');
+
+		if ($tempTag)
+		{
+			if (!$saveFilter)
+			{
+				$saveFilter = array();
+			}
+
+			if (!$saveFilter)
+			{
+				$saveFilter[$tempType] = array();
+				$saveFilter[$tempType][$tempTag] = array("typeid" => $tempType, "tagid" => $tempTag);
+			}
+			else
+			{
+				$saveFilter[$tempType][$tempTag] = array("typeid" => $tempType, "tagid" => $tempTag);
+			}
+
+			$session->set("saveFilter", $saveFilter);
+		}
+
+		if ($act == 'delete')
+		{
+			unset($saveFilter[$tempType][$tempTag]);
+
+			if ($saveFilter[$tempType] == null)
+			{
+				unset($saveFilter[$tempType]);
+			}
+
+			$session->set("saveFilter", $saveFilter);
+		}
+
+		if ($act == 'clear')
+		{
+			$session->clear('saveFilter');
+		}
+	}
+
+	/**
 	 * Get List from product
 	 *
 	 * @return array
 	 */
 	function getListQuery()
 	{
+		// Add filter data for filter state
+		$this->addFilterStateData();
+
 		$param = JComponentHelper::getParams('com_redproductfinder');
 
 		$searchBy = $param->get("search_relation");
@@ -165,6 +221,10 @@ class RedproductfinderModelFindproducts extends RModelList
 	{
 		$pk = (!empty($pk)) ? $pk : $this->getState('redform.data');
 
+		// Session filter
+		$session = JFactory::getSession();
+		$saveFilter = $session->get('saveFilter');
+
 		$searchByComp = $param->get('search_by');
 
 		// Filter by cid
@@ -174,7 +234,10 @@ class RedproductfinderModelFindproducts extends RModelList
 		$manufacturerId = $pk["manufacturer_id"];
 
 		// Filter by filterprice
-		$filter = $pk["filterprice"];
+		if (isset($pk["filterprice"]))
+		{
+			$filter = $pk["filterprice"];
+		}
 
 		$orderBy = $this->getState('order_by');
 
@@ -194,7 +257,46 @@ class RedproductfinderModelFindproducts extends RModelList
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		if ($searchByComp == 1)
+		if (isset($saveFilter))
+		{
+			// Main query
+			$query = $db->getQuery(true);
+
+			$query->select("p.product_id");
+			$query->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+				->join("LEFT", $db->qn("#__redproductfinder_associations", "ac") . " ON p.product_id = ac.product_id");
+
+			$i = 0;
+			$j = 0;
+
+			// Begin join query
+			foreach ($saveFilter as $type_id => $value)
+			{
+				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
+
+				foreach ($value as $tag_id => $type_tag)
+				{
+					$tagId[$j][] = $tag_id;
+				}
+
+				foreach ($tagId as $k => $tag)
+				{
+					if ($k == $i)
+					{
+						$tagString = implode(',', $tag);
+						$arrQuery[] = 'ac_t' . $j . '.tag_id IN (' . $tagString . ")";
+						$tagString = implode(' OR ', $arrQuery);
+					}
+				}
+
+				$i++;
+				$j++;
+			}
+
+			$query->where($tagString);
+		}
+		elseif ($searchByComp == 1 && isset($pk["attribute"]))
 		{
 			$query->select("p.product_id")
 			->from($db->qn("#__redshop_product", "p"))
@@ -245,7 +347,6 @@ class RedproductfinderModelFindproducts extends RModelList
 				$query->where("( pp.property_name IN ('" . $proString . "') " . $subQuery . ")");
 			}
 		}
-
 		elseif ($searchByComp == 0)
 		{
 			$query->select("a.product_id")
@@ -258,46 +359,56 @@ class RedproductfinderModelFindproducts extends RModelList
 			->where("p.product_parent_id = 0")
 			->group($db->qn("a.product_id"));
 
+			// Remove some field
 			unset($pk["filterprice"]);
 			unset($pk["template_id"]);
 			unset($pk["manufacturer_id"]);
 			unset($pk["cid"]);
 
-			// Add tag id
-			$keyTags = array();
+			// Main query
+			$query = $db->getQuery(true);
 
-			foreach ( $pk as $k => $value )
+			$query->select("p.product_id");
+			$query->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+				->join("LEFT", $db->qn("#__redproductfinder_associations", "ac") . " ON p.product_id = ac.product_id");
+
+			// Create arrays variable
+			$types = array();
+			$count = count($pk);
+			$j = 0;
+			$i = 0;
+
+			if ($pk != null)
 			{
-				if (isset($value["tags"]))
+				// Get how many type
+				$types = array_keys($pk);
+
+				foreach ($types as $k => $type)
 				{
-					$keyTypes[] = $value['typeid'];
+					if (isset($pk[$type]['tags']))
+					{
+						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
+
+						$typeString = implode(',', $pk[$type]["tags"]);
+
+						if (isset($pk[$type]["tags"]))
+						{
+							$arrQuery[] = 'ac_t' . $j . '.tag_id IN (' . $typeString . ")";
+							$tagString = implode(' OR ', $arrQuery);
+						}
+
+						$j++;
+						$i++;
+					}
 				}
 
-				foreach ( $value["tags"] as $k_t => $tag )
-				{
-					$keyTags[] = $tag;
-				}
-			}
-
-			if (count($keyTags) != 0)
-			{
-				if ($keyTypes)
-				{
-					$keyTypeString = implode(",", $keyTypes);
-					$query->where($db->qn("at.type_id") . " IN (" . $keyTypeString . ")");
-				}
-
-				// Remove duplicate tag id
-				$keyTags = array_unique($keyTags);
-
-				// Add tag id
-				$keyTagString = implode(",", $keyTags);
-				$query->where($db->qn("at.tag_id") . " IN (" . $keyTagString . ")");
+				$query->where($tagString);
+				$query->group($db->qn("p.product_id"));
 			}
 			else
-
 			{
-				if (!$filter)
+				if (!isset($filter))
 				{
 					$query = $db->getQuery(true);
 					$query->select("p.product_id")
@@ -311,7 +422,12 @@ class RedproductfinderModelFindproducts extends RModelList
 			}
 		}
 
-		if ($filter)
+		$query->where("p.published = 1")
+			->where("p.expired = 0")
+			->where("p.product_parent_id = 0")
+			->group($db->qn("p.product_id"));
+
+		if (isset($filter))
 		{
 			// Condition min max
 			$min = $filter['min'];
@@ -350,6 +466,10 @@ class RedproductfinderModelFindproducts extends RModelList
 	 */
 	public function getListQueryByAnd($param)
 	{
+		// Session filter
+		$session = JFactory::getSession();
+		$saveFilter = $session->get('saveFilter');
+
 		$pk = (!empty($pk)) ? $pk : $this->getState('redform.data');
 
 		$db = JFactory::getDbo();
@@ -370,15 +490,50 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			// Filter by filterprice
 			$filter = $pk["filterprice"];
+			$min = $filter['min'];
+			$max = $filter['max'];
 		}
-
-		$min = $filter['min'];
-		$max = $filter['max'];
 
 		$cid = $this->getState("catid");
 		$manufacturerId = $pk["manufacturer_id"];
 
-		if ($searchByComp == 1)
+		if (isset($saveFilter))
+		{
+			// Main query
+			$query = $db->getQuery(true);
+
+			$query->select("p.product_id");
+			$query->from($db->qn("#__redshop_product", "p"))
+				->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
+				->join("LEFT", $db->qn("#__redproductfinder_associations", "ac") . " ON p.product_id = ac.product_id");
+
+			$i = 0;
+			$j = 0;
+
+			// Begin join query
+			foreach ($saveFilter as $type_id => $value)
+			{
+				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
+
+				foreach ($value as $tag_id => $type_tag)
+				{
+					$tagId[$j][] = $tag_id;
+				}
+
+				foreach ($tagId as $k => $tag)
+				{
+					if ($k == $i)
+					{
+						$tagString = implode(',', $tag);
+						$query->where('ac_t' . $j . '.tag_id IN (' . $tagString . ")");
+					}
+				}
+
+				$i++;
+				$j++;
+			}
+		}
+		elseif ($searchByComp == 1)
 		{
 			// Main query
 			$db = JFactory::getDbo();
@@ -568,8 +723,8 @@ class RedproductfinderModelFindproducts extends RModelList
 
 		$query->where("p.published = 1")
 			->where("p.expired = 0")
-			->where("p.product_parent_id = 0");
-		$query->group("p.product_id");
+			->where("p.product_parent_id = 0")
+			->group("p.product_id");
 
 		if ($filter)
 		{
@@ -607,6 +762,7 @@ class RedproductfinderModelFindproducts extends RModelList
 	public function getItem($pk = null)
 	{
 		$query = $this->getListQuery();
+		echo $query->dump();
 		$db = JFactory::getDbo();
 		$start = $this->getState('list.start');
 		$limit = $this->getState('list.limit');
