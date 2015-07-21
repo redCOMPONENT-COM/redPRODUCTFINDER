@@ -296,20 +296,16 @@ class RedproductfinderModelFindproducts extends RModelList
 
 			$query->where($tagString);
 		}
-		elseif ($searchByComp == 1 && isset($pk["attribute"]))
+		elseif ($searchByComp == 1)
 		{
 			$query->select("p.product_id")
 			->from($db->qn("#__redshop_product", "p"))
 			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
 			->join("LEFT", $db->qn("#__redshop_product_attribute", "pa") . " ON pa.product_id = p.product_id")
 			->join("LEFT", $db->qn("#__redshop_product_attribute_property", "pp") . " ON pp.attribute_id = pa.attribute_id")
-			->join("LEFT", $db->qn("#__redshop_product_subattribute_color", "ps") . " ON ps.subattribute_id = pp.property_id")
-			->where("p.published = 1")
-			->where("p.expired = 0")
-			->where("p.product_parent_id = 0")
-			->group($db->qn("p.product_id"));
+			->join("LEFT", $db->qn("#__redshop_product_subattribute_color", "ps") . " ON ps.subattribute_id = pp.property_id");
 
-			if (isset($attribute))
+			if (isset($pk['attribute']))
 			{
 				foreach ($attribute as $k => $value)
 				{
@@ -353,11 +349,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			->from($db->qn("#__redproductfinder_associations", "a"))
 			->join("LEFT", $db->qn("#__redproductfinder_association_tag", "at") . " ON a.id = at.association_id")
 			->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id")
-			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
-			->where("p.published = 1")
-			->where("p.expired = 0")
-			->where("p.product_parent_id = 0")
-			->group($db->qn("a.product_id"));
+			->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
 
 			// Remove some field
 			unset($pk["filterprice"]);
@@ -413,11 +405,7 @@ class RedproductfinderModelFindproducts extends RModelList
 					$query = $db->getQuery(true);
 					$query->select("p.product_id")
 					->from($db->qn("#__redshop_product", "p"))
-					->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id")
-					->where("p.published = 1")
-					->where("p.expired = 0")
-					->where("p.product_parent_id = 0")
-					->group($db->qn("p.product_id"));
+					->join("LEFT", $db->qn("#__redshop_product_category_xref", "cat") . " ON p.product_id = cat.product_id");
 				}
 			}
 		}
@@ -762,6 +750,7 @@ class RedproductfinderModelFindproducts extends RModelList
 	public function getItem($pk = null)
 	{
 		$query = $this->getListQuery();
+		echo $query->dump();
 		$db = JFactory::getDbo();
 		$start = $this->getState('list.start');
 		$limit = $this->getState('list.limit');
