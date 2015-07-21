@@ -59,13 +59,14 @@ class RedproductfinderModelForms extends RModel
 
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
-			->select("f.id as formid,t.*, t.id as typeid,tg.*, tg.id as tagid");
-
-		$query->from($db->qn("#__redproductfinder_forms", "f"));
-		$query->join("INNER", $db->qn("#__redproductfinder_types", "t") . " ON t.form_id = f.id");
-		$query->join("INNER", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.type_id = t.id");
-		$query->join("LEFT", $db->qn("#__redproductfinder_tags", "tg") . " ON tg.id = tt.tag_id");
-		$query->where($db->qn("f.id") . "=" . $pk);
+			->select("f.id as formid,t.*, t.id as typeid,tg.*, tg.id as tagid")
+			->from($db->qn("#__redproductfinder_forms", "f"))
+			->join("INNER", $db->qn("#__redproductfinder_types", "t") . " ON t.form_id = f.id")
+			->join("INNER", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.type_id = t.id")
+			->join("LEFT", $db->qn("#__redproductfinder_tags", "tg") . " ON tg.id = tt.tag_id")
+			->where($db->qn("f.id") . "=" . $pk)
+			->where($db->qn("t.published") . " = 1")
+			->where($db->qn("tg.published") . " = 1");
 
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
