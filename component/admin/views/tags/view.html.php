@@ -70,6 +70,7 @@ class RedproductfinderViewTags extends JViewLegacy
 		JToolbarHelper::publish('tags.publish', 'JTOOLBAR_PUBLISH', true);
 		JToolbarHelper::unpublish('tags.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 		JToolbarHelper::deleteList('Are you sure you want to delete items', 'tags.delete');
+		JToolBarHelper::preferences('com_redproductfinder', '300');
 	}
 
 	/**
