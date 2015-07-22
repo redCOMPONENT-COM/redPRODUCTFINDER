@@ -87,6 +87,8 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		// Count accessory
 		$accessorylist = $producthelper->getProductAccessory(0, $product->product_id);
 		$totacc = count($accessorylist);
+		$netPrice = $producthelper->getProductNetPrice($pid);
+		$productPrice = $netPrice['productPrice'] + $netPrice['productVat'];
 
 		$data_add = $template_product;
 
@@ -114,7 +116,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 		if ($showPrice == 1)
 		{
-			$data_add = str_replace("{product_price}", $producthelper->getProductFormattedPrice($product->product_price), $data_add);
+			$data_add = str_replace("{product_price}", $producthelper->getProductFormattedPrice($productPrice), $data_add);
 		}
 		else
 		{
