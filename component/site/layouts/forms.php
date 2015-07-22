@@ -10,6 +10,7 @@
 $data = $displayData["data"];
 $model = $displayData["model"];
 $attributes = $model->getAttribute();
+$input = JFactory::getApplication()->input;
 $attributeProperties = $model->getAttributeProperty();
 $attributeSubProperties = $model->getAttributeSubProperty();
 $param = JComponentHelper::getParams('com_redproductfinder');
@@ -18,6 +19,9 @@ $cid = 0;
 $manufacturer_id = 0;
 $template_id = $param->get('prod_template');
 $formid = $param->get('form');
+$filterPriceMin = $param->get("filter_price_min_value", 0);
+$filterPriceMax = $param->get("filter_price_max_value", 100);
+$Itemid = $input->getInt('Itemid');
 
 ?>
 <div class="">
@@ -79,17 +83,18 @@ $formid = $param->get('form');
 			</div>
 		</div>
 		<div  class="row-fluid">
-			<span><?php echo JText::sprintf("PLG_REPRODUCTFINDER_FORM_FORMS_DEFAULT_MIN"); ?></span><span><input type="text" name="redform[filterprice][min]" /></span>
-			<span><?php echo JText::sprintf("PLG_REPRODUCTFINDER_FORM_FORMS_DEFAULT_MAX"); ?></span><span><input type="text" name="redform[filterprice][max]" /></span>
+			<span><?php echo JText::sprintf("PLG_REPRODUCTFINDER_FORM_FORMS_DEFAULT_MIN"); ?></span><span><input type="number" min="0" name="redform[filterprice][min]" value="<?php echo $filterPriceMin ?>" /></span>
+			<span><?php echo JText::sprintf("PLG_REPRODUCTFINDER_FORM_FORMS_DEFAULT_MAX"); ?></span><span><input type="number" min="0" name="redform[filterprice][max]" value="<?php echo $filterPriceMax ?>" /></span>
 		</div>
 	</div>
 
-	<input type="submit" name="submit" value="submit" />
+	<input type="submit" name="submit" value="<?php echo JText::sprintf("PLG_REPRODUCTFINDER_FORM_FORMS_SUBMIT_FORM"); ?>" />
 	<input type="hidden" name="view" value="findproducts" />
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
 	<input type="hidden" name="redform[template_id]" value="<?php echo $template_id;?>" />
 	<input type="hidden" name="redform[cid]" value="<?php echo $cid;?>" />
 	<input type="hidden" name="redform[manufacturer_id]" value="<?php echo $manufacturer_id;?>" />
+	<input type="hidden" name="Itemid" value="<?php echo $Itemid;?>" />
 	<?php echo JHtml::_('form.token'); ?>
 	</form>
 </div>

@@ -65,6 +65,7 @@ class RedproductfinderViewTypes extends JViewLegacy
 		JToolbarHelper::publish('types.publish', 'JTOOLBAR_PUBLISH', true);
 		JToolbarHelper::unpublish('types.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 		JToolbarHelper::deleteList('Are you sure you want to delete items', 'types.delete');
+		JToolBarHelper::preferences('com_redproductfinder', '300');
 	}
 
 	/**

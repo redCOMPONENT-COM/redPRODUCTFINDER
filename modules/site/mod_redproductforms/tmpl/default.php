@@ -97,22 +97,26 @@ if ($count > 0)
 							<ul class='taglist'>
 								<?php foreach ($type["tags"] as $k_t => $tag) :?>
 									<li>
+										<label>
 										<span class='taginput' data-aliases='<?php echo $tag["aliases"];?>'>
 										<input <?php
-										foreach ($values as $key => $value) :
-											if ($value['typeid'] == $type['typeid']) :
-												if (isset($value['tags'])) :
-													foreach ($value['tags'] as $keyTag) :
-														if ($keyTag == $tag["tagid"])
-															echo 'checked="checked"';
-														else
-															echo '';
-													endforeach;
+										if (isset($value)):
+											foreach ($values as $key => $value) :
+												if ($value['typeid'] == $type['typeid']) :
+													if (isset($value['tags'])) :
+														foreach ($value['tags'] as $keyTag) :
+															if ($keyTag == $tag["tagid"])
+																echo 'checked="checked"';
+															else
+																echo '';
+														endforeach;
+													endif;
 												endif;
-											endif;
-										endforeach; ?>
+											endforeach;
+										endif; ?>
 										 type="checkbox" name="redform[<?php echo $type["typeid"]?>][tags][]" value="<?php echo $tag["tagid"]; ?>"></span>
 										<span class='tagname'><?php echo $tag["tagname"]; ?></span>
+										</label>
 									</li>
 								<?php endforeach; ?>
 							</ul>
@@ -131,6 +135,7 @@ if ($count > 0)
 									$attname = $model->getAttributeName($property->attribute_id);
 									if ($attname[0] == $attribute->attribute_name) { ?>
 										<li>
+											<label>
 											<span class='taginput' data-aliases='<?php echo $attribute->attribute_name;?>'>
 											<input type="checkbox"
 										<?php if ($count > 0) :
@@ -143,15 +148,18 @@ if ($count > 0)
 											endif;?>
 											 name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
-											<ul class='taglist'>
+											</label>
+											<ul class='taglist' style="list-style: none">
 											<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 												<?php
 													$proName = $model->getPropertyName($subProperty->subattribute_id);
 													if ($proName[0] == $property->property_name) : ?>
 												<li>
+													<label>
 													<span class='taginput' data-aliases='<?php echo $property->property_name;?>'>
 													<input type="checkbox" name="redform[properties][]" value="<?php echo $subProperty->subattribute_color_name; ?>"></span>
 													<span class='tagname'><?php echo $subProperty->subattribute_color_name; ?></span>
+													</label>
 												</li>
 												<?php endif; ?>
 											<?php endforeach;?>
@@ -167,11 +175,11 @@ if ($count > 0)
 			</div>
 		</div>
 		<div  class="row-fluid">
-			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MIN"); ?></span><span><input type="text" name="redform[filterprice][min]" value="<?php echo $range['min'];?>"/></span>
-			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MAX"); ?></span><span><input type="text" name="redform[filterprice][max]" value="<?php echo $range['max'];?>"/></span>
+			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MIN"); ?></span><span><input type="number" class="span12" min="0" name="redform[filterprice][min]" value="<?php echo $range['min'];?>" required/></span><br>
+			<span><?php echo JText::_("MOD_REDPRODUCTFORM_TMPL_DEFAULT_MAX"); ?></span><span><input type="number" class="span12" min="0" name="redform[filterprice][max]" value="<?php echo $range['max'];?>" required/></span>
 		</div>
 	</div>
-	<input type="submit" name="submit" value="submit" />
+	<input type="submit" name="submit" value="<?php echo JText::_("MOD_REDPRODUCTFORM_FORM_FORMS_SUBMIT_FORM"); ?>" />
 	<input type="hidden" name="formid" value="<?php echo $formid; ?>" />
 	<input type="hidden" name="redform[template_id]" value="<?php echo $templateId;?>" />
 	<input type="hidden" name="redform[cid]" value="<?php if ($cid) echo $cid; elseif ($count > 0) echo $catId;?>" />

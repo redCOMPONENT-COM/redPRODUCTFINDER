@@ -12,6 +12,7 @@ $searchBy = $param->get("search_by");
 $template_id = $param->get('prod_template');
 $showPrice = $param->get("show_price");
 $showCart = $param->get("show_add_to_cart");
+$searchTag = $param->get("search_tag_display");
 $input = JFactory::getApplication()->input;
 $isredshop = JComponentHelper::isEnabled('com_redshop');
 $redform = $input->get('redform', array(), "array");
@@ -48,14 +49,12 @@ if (!$isredshop)
 
 JLoader::import('findproducts', JPATH_SITE . '/components/com_redproductfinder/helpers');
 JLoader::import('redshop.library');
+JLoader::load('RedshopHelperProduct');
 JLoader::load('RedshopHelperAdminConfiguration');
 JLoader::load('RedshopHelperAdminTemplate');
 JLoader::load('RedshopHelperAdminStockroom');
 JLoader::load('RedshopHelperAdminText_Library');
 
-$producthelper = new producthelper;
-
-// $search_model = new searchModelSearch;
 $objhelper = new redhelper;
 $Redconfiguration = new Redconfiguration;
 $Redconfiguration->defineDynamicVars();
@@ -63,21 +62,19 @@ $extraField = new extraField;
 $stockroomhelper = new rsstockroomhelper;
 $redTemplate = new Redtemplate;
 $texts = new text_library;
-$productHelper = new producthelper;
+$producthelper = new producthelper;
 
-$order_data            = $objhelper->getOrderByList();
-$getorderby            = JRequest::getString('order_by', DEFAULT_PRODUCT_ORDERING_METHOD);
+$order_data = $objhelper->getOrderByList();
+$getorderby = JRequest::getString('order_by', DEFAULT_PRODUCT_ORDERING_METHOD);
 $lists['order_select'] = JHTML::_('select.genericlist', $order_data, 'order_by', 'class="inputbox" size="1" onchange="document.orderby_form.submit();" ', 'value', 'text', $getorderby);
 $option = 'com_redshop';
 $loadCategorytemplate = '';
 $layout = JRequest::getCmd('layout', '');
-$model  = $this->getModel('findproducts');
-$catid = $model->getState('catid');
-$attribute_template = '';
-$userfieldArr = '';
-$count_no_user_field = '';
+$model = $this->getModel('findproducts');
+$cid = $model->getState('catid');
+$count_no_user_field = 0;
 $product_data = '';
-$extraFieldName = '';
+$extraFieldName = $extraField->getSectionFieldNameArray(1, 1, 1);
 
 // Check Itemid on pagination
 $Itemid = $input->get('Itemid', 0, "int");
@@ -86,10 +83,12 @@ $fieldArray = $extraField->getSectionFieldList(17, 0, 0);
 
 $template_array = $redTemplate->getTemplate("redproductfinder", $template_id);
 $template_desc = $template_array[0]->template_desc;
+$attribute_template = $producthelper->getAttributeTemplate($template_desc);
 
 // Begin replace template
 $template_desc = str_replace("{total_product_lbl}", JText::_('COM_REDSHOP_TOTAL_PRODUCT'), $template_desc);
 $template_desc = str_replace("{total_product}", count($this->products), $template_desc);
+
 
 if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{product_loop_end}"))
 {
@@ -98,13 +97,12 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$template_d2 = explode("{product_loop_end}", $template_d1[1]);
 	$template_product = $template_d2[0];
 
-	$attribute_template = $producthelper->getAttributeTemplate($template_product);
-
 	// Loop product lists
 	foreach ($this->products as $key => $pd)
 	{
 		$pid = $pd->product_id;
 		$product = $producthelper->getProductById($pid);
+		$catid = $producthelper->getCategoryProduct($pid);
 
 		// Count accessory
 		$accessorylist = $producthelper->getProductAccessory(0, $product->product_id);
@@ -424,6 +422,9 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 			$attributes = array_merge($attributes, $attributes_set);
 		}
 
+		$returnArr = $producthelper->getProductUserfieldFromTemplate($data_add);
+		$userfieldArr = $returnArr[1];
+
 		/* Product attribute  Start */
 		$totalatt = count($attributes);
 		/* check product for not for sale */
@@ -434,9 +435,9 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 		$data_add = $producthelper->replaceAttributeData($product->product_id, 0, 0, $attributes, $data_add, $attribute_template, $isChilds);
 
-		foreach ($attribute_template as $i => $item)
+		if (isset($attribute_template))
 		{
-			$templateAttribute = "{attribute_template:" . $item->template_name . "}";
+			$templateAttribute = "{attribute_template:" . $attribute_template->template_name . "}";
 
 			if (strstr($data_add, $templateAttribute))
 			{
@@ -450,7 +451,7 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		}
 
 		/* get cart tempalte */
-		$data_add = $producthelper->replaceCartTemplate($product->product_id, $catid, 0, 0, $data_add, $isChilds, $userfieldArr, $totalatt, $totacc, $count_no_user_field);
+		$data_add = $producthelper->replaceCartTemplate($product->product_id, $catid, 0, 0, $data_add, $isChilds, $userfieldArr, $totalatt, $totacc, $count_no_user_field, "");
 
 		$product_data .= $data_add;
 	}
@@ -459,31 +460,38 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 	if (strstr($template_desc, "{display_tag}"))
 	{
-		foreach ($values as $value)
+		if ($searchTag == 1)
 		{
-			$typeName = RedproductfinderFindProducts::getTypeName($value['typeid']);
-
-			foreach ($value['tags'] as $tags)
+			foreach ($values as $value)
 			{
-				$tagName = RedproductfinderFindProducts::getTagName($tags);
-				$displayTag[] = "<span><strong>" . $typeName . " - " . $tagName . "</strong></span><br>";
+				$typeName = RedproductfinderFindProducts::getTypeName($value['typeid']);
+
+				foreach ($value['tags'] as $tags)
+				{
+					$tagName = RedproductfinderFindProducts::getTagName($tags);
+					$displayTag[] = "<span><strong>" . $typeName . " - " . $tagName . "</strong></span><br>";
+				}
 			}
+
+			$display = implode('<br>', $displayTag);
+
+			$template_desc = str_replace("{display_tag}", $display, $template_desc);
 		}
-
-		$display = implode('<br>', $displayTag);
-
-		$template_desc = str_replace("{display_tag}", $display, $template_desc);
+		else
+		{
+			$template_desc = str_replace("{display_tag}", "", $template_desc);
+		}
 	}
 
 	$db    = JFactory::getDbo();
 	$query = 'SELECT category_name'
 	. ' FROM #__redshop_category  '
-	. 'WHERE category_id=' . $catid;
+	. 'WHERE category_id=' . (int) $cid;
 	$db->setQuery($query);
 
 	$cat_name = null;
 
-	if ($catid)
+	if ($cid)
 	{
 		if ($catname_array = $db->loadObjectList())
 		{
@@ -495,14 +503,14 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	$query = 'SELECT category_name, category_id'
 	. ' FROM #__redshop_category AS c '
 	. ' INNER JOIN #__redshop_category_xref AS cx ON cx.category_parent_id = c.category_id'
-	. ' WHERE cx.category_child_id = ' . $catid;
+	. ' WHERE cx.category_child_id = ' . (int) $cid;
 	$db->setQuery($query);
 
 	// Order By
 	$limitstart = $model->getState("list.start");
 	$orderby = $model->getState("order_by");
 
-	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $catid . "&limitstart=" . $limitstart);
+	$linkOrderBy = JRoute::_("index.php?option=com_redproductfinder&view=findproducts&cid=" . $cid . "&limitstart=" . $limitstart);
 
 	$order_by     = "";
 	$orderby_form = "<form name='orderby_form' action='" . $linkOrderBy . "' method='post' >";
