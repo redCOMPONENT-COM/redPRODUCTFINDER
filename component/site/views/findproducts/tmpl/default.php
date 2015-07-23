@@ -34,11 +34,14 @@ unset($pk["template_id"]);
 unset($pk["manufacturer_id"]);
 unset($pk["cid"]);
 
-foreach ( $pk as $k => $value )
+if (isset($pk))
 {
-	if (isset($value['tags']))
+	foreach ( $pk as $k => $value )
 	{
-		$values[] = $value;
+		if (isset($value['tags']))
+		{
+			$values[] = $value;
+		}
 	}
 }
 
@@ -464,20 +467,23 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	{
 		if ($searchTag == 1)
 		{
-			foreach ($values as $value)
+			if (isset($values))
 			{
-				$typeName = RedproductfinderFindProducts::getTypeName($value['typeid']);
-
-				foreach ($value['tags'] as $tags)
+				foreach ($values as $value)
 				{
-					$tagName = RedproductfinderFindProducts::getTagName($tags);
-					$displayTag[] = "<span><strong>" . $typeName . " - " . $tagName . "</strong></span><br>";
+					$typeName = RedproductfinderFindProducts::getTypeName($value['typeid']);
+
+					foreach ($value['tags'] as $tags)
+					{
+						$tagName = RedproductfinderFindProducts::getTagName($tags);
+						$displayTag[] = "<span><strong>" . $typeName . " - " . $tagName . "</strong></span><br>";
+					}
 				}
+
+				$display = implode('<br>', $displayTag);
+
+				$template_desc = str_replace("{display_tag}", $display, $template_desc);
 			}
-
-			$display = implode('<br>', $displayTag);
-
-			$template_desc = str_replace("{display_tag}", $display, $template_desc);
 		}
 		else
 		{
