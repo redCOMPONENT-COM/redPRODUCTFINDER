@@ -9,6 +9,7 @@ defined('_JEXEC') or die;
 
 $param = JComponentHelper::getParams('com_redproductfinder');
 $searchBy = $param->get("search_by");
+$description = $param->get('product_description');
 $template_id = $param->get('prod_template');
 $showPrice = $param->get("show_price");
 $showCart = $param->get("show_add_to_cart");
@@ -184,14 +185,16 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 		if (strstr($data_add, '{product_s_desc}'))
 		{
-			$p_s_desc = $Redconfiguration->maxchar($product->product_s_desc, CATEGORY_PRODUCT_SHORT_DESC_MAX_CHARS, CATEGORY_PRODUCT_SHORT_DESC_END_SUFFIX);
-			$data_add = str_replace("{product_s_desc}", $p_s_desc, $data_add);
-		}
-
-		if (strstr($data_add, '{product_desc}'))
-		{
-			$p_desc = $Redconfiguration->maxchar($product->product_desc, CATEGORY_PRODUCT_DESC_MAX_CHARS, CATEGORY_PRODUCT_DESC_END_SUFFIX);
-			$data_add = str_replace("{product_desc}", $p_desc, $data_add);
+			if ($description == 'short')
+			{
+				$p_s_desc = $Redconfiguration->maxchar($product->product_s_desc, CATEGORY_PRODUCT_SHORT_DESC_MAX_CHARS, CATEGORY_PRODUCT_SHORT_DESC_END_SUFFIX);
+				$data_add = str_replace("{product_s_desc}", $p_s_desc, $data_add);
+			}
+			else
+			{
+				$p_desc = $Redconfiguration->maxchar($product->product_desc, CATEGORY_PRODUCT_DESC_MAX_CHARS, CATEGORY_PRODUCT_DESC_END_SUFFIX);
+				$data_add = str_replace("{product_desc}", $p_desc, $data_add);
+			}
 		}
 
 		if (strstr($data_add, '{product_rating_summary}'))

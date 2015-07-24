@@ -21,7 +21,7 @@ class RedproductfinderModelRedproductfinder extends RModelList
 	/**
 	 * Get total information of redproductfinder
 	 *
-	 * @return voidg
+	 * @return void
 	 */
 	public function getTotals()
 	{

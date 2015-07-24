@@ -229,6 +229,8 @@ class RedproductfinderModelFindproducts extends RModelList
 		$searchParentProduct = $param->get('show_main_product');
 		$searchChildProduct = $param->get('search_child_product');
 		$qualityScore = $param->get('use_quality_score');
+		$filterOption = $param->get('redshop_filter_option');
+		$considerAllTags = $param->get('consider_all_tags');
 
 		// Filter by cid
 		$cid = $this->getState("catid");
@@ -490,6 +492,10 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			$query->order($db->escape($orderBy));
 		}
+		elseif ($filterOption == 1)
+		{
+			$query->order('p.product_id DESC');
+		}
 
 		return $query;
 	}
@@ -515,6 +521,8 @@ class RedproductfinderModelFindproducts extends RModelList
 		$searchParentProduct = $param->get('show_main_product');
 		$searchChildProduct = $param->get('search_child_product');
 		$qualityScore = $param->get('use_quality_score');
+		$filterOption = $param->get('redshop_filter_option');
+		$considerAllTags = $param->get('consider_all_tags');
 
 		$orderBy = $this->getState('order_by');
 
@@ -740,6 +748,10 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			$query->order($db->escape($orderBy));
 		}
+		elseif ($filterOption == 1)
+		{
+			$query->order('p.product_id DESC');
+		}
 
 		return $query;
 	}
@@ -754,6 +766,7 @@ class RedproductfinderModelFindproducts extends RModelList
 	public function getItem($pk = null)
 	{
 		$query = $this->getListQuery();
+		echo $query->dump();
 		$db = JFactory::getDbo();
 		$start = $this->getState('list.start');
 		$limit = $this->getState('list.limit');
