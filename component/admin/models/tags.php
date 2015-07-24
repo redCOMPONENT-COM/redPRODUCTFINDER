@@ -225,4 +225,24 @@ class RedproductfinderModelTags extends RModelList
 
 		return $query;
 	}
+
+	/**
+	 * count Types.
+	 *
+	 * @return JDatabaseQuery A JDatabaseQuery object
+	 */
+	public function countTypes()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Select the required fields from the table.
+		$query->select('count(*)');
+		$query->from($db->qn('#__redproductfinder_types'));
+		$db->setQuery($query);
+		$count = $db->loadResult();
+
+		return $count;
+	}
 }

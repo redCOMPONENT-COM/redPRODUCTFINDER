@@ -411,4 +411,24 @@ class RedproductfinderModelAssociations extends RModelList
 
 		return $query;
 	}
+
+	/**
+	 * count Tags.
+	 *
+	 * @return JDatabaseQuery A JDatabaseQuery object
+	 */
+	public function countTags()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Select the required fields from the table.
+		$query->select('count(*)');
+		$query->from($db->qn('#__redproductfinder_tags'));
+		$db->setQuery($query);
+		$count = $db->loadResult();
+
+		return $count;
+	}
 }

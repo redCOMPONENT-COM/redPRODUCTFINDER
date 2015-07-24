@@ -72,7 +72,25 @@ if ($saveOrder)
 		</div>
 
 		<div class="clearfix"></div>
-
+	<?php if ($this->count == 0) : ?>
+	<div class="alert alert-warning alert-dismissible fade in" role="alert">
+		<button class="close" aria-label="Close" data-dismiss="alert" type="button">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<p><?php echo JText::_('COM_REDPRODUCTFINDER_NOT_TYPES'); ?></p>
+		<p><a class="btn btn-default" href="index.php?option=com_redproductfinder&view=types">
+			<span class="icon-folder"></span>
+			<?php echo JText::_('COM_REDPRODUCTFINDER_GO_TO_TYPES'); ?>
+		</a></p>
+	</div>
+	<?php elseif (empty($this->items)) : ?>
+	<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<div class="pagination-centered">
+			<h3><?php echo JText::_('COM_REDPRODUCTFINDER_NOTHING_TO_DISPLAY'); ?></h3>
+		</div>
+	</div>
+	<?php else : ?>
 		<table class="table table-striped" id="table-tagslist" class="adminlist">
 			<thead>
 			<tr>
@@ -168,6 +186,7 @@ if ($saveOrder)
 		         </tr>
 	         </tfoot>
 		</table>
+	<?php endif; ?>
 	</div>
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="view" value="tags" />

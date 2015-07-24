@@ -61,7 +61,14 @@ JFactory::getDocument()->addScriptDeclaration('
 		</div>
 
 		<div class="clearfix"></div>
-
+	<?php if (empty($this->items)) : ?>
+	<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<div class="pagination-centered">
+			<h3><?php echo JText::_('COM_REDPRODUCTFINDER_NOTHING_TO_DISPLAY'); ?></h3>
+		</div>
+	</div>
+	<?php else : ?>
 		<table class="table table-striped" id="table-formslist" class="adminlist">
 		<thead>
 			<tr>
@@ -142,6 +149,7 @@ JFactory::getDocument()->addScriptDeclaration('
 			</tr>
 		</tfoot>
 		</table>
+	<?php endif; ?>
 	</div>
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="view" value="forms" />

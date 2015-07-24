@@ -195,4 +195,24 @@ class RedproductfinderModelTypes extends RModelList
 
 		return $query;
 	}
+
+	/**
+	 * count Forms.
+	 *
+	 * @return JDatabaseQuery A JDatabaseQuery object
+	 */
+	public function countForms()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Select the required fields from the table.
+		$query->select('count(*)');
+		$query->from($db->qn('#__redproductfinder_forms'));
+		$db->setQuery($query);
+		$count = $db->loadResult();
+
+		return $count;
+	}
 }

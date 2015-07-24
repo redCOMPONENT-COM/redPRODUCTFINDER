@@ -64,7 +64,25 @@ JFactory::getDocument()->addScriptDeclaration('
 		</div>
 
 		<div class="clearfix"></div>
-
+	<?php if ($this->count == 0) : ?>
+	<div class="alert alert-warning alert-dismissible fade in" role="alert">
+		<button class="close" aria-label="Close" data-dismiss="alert" type="button">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<p><?php echo JText::_('COM_REDPRODUCTFINDER_NOT_TAGS'); ?></p>
+		<p><a class="btn btn-default" href="index.php?option=com_redproductfinder&view=tags">
+			<span class="icon-folder"></span>
+			<?php echo JText::_('COM_REDPRODUCTFINDER_GO_TO_TAGS'); ?>
+		</a></p>
+	</div>
+	<?php elseif (empty($this->items)) : ?>
+	<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<div class="pagination-centered">
+			<h3><?php echo JText::_('COM_REDPRODUCTFINDER_NOTHING_TO_DISPLAY'); ?></h3>
+		</div>
+	</div>
+	<?php else : ?>
 		<table class="table table-striped" id="filterslist" class="adminlist">
 			<thead>
 			<tr>
@@ -141,8 +159,8 @@ JFactory::getDocument()->addScriptDeclaration('
 	         	</tr>
 			</tfoot>
 		</table>
+	<?php endif; ?>
 	</div>
-
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="view" value="filters" />
 	<input type="hidden" name="boxchecked" value="0" />

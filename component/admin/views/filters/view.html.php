@@ -41,12 +41,15 @@ class RedproductfinderViewFilters extends JViewLegacy
 
 		$items = $this->get("Items");
 		$state = $this->get("State");
+		$model  = $this->getModel();
+		$count  = $model->countTags();
 
 		$this->assignRef('pagination', $pagination);
 		$this->assignRef('filters', $filters);
 		$this->assignRef('countfilters', $countfilters);
 		$this->assignRef('items', $items);
 		$this->assignRef('state', $state);
+		$this->assignRef('count', $count);
 
 		/* Get the toolbar */
 		$this->toolbar();
