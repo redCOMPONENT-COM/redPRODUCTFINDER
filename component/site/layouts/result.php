@@ -14,6 +14,7 @@ $description = $param->get('product_description');
 $template_id = $param->get('prod_template');
 $showPrice = $param->get("show_price");
 $showCart = $param->get("show_add_to_cart");
+$searchTag = $param->get("search_tag_display");
 $post = $displayData["post"];
 $cid = $post["cid"];
 $input = JFactory::getApplication()->input;
@@ -446,20 +447,34 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 	if (strstr($template_desc, "{display_tag}"))
 	{
-		foreach ($values as $value)
+		if ($searchTag == 1)
 		{
-			$typeName = RedproductfinderFindProducts::getTypeName($value['typeid']);
-
-			foreach ($value['tags'] as $tags)
+			if (isset($values))
 			{
-				$tagName = RedproductfinderFindProducts::getTagName($tags);
-				$displayTag[] = "<span><strong>" . $typeName . " - " . $tagName . "</strong></span><br>";
+				foreach ($values as $value)
+				{
+					$typeName = RedproductfinderFindProducts::getTypeName($value['typeid']);
+
+					foreach ($value['tags'] as $tags)
+					{
+						$tagName = RedproductfinderFindProducts::getTagName($tags);
+						$displayTag[] = "<span><strong>" . $typeName . " - " . $tagName . "</strong></span><br>";
+					}
+				}
+
+				$display = implode('<br>', $displayTag);
+
+				$template_desc = str_replace("{display_tag}", $display, $template_desc);
+			}
+			else
+			{
+				$template_desc = str_replace("{display_tag}", "", $template_desc);
 			}
 		}
-
-		$display = implode('<br>', $displayTag);
-
-		$template_desc = str_replace("{display_tag}", $display, $template_desc);
+		else
+		{
+			$template_desc = str_replace("{display_tag}", "", $template_desc);
+		}
 	}
 
 

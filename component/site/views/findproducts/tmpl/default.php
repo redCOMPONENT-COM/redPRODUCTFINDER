@@ -487,6 +487,10 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 				$template_desc = str_replace("{display_tag}", $display, $template_desc);
 			}
+			else
+			{
+				$template_desc = str_replace("{display_tag}", "", $template_desc);
+			}
 		}
 		else
 		{
