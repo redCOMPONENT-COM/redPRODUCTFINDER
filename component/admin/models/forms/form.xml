@@ -2,7 +2,7 @@
 <form>
     <fieldset addfieldpath="/administrator/components/com_categories/models/fields">
 		<field name="id"
-			type="text"
+			type="hidden"
 			label="JGLOBAL_FIELD_ID_LABEL"
 			description="JGLOBAL_FIELD_ID_DESC"
 			size="10"
@@ -11,12 +11,12 @@
 			class="readonly"
 		/>
 
-		<field 	id="published" name="published" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" 
+		<field 	id="published" name="published" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC"
 		class="chzn-color-state" filter="intval" size="1" default="1">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-		
+
 		<field name="formname"
 			type="text"
 			label="COM_REDPRODUCTFINDER_FORM_NAME"
@@ -36,7 +36,7 @@
 			<option value="0">
 				JNO</option>
 		</field>
-		
+
 		<field id="showname"
 			name="showname"
 			type="list"
@@ -47,7 +47,7 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		
+
 		<field name="checked_out"
 			type="text"
 			label="COM_REDPRODUCTFINDER_MODELS_FORMS_FORM_CHECKED_OUT_LABEL"
