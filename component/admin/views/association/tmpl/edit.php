@@ -35,9 +35,6 @@ JFactory::getDocument()->addScriptDeclaration('
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
 					<div>
-						<?php echo $this->form->renderField("category_id"); ?>
-					</div>
-					<div>
 						<?php echo $this->form->renderField("product_id"); ?>
 					</div>
 					<div>
