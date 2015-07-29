@@ -53,6 +53,14 @@ if ($saveOrder)
 }
 
 ?>
+<script language="javascript" type="text/javascript">
+	resetfilter = function()
+	{
+		document.getElementById('filter_search').value='';
+		document.getElementById('filter_forms').value='';
+		document.adminForm.submit();
+	}
+</script>
 <form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=types'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
@@ -62,7 +70,7 @@ if ($saveOrder)
 				</div>
 				<div class="btn-group pull-left">
 					<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
-					<button type="button" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.getElementById('filter_search').value='';this.form.submit();"><i class="icon-remove"></i></button>
+					<button type="button" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>" onclick="resetfilter();"><i class="icon-remove"></i></button>
 				</div>
 				<div class="btn-group pull-left">
 					<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
@@ -81,30 +89,48 @@ if ($saveOrder)
 			</div>
 
 			<div class="clearfix"></div>
-
+	<?php if ($this->count == 0) : ?>
+	<div class="alert alert-warning alert-dismissible fade in" role="alert">
+		<button class="close" aria-label="Close" data-dismiss="alert" type="button">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<p><?php echo JText::_('COM_REDPRODUCTFINDER_NOT_FORMS'); ?></p>
+		<p><a class="btn btn-default" href="index.php?option=com_redproductfinder&view=forms">
+			<span class="icon-folder"></span>
+			<?php echo JText::_('COM_REDPRODUCTFINDER_GO_TO_FORMS'); ?>
+		</a></p>
+	</div>
+	<?php elseif (empty($this->items)) : ?>
+	<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<div class="pagination-centered">
+			<h3><?php echo JText::_('COM_REDPRODUCTFINDER_NOTHING_TO_DISPLAY'); ?></h3>
+		</div>
+	</div>
+	<?php else : ?>
 		<table class="table table-striped" id="table-typeslist" class="adminlist">
 			<thead>
 				<tr>
 					<th width="1%" class="nowrap center hidden-phone">
-						<?php echo JHTML::_('rsearchtools.sort', '<i class=\'icon-sort\'></i>', 't.ordering', $listDirn, $listOrder); ?>
+						<?php echo JHTML::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_ORDER', 't.ordering', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="center">
 						<?php echo JHtml::_('grid.checkall'); ?>
 					</th>
 					<th class="title">
-						<?php echo JText::_('COM_REDPRODUCTFINDER_TYPE_NAME'); ?>
+						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_TYPE_NAME', 't.type_name', $listDirn, $listOrder); ?>
 					</th>
 					<th class="title">
-						<?php echo JText::_('COM_REDPRODUCTFINDER_TYPE_FORM_NAME'); ?>
+						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_TYPE_FORM_NAME', 't.form_id', $listDirn, $listOrder); ?>
 					</th>
 					<th class="title">
-						<?php echo JText::_('COM_REDPRODUCTFINDER_TYPE_SELECT'); ?>
+						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_TYPE_SELECT', 't.type_select', $listDirn, $listOrder); ?>
 					</th>
 					<th class="title">
-						<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
+						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 't.published', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%">
-						<?php echo JText::_('COM_REDPRODUCTFINDER_ID'); ?>
+						<?php echo JHtml::_('rsearchtools.sort', 'JGRID_HEADING_ID', 't.id', $listDirn, $listOrder); ?>
 					</th>
 				</tr>
 			</thead>
@@ -171,7 +197,8 @@ if ($saveOrder)
 		            <td colspan="8"><?php echo $this->pagination->getListFooter(); ?></td>
 		        </tr>
 		    </tfoot>
-			</table>
+		</table>
+	<?php endif; ?>
 	</div>
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />

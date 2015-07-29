@@ -44,6 +44,8 @@ class RedproductfinderViewAssociations extends JViewLegacy
 
 		$items	= $this->get("Items");
 		$state	= $this->get("State");
+		$model  = $this->getModel();
+		$count  = $model->countTags();
 
 		/* Set variabels */
 		$this->assignRef('pagination', $pagination);
@@ -53,6 +55,7 @@ class RedproductfinderViewAssociations extends JViewLegacy
 		$this->assignRef('lists', $lists);
 		$this->assignRef('items', $items);
 		$this->assignRef('state', $state);
+		$this->assignRef('count', $count);
 
 		/* Get the toolbar */
 		$this->toolbar();
