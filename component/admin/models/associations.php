@@ -18,6 +18,9 @@ defined('_JEXEC') or die;
  */
 class RedproductfinderModelAssociations extends RModelList
 {
+	protected $filter_fields = array('id', 'a.id',
+									'product_id', 'a.product_id',
+									'published', 'a.published');
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -30,24 +33,13 @@ class RedproductfinderModelAssociations extends RModelList
 	 *
 	 * @since   1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.id', $direction = 'asc')
 	{
-		$app = JFactory::getApplication();
-
-		// Adjust the context to support modal layouts.
-		if ($layout = $app->input->get('layout'))
-		{
-			$this->context .= '.' . $layout;
-		}
-
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
-
 		// List state information.
-		parent::populateState('p.product_name', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
@@ -391,8 +383,7 @@ class RedproductfinderModelAssociations extends RModelList
 
 		$query->select("a.*, p.product_name")
 		->from($db->qn("#__redproductfinder_associations", "a"))
-		->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id")
-		->order($db->qn("a.ordering"));
+		->join("LEFT", $db->qn("#__redshop_product", "p") . " ON a.product_id = p.product_id");
 
 		if ($state == "-2")
 		{
@@ -408,16 +399,36 @@ class RedproductfinderModelAssociations extends RModelList
 
 		if (!empty($search))
 		{
-			$search = $db->q('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
 			$query->where('(p.product_name LIKE ' . $search . ')');
 		}
 
 		// Add the list ordering clause.
-		$orderCol = $this->state->get('list.ordering', 't.type_name');
+		$orderCol = $this->state->get('list.ordering', 'a.id');
 		$orderDirn = $this->state->get('list.direction', 'asc');
 
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
+	}
+
+	/**
+	 * count Tags.
+	 *
+	 * @return JDatabaseQuery A JDatabaseQuery object
+	 */
+	public function countTags()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Select the required fields from the table.
+		$query->select('count(*)');
+		$query->from($db->qn('#__redproductfinder_tags'));
+		$db->setQuery($query);
+		$count = $db->loadResult();
+
+		return $count;
 	}
 }

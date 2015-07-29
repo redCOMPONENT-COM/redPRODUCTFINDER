@@ -27,7 +27,13 @@ class RedproductfinderModelTypes extends RModelList
 	/** @var integer pagination limit */
 	protected $_limit = null;
 
-	protected $filter_fields = array('ordering', 't.ordering');
+	protected $filter_fields = array('id', 't.id',
+									'published', 't.published',
+									'ordering', 't.ordering',
+									'type_name', 't.type_name',
+									'type_select','t.type_select',
+									'form_id', 't.form_id'
+									);
 
 	var $_context = null;
 
@@ -51,31 +57,8 @@ class RedproductfinderModelTypes extends RModelList
 	 */
 	protected function populateState($ordering = "t.ordering", $direction = "asc")
 	{
-		$app = JFactory::getApplication();
-
-		// Adjust the context to support modal layouts.
-		if ($layout = $app->input->get('layout'))
-		{
-			$this->context .= '.' . $layout;
-		}
-		else
-		{
-			$this->context = $this->context;
-		}
-
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
-
-		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
-
-		$value = $app->getUserStateFromRequest('global.list.limit', $this->paginationPrefix . 'limit', $app->getCfg('list_limit'), 'uint');
-		$limit = $value;
-		$this->setState('list.limit', $limit);
-
-		$value = $app->getUserStateFromRequest($this->context . '.limitstart', $this->paginationPrefix . 'limitstart', 0);
-		$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-		$this->setState('list.start', $limitstart);
 
 		// List state information.
 		parent::populateState($ordering, $direction);
@@ -200,7 +183,7 @@ class RedproductfinderModelTypes extends RModelList
 
 		if (!empty($search))
 		{
-			$search = $db->q('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
 			$query->where('(t.type_name LIKE ' . $search . ')');
 		}
 
@@ -211,5 +194,25 @@ class RedproductfinderModelTypes extends RModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
+	}
+
+	/**
+	 * count Forms.
+	 *
+	 * @return JDatabaseQuery A JDatabaseQuery object
+	 */
+	public function countForms()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Select the required fields from the table.
+		$query->select('count(*)');
+		$query->from($db->qn('#__redproductfinder_forms'));
+		$db->setQuery($query);
+		$count = $db->loadResult();
+
+		return $count;
 	}
 }

@@ -33,8 +33,11 @@ class RedproductfinderModelTags extends RModelList
 	/** @var integer pagination limit */
 	protected $limitField = 'tags_limit';
 
-	/** @var integer filter */
-	protected $filter_fields = array('ordering', 't.ordering');
+	protected $filter_fields = array('id', 't.id',
+									'tt.type_id',
+									'tag_name', 't.tag_name',
+									'ordering', 't.ordering',
+									'published', 't.published');
 
 	/**
 	 * Method to auto-populate the model state.
@@ -50,27 +53,8 @@ class RedproductfinderModelTags extends RModelList
 	 */
 	protected function populateState($ordering = "t.ordering", $direction = "asc")
 	{
-		$app = JFactory::getApplication();
-
-		// Adjust the context to support modal layouts.
-		if ($layout = $app->input->get('layout'))
-		{
-			$this->context .= '.' . $layout;
-		}
-
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
-
-		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
-
-		$value = $app->getUserStateFromRequest('global.list.limit', $this->paginationPrefix . 'limit', $app->getCfg('list_limit'), 'uint');
-		$limit = $value;
-		$this->setState('list.limit', $limit);
-
-		$value = $app->getUserStateFromRequest($this->context . '.limitstart', $this->paginationPrefix . 'limitstart', 0);
-		$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-		$this->setState('list.start', $limitstart);
 
 		// List state information.
 		parent::populateState($ordering, $direction);
@@ -220,15 +204,16 @@ class RedproductfinderModelTags extends RModelList
 		 */
 		$state = "1";
 
-		$query->select("t.*")
-			->from($db->qn("#__redproductfinder_tags", "t"));
+		$query->select("t.*, tt.type_id")
+			->from($db->qn("#__redproductfinder_tags", "t"))
+			->join("LEFT", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.tag_id = t.id");
 
 		// Filter by search
 		$search = $this->getState('filter.search');
 
 		if (!empty($search))
 		{
-			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
 			$query->where('(t.tag_name LIKE ' . $search . ')');
 		}
 
@@ -239,5 +224,25 @@ class RedproductfinderModelTags extends RModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
+	}
+
+	/**
+	 * count Types.
+	 *
+	 * @return JDatabaseQuery A JDatabaseQuery object
+	 */
+	public function countTypes()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Select the required fields from the table.
+		$query->select('count(*)');
+		$query->from($db->qn('#__redproductfinder_types'));
+		$db->setQuery($query);
+		$count = $db->loadResult();
+
+		return $count;
 	}
 }

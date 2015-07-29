@@ -55,7 +55,7 @@ JFactory::getDocument()->addScriptDeclaration('
 ');
 
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=associations'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
@@ -73,7 +73,25 @@ JFactory::getDocument()->addScriptDeclaration('
 		</div>
 
 		<div class="clearfix"></div>
-
+	<?php if ($this->count == 0) : ?>
+	<div class="alert alert-warning alert-dismissible fade in" role="alert">
+		<button class="close" aria-label="Close" data-dismiss="alert" type="button">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<p><?php echo JText::_('COM_REDPRODUCTFINDER_NOT_TAGS'); ?></p>
+		<p><a class="btn btn-default" href="index.php?option=com_redproductfinder&view=tags">
+			<span class="icon-folder"></span>
+			<?php echo JText::_('COM_REDPRODUCTFINDER_GO_TO_TAGS'); ?>
+		</a></p>
+	</div>
+	<?php elseif (empty($this->items)) : ?>
+	<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<div class="pagination-centered">
+			<h3><?php echo JText::_('COM_REDPRODUCTFINDER_NOTHING_TO_DISPLAY'); ?></h3>
+		</div>
+	</div>
+	<?php else : ?>
 		<table class="table table-striped" id="associationslist" class="adminlist">
 		<thead>
 			<tr>
@@ -84,16 +102,16 @@ JFactory::getDocument()->addScriptDeclaration('
 					<?php echo JHtml::_('grid.checkall'); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_ASSOCIATION'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_ASSOCIATION', 'a.product_id', $listDirn, $listOrder); ?>
 				</th>
 				<th class="title">
 					<?php echo JText::_('COM_REDPRODUCTFINDER_TAG_NAME'); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('Published'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%">
-					<?php echo JText::_('COM_REDPRODUCTFINDER_ID'); ?>
+					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 		</thead>
@@ -105,10 +123,10 @@ JFactory::getDocument()->addScriptDeclaration('
 					for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 					{
 						$item = $this->items[$i];
-						
+
 						JFilterOutput::objectHTMLSafe($item);
 						$link 	= JRoute::_('index.php?option=com_redproductfinder&task=association.edit&id='. $item->id);
-					
+
 						$checked = JHTML::_('grid.checkedout',  $item, $i);
 						$my  = JFactory::getUser();
 						?>
@@ -158,7 +176,7 @@ JFactory::getDocument()->addScriptDeclaration('
 									</tr>
 									<?php
 									$k = 1 - $k;
-								}	
+								}
 				}
 			?>
 		</tbody>
@@ -168,8 +186,8 @@ JFactory::getDocument()->addScriptDeclaration('
 	         </tr>
 	    </tfoot>
 		</table>
+	<?php endif; ?>
 	</div>
-
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="view" value="associations" />
 	<input type="hidden" name="boxchecked" value="0" />
