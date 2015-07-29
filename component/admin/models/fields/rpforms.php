@@ -40,8 +40,7 @@ class JFormFieldRPForms extends JFormFieldList
 		$query = $db->getQuery(true);
 
 		$query->select($db->qn('id') . ', ' . $db->qn('formname', 'title'))
-			->from($db->qn('#__redproductfinder_forms'))
-			->where('published = ' . $db->q(1));
+			->from($db->qn('#__redproductfinder_forms'));
 
 		$db->setQuery($query);
 

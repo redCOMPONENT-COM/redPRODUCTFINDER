@@ -40,8 +40,7 @@ class JFormFieldRPTypes extends JFormFieldList
 		$query = $db->getQuery(true);
 
 		$query->select($db->qn('id') . ', ' . $db->qn('type_name', 'title'))
-			->from($db->qn('#__redproductfinder_types'))
-			->where('published = ' . $db->q(1));
+			->from($db->qn('#__redproductfinder_types'));
 
 		$db->setQuery($query);
 
