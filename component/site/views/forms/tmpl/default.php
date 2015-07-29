@@ -56,8 +56,7 @@ $filterPriceMax = $param->get("filter_price_max_value", 100);
 							<ul class='taglist' style="list-style: none">
 								<?php foreach($attributeProperties as $k_p => $property) :?>
 									<?php
-									$attname = $model->getAttributeName($property->attribute_id);
-									if ($attname[0] == $attribute->attribute_name) { ?>
+									if ($property->attribute_name == $attribute->attribute_name) : ?>
 										<li>
 											<label>
 											<span class='taginput'><input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][]" value="<?php echo $property->property_name; ?>"></span>
@@ -66,20 +65,24 @@ $filterPriceMax = $param->get("filter_price_max_value", 100);
 											<ul class='taglist' style="list-style: none">
 											<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 												<?php
-													$proname = $model->getPropertyName($subProperty->subattribute_id);
-													if ($proname[0] == $property->property_name) { ?>
+													if ($subProperty->property_name == $property->property_name) :
+														$newArr[] = $subProperty->subattribute_color_name;
+												endif; ?>
+											<?php endforeach;?>
+											<?php  if (isset($newArr)) :
+											foreach(array_unique($newArr) as $key => $value) :?>
 												<li>
 													<label>
 													<span class='taginput'>
-													<input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name;?>][]" value="<?php echo $subProperty->subattribute_color_name; ?>"></span>
-													<span class='tagname'><?php echo $subProperty->subattribute_color_name; ?></span>
+													<input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name;?>][]" value="<?php echo $value; ?>"></span>
+													<span class='tagname'><?php echo $value; ?></span>
 													</label>
 												</li>
-												<?php } ?>
-											<?php endforeach;?>
+											<?php endforeach;
+											endif;?>
 											</ul>
 										</li>
-									<?php } ?>
+									<?php endif; ?>
 								<?php endforeach;?>
 							</ul>
 						</div>

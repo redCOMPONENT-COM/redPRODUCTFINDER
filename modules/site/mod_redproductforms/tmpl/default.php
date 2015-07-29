@@ -147,8 +147,7 @@ if ($count > 0)
 								<ul class='taglist'>
 									<?php foreach($attributeProperties as $k_p => $property) :?>
 										<?php
-										$attname = $model->getAttributeName($property->attribute_id);
-										if ($attname[0] == $attribute->attribute_name) { ?>
+										if ($property->attribute_name == $attribute->attribute_name) : ?>
 											<li>
 												<label>
 												<span class='taginput' data-aliases='<?php echo $attribute->attribute_name;?>'>
@@ -167,10 +166,15 @@ if ($count > 0)
 												<span class='tagname'><?php echo $property->property_name; ?></span>
 												</label>
 												<ul class='taglist'>
-												<?php foreach($attributeSubProperties as $k_sp => $subproperty) :?>
+												<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 													<?php
-														$proname = $model->getPropertyName($subproperty->subattribute_id);
-														if ($proname[0] == $property->property_name) { ?>
+														if ($subProperty->property_name == $property->property_name) :
+															$newArr[] = $subProperty->subattribute_color_name;
+													?>
+													<?php endif; ?>
+												<?php endforeach;?>
+												<?php  if (isset($newArr)) :
+												foreach(array_unique($newArr) as $key => $value) :?>
 													<li>
 														<label>
 														<span class='taginput' data-aliases='<?php echo $property->property_name;?>'>
@@ -179,10 +183,12 @@ if ($count > 0)
 															<?php foreach ($attributeCheck as $att) : unset($att["subproperty"]); ?>
 																<?php foreach ($att as $pro) : ?>
 																	<?php if (isset($subName)) : ?>
-																		<?php foreach ($subName as $sub) : ?>
+																		<?php foreach ($subName as $key => $sub) : ?>
 																			<?php foreach ($sub as $s) : ?>
-																				<?php if ($s == $subproperty->subattribute_color_name) : ?>
-																					<?php echo 'checked' ?>
+																				<?php if ($s == $value) : ?>
+																					<?php if ($property->property_name == $key ) : ?>
+																						<?php echo 'checked' ?>
+																					<?php endif; ?>
 																				<?php endif; ?>
 																			<?php endforeach ?>
 																		<?php endforeach ?>
@@ -190,16 +196,16 @@ if ($count > 0)
 																<?php endforeach ?>
 															<?php endforeach ?>
 														<?php endif; ?>
-														type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name; ?>][]" value="<?php echo $subproperty->subattribute_color_name; ?>">
+														type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name; ?>][]" value="<?php echo $value; ?>">
 														</span>
-														<span class='tagname'><?php echo $subproperty->subattribute_color_name; ?></span>
+														<span class='tagname'><?php echo $value; ?></span>
 														</label>
 													</li>
-													<?php } ?>
-												<?php endforeach;?>
+												<?php endforeach;
+												endif;?>
 												</ul>
 											</li>
-										<?php } ?>
+										<?php endif; ?>
 									<?php endforeach;?>
 								</ul>
 							</div>
