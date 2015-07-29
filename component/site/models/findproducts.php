@@ -273,7 +273,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			// Begin join query
 			foreach ($saveFilter as $type_id => $value)
 			{
-				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id AND ac.published = 1');
+				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
 
 				foreach ($value as $tag_id => $type_tag)
 				{
@@ -356,7 +356,7 @@ class RedproductfinderModelFindproducts extends RModelList
 					$j++;
 				}
 
-				$query->where($where3);
+				$query->where('(' . $where3 . ')');
 			}
 		}
 		elseif ($searchByComp == 0)
@@ -396,7 +396,7 @@ class RedproductfinderModelFindproducts extends RModelList
 				{
 					if (isset($pk[$type]['tags']))
 					{
-						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id AND ac.published = 1');
+						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
 
 						$typeString = implode(',', $pk[$type]["tags"]);
 
@@ -412,6 +412,7 @@ class RedproductfinderModelFindproducts extends RModelList
 				}
 
 				$query->where($tagString);
+				$query->group($db->qn("p.product_id"));
 			}
 			else
 			{
@@ -523,7 +524,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			// Begin join query
 			foreach ($saveFilter as $type_id => $value)
 			{
-				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id AND ac.published = 1');
+				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
 
 				foreach ($value as $tag_id => $type_tag)
 				{
@@ -634,7 +635,7 @@ class RedproductfinderModelFindproducts extends RModelList
 				{
 					if (isset($pk[$type]['tags']))
 					{
-						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id AND ac.published = 1');
+						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
 
 						$typeString = implode(',', $pk[$type]["tags"]);
 

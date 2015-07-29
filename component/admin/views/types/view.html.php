@@ -38,12 +38,15 @@ class RedproductfinderViewTypes extends JViewLegacy
 		$types = $this->get('Types');
 		$items = $this->get('Items');
 		$state = $this->get("State");
+		$model  = $this->getModel();
+		$count  = $model->countForms();
 
 		/* Set variabels */
 		$this->assignRef('pagination', $pagination);
 		$this->assignRef('types', $types);
 		$this->assignRef('items', $items);
 		$this->assignRef('state', $state);
+		$this->assignRef('count', $count);
 
 		/* Get the toolbar */
 		$this->toolbar();

@@ -41,6 +41,8 @@ class RedproductfinderViewTags extends JViewLegacy
 
 		/* Get the used types */
 		$types = $this->get('TagTypeNames');
+		$model = $this->getModel();
+		$count = $model->countTypes();
 
 		/* Set variabels */
 		$this->assignRef('pagination', $pagination);
@@ -48,6 +50,7 @@ class RedproductfinderViewTags extends JViewLegacy
 		$this->assignRef('types', $types);
 		$this->assignRef('items', $items);
 		$this->assignRef('state', $state);
+		$this->assignRef('count', $count);
 
 		/* Get the toolbar */
 		$this->toolbar();
