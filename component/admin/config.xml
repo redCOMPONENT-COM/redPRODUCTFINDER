@@ -2,17 +2,6 @@
 <config addfieldpath="/administrator/components/com_redproductfinder/elements">
 	<fieldset name="basic">
 		<field
-			name="search_by"
-			class="btn-group"
-			type="radio"
-			default="0"
-			label="COM_REDPRODUCTFINDER_SEARCH_BY"
-			description="COM_REDPRODUCTFINDER_SEARCH_BY_TIP">
-			<option value="0">COM_REDPRODUCTFINDER_TAG_TYPE</option>
-		    <option value="1">COM_REDPRODUCTFINDER_ATTRIBUTE</option>
-		</field>
-
-		<field
 			name="product_description"
 			class="btn-group"
 			type="radio"
