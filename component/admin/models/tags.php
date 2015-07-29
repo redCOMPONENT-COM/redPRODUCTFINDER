@@ -204,9 +204,17 @@ class RedproductfinderModelTags extends RModelList
 		 */
 		$state = "1";
 
-		$query->select("t.*, tt.type_id")
+		$query->select("t.*")
 			->from($db->qn("#__redproductfinder_tags", "t"))
 			->join("LEFT", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.tag_id = t.id");
+
+		// Filter by Types
+		$typeId = $this->getState('filter.types');
+
+		if (is_numeric($typeId))
+		{
+			$query->where('tt.type_id = ' . (int) $typeId);
+		}
 
 		// Filter by search
 		$search = $this->getState('filter.search');

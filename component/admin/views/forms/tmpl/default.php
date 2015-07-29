@@ -43,7 +43,7 @@ JFactory::getDocument()->addScriptDeclaration('
 	};
 ');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=forms'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
+<form action="<?php echo JRoute::_('index.php?option=com_redproductfinder'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
@@ -61,14 +61,7 @@ JFactory::getDocument()->addScriptDeclaration('
 		</div>
 
 		<div class="clearfix"></div>
-	<?php if (empty($this->items)) : ?>
-	<div class="alert alert-info">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		<div class="pagination-centered">
-			<h3><?php echo JText::_('COM_REDPRODUCTFINDER_NOTHING_TO_DISPLAY'); ?></h3>
-		</div>
-	</div>
-	<?php else : ?>
+
 		<table class="table table-striped" id="table-formslist" class="adminlist">
 		<thead>
 			<tr>
@@ -76,10 +69,10 @@ JFactory::getDocument()->addScriptDeclaration('
 					<?php echo JHtml::_('grid.checkall'); ?>
 				</th>
 				<th width="20%" class="title">
-					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_FORM_NAME', 'a.formname', $listDirn, $listOrder); ?>
+					<?php echo JText::_('COM_REDPRODUCTFINDER_FORM_NAME'); ?>
 				</th>
 				<th width="3%" class="title center">
-					<?php echo JHtml::_('grid.sort', 'COM_REDPRODUCTFINDER_PUBLISHED', 'a.published', $listDirn, $listOrder); ?>
+					<?php echo JText::_('COM_REDPRODUCTFINDER_PUBLISHED'); ?>
 				</th>
 				<th width="20%" class="title">
 					<?php echo JText::_('COM_REDPRODUCTFINDER_TAG'); ?>
@@ -149,7 +142,6 @@ JFactory::getDocument()->addScriptDeclaration('
 			</tr>
 		</tfoot>
 		</table>
-	<?php endif; ?>
 	</div>
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="view" value="forms" />

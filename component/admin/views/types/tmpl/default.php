@@ -53,6 +53,14 @@ if ($saveOrder)
 }
 
 ?>
+<script language="javascript" type="text/javascript">
+	resetfilter = function()
+	{
+		document.getElementById('filter_search').value='';
+		document.getElementById('filter_forms').value='';
+		document.adminForm.submit();
+	}
+</script>
 <form action="<?php echo JRoute::_('index.php?option=com_redproductfinder&view=types'); ?>" method="post" name="adminForm" id="adminForm" class="admin">
 	<div id="j-main-container" class="span12 j-toggle-main">
 		<div id="filter-bar" class="btn-toolbar">
@@ -62,7 +70,14 @@ if ($saveOrder)
 				</div>
 				<div class="btn-group pull-left">
 					<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
-					<button type="button" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.getElementById('filter_search').value='';this.form.submit();"><i class="icon-remove"></i></button>
+					<button type="button" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>" onclick="resetfilter();"><i class="icon-remove"></i></button>
+				</div>
+				<div class="btn-group pull-left">
+					<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
+					<?php
+						$group = $this->filterForm->getGroup('filter');
+						echo $group['filter_forms']->input;
+					?>
 				</div>
 				<div class="btn-group pull-right hidden-phone">
 					<label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
