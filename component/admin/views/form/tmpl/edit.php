@@ -46,9 +46,6 @@ JFactory::getDocument()->addScriptDeclaration('
 					<div>
 						<?php echo $this->form->renderField('dependency'); ?>
 					</div>
-					<div>
-						<?php echo $this->form->renderField('id'); ?>
-					</div>
 				</div>
 			</div>
 		</div>

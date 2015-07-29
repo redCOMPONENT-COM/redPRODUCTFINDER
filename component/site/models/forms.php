@@ -107,8 +107,9 @@ class RedproductfinderModelForms extends RModel
 	{
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
-			->select("pp.property_name, pp.attribute_id, pp.property_id")
+			->select("pp.property_name, pp.attribute_id, pp.property_id, pa.attribute_name")
 		->from($db->qn("#__redshop_product_attribute_property", "pp"))
+		->join("LEFT", $db->qn("#__redshop_product_attribute", "pa") . " ON pp.attribute_id = pa.attribute_id")
 		->group($db->qn("pp.property_name"));
 
 		$db->setQuery($query);
@@ -128,54 +129,12 @@ class RedproductfinderModelForms extends RModel
 	{
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
-			->select("ps.subattribute_color_name, ps.subattribute_id")
+			->select("ps.subattribute_color_name, ps.subattribute_id, pp.property_name")
 		->from($db->qn("#__redshop_product_subattribute_color", "ps"))
-		->group($db->qn("ps.subattribute_color_name"));
+		->join("LEFT", $db->qn("#__redshop_product_attribute_property", "pp") . " ON ps.subattribute_id = pp.property_id");
 
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
-
-		return $data;
-	}
-
-	/**
-	 * This method will get attribute name
-	 *
-	 * @param   array  $id  attribute id
-	 *
-	 * @return array
-	 */
-	public function getAttributeName($id)
-	{
-		$db = $this->getDbo();
-		$query = $db->getQuery(true)
-			->select("pa.attribute_name")
-		->from($db->qn("#__redshop_product_attribute", "pa"))
-		->where($db->qn("pa.attribute_id") . " = " . $db->q((int) $id));
-
-		$db->setQuery($query);
-		$data = $db->loadRow();
-
-		return $data;
-	}
-
-	/**
-	 * This method will get property name
-	 *
-	 * @param   array  $id  property id
-	 *
-	 * @return array
-	 */
-	public function getPropertyName($id)
-	{
-		$db = $this->getDbo();
-		$query = $db->getQuery(true)
-			->select("pp.property_name")
-		->from($db->qn("#__redshop_product_attribute_property", "pp"))
-		->where($db->qn("pp.property_id") . " = " . $db->q((int) $id));
-
-		$db->setQuery($query);
-		$data = $db->loadRow();
 
 		return $data;
 	}
