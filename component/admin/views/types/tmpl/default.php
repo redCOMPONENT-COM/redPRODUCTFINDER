@@ -97,7 +97,7 @@ if ($saveOrder)
 			<thead>
 				<tr>
 					<th width="1%" class="nowrap center hidden-phone">
-						<?php echo JHTML::_('rsearchtools.sort', '<i class=\'icon-sort\'></i>', 't.ordering', $listDirn, $listOrder); ?>
+						<?php echo JHTML::_('rsearchtools.sort', 'COM_REDPRODUCTFINDER_ORDER', 't.ordering', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="center">
 						<?php echo JHtml::_('grid.checkall'); ?>
