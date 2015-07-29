@@ -11,7 +11,7 @@ defined('JPATH_BASE') or die;
 
 jimport('joomla.form.formfield');
 JLoader::load('RedshopHelperProduct');
-
+require_once JPATH_SITE . "/administrator/components/com_redshop/helpers/redshop.cfg.php";
 /**
  * Form Field class for the Joomla Framework.
  *
