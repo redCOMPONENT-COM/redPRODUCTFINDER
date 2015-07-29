@@ -65,6 +65,8 @@ class RedproductfinderModelForms extends RModel
 			->join("INNER", $db->qn("#__redproductfinder_tag_type", "tt") . " ON tt.type_id = t.id")
 			->join("LEFT", $db->qn("#__redproductfinder_tags", "tg") . " ON tg.id = tt.tag_id")
 			->where($db->qn("f.id") . "=" . $pk)
+			->where($db->qn("t.published") . " = 1")
+			->where($db->qn("tg.published") . " = 1")
 			->order("t.ordering ASC, tg.ordering ASC");
 
 		$db->setQuery($query);
