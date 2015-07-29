@@ -161,6 +161,13 @@ if ($count > 0)
 														<?php endforeach ?>
 													<?php endforeach ?>
 												<?php endif; ?>
+												<?php if (isset($subName)) : ?>
+													<?php foreach ($subName as $key => $sub) : ?>
+														<?php if ($key == $property->property_name) : ?>
+															<?php echo 'checked' ?>
+														<?php endif; ?>
+													<?php endforeach ?>
+												<?php endif; ?>
 												type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][]" value="<?php echo $property->property_name; ?>">
 												</span>
 												<span class='tagname'><?php echo $property->property_name; ?></span>
@@ -169,38 +176,36 @@ if ($count > 0)
 												<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 													<?php
 														if ($subProperty->property_name == $property->property_name) :
-															$newArr[] = $subProperty->subattribute_color_name;
+															$newArr[$subProperty->property_name][] = $subProperty->subattribute_color_name;
 													?>
 													<?php endif; ?>
 												<?php endforeach;?>
 												<?php  if (isset($newArr)) :
-												foreach(array_unique($newArr) as $key => $value) :?>
+												foreach($newArr as $key => $value) :?>
+													<?php if ($key == $property->property_name) : ?>
+													<?php foreach(array_unique($value) as $key => $valueSub) :?>
 													<li>
 														<label>
 														<span class='taginput' data-aliases='<?php echo $property->property_name;?>'>
 														<input
-														<?php if (isset($pk['attribute'])) : ?>
-															<?php foreach ($attributeCheck as $att) : unset($att["subproperty"]); ?>
-																<?php foreach ($att as $pro) : ?>
-																	<?php if (isset($subName)) : ?>
-																		<?php foreach ($subName as $key => $sub) : ?>
-																			<?php foreach ($sub as $s) : ?>
-																				<?php if ($s == $value) : ?>
-																					<?php if ($property->property_name == $key ) : ?>
-																						<?php echo 'checked' ?>
-																					<?php endif; ?>
-																				<?php endif; ?>
-																			<?php endforeach ?>
-																		<?php endforeach ?>
+														<?php if (isset($subName)) : ?>
+															<?php foreach ($subName as $key => $sub) : ?>
+																<?php foreach ($sub as $s) : ?>
+																	<?php if ($property->property_name == $key ) : ?>
+																		<?php if ($s == $valueSub) : ?>
+																			<?php echo 'checked' ?>
+																		<?php endif; ?>
 																	<?php endif; ?>
 																<?php endforeach ?>
 															<?php endforeach ?>
 														<?php endif; ?>
-														type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name; ?>][]" value="<?php echo $value; ?>">
+														type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name; ?>][]" value="<?php echo $valueSub; ?>">
 														</span>
-														<span class='tagname'><?php echo $value; ?></span>
+														<span class='tagname'><?php echo $valueSub; ?></span>
 														</label>
 													</li>
+													<?php endforeach; ?>
+													<?php endif; ?>
 												<?php endforeach;
 												endif;?>
 												</ul>

@@ -66,20 +66,22 @@ $filterPriceMax = $param->get("filter_price_max_value", 100);
 											<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 												<?php
 													if ($subProperty->property_name == $property->property_name) :
-														$newArr[] = $subProperty->subattribute_color_name;
-												endif; ?>
-											<?php endforeach;?>
-											<?php  if (isset($newArr)) :
-											foreach(array_unique($newArr) as $key => $value) :?>
+														$newArr[$subProperty->property_name][] = $subProperty->subattribute_color_name;
+													endif; ?>
+											<?php endforeach; ?>
+											<?php foreach($newArr as $key => $value) :?>
+												<?php if ($key == $property->property_name) : ?>
+												<?php foreach(array_unique($value) as $key => $valueSub) :?>
 												<li>
 													<label>
 													<span class='taginput'>
-													<input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name;?>][]" value="<?php echo $value; ?>"></span>
-													<span class='tagname'><?php echo $value; ?></span>
+													<input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name;?>][]" value="<?php echo $valueSub; ?>"></span>
+													<span class='tagname'><?php echo $valueSub; ?></span>
 													</label>
 												</li>
-											<?php endforeach;
-											endif;?>
+												<?php endforeach; ?>
+												<?php endif; ?>
+											<?php endforeach; ?>
 											</ul>
 										</li>
 									<?php endif; ?>
