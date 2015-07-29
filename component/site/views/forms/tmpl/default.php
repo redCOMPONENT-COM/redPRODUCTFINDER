@@ -49,41 +49,46 @@ $filterPriceMax = $param->get("filter_price_max_value", 100);
 					<?php endforeach;?>
 				</div>
 			<?php else : ?>
-				<div  class="row-fluid form-horizontal-desktop">
+				<div class="row-fluid form-horizontal-desktop">
 					<?php foreach($attributes as $k_a => $attribute) :?>
 						<div id='typename-<?php echo $attribute->attribute_id;?>'>
 							<label><?php echo $attribute->attribute_name;?></label>
 							<ul class='taglist' style="list-style: none">
 								<?php foreach($attributeProperties as $k_p => $property) :?>
 									<?php
-									$attname = $model->getAttributeName($property->attribute_id);
-									if ($attname[0] == $attribute->attribute_name) : ?>
+									if ($property->attribute_name == $attribute->attribute_name) : ?>
 										<li>
 											<label>
-											<span class='taginput'><input type="checkbox" name="redform[properties][]" value="<?php echo $property->property_name; ?>"></span>
+											<span class='taginput'><input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][]" value="<?php echo $property->property_name; ?>"></span>
 											<span class='tagname'><?php echo $property->property_name; ?></span>
 											</label>
 											<ul class='taglist' style="list-style: none">
 											<?php foreach($attributeSubProperties as $k_sp => $subProperty) :?>
 												<?php
-													$proName = $model->getPropertyName($subProperty->subattribute_id);
-													if ($proName[0] == $property->property_name) : ?>
+													if ($subProperty->property_name == $property->property_name) :
+														$newArr[$subProperty->property_name][] = $subProperty->subattribute_color_name;
+													endif; ?>
+											<?php endforeach; ?>
+											<?php foreach($newArr as $key => $value) :?>
+												<?php if ($key == $property->property_name) : ?>
+												<?php foreach(array_unique($value) as $key => $valueSub) :?>
 												<li>
 													<label>
 													<span class='taginput'>
-													<input type="checkbox" name="redform[properties][]" value="<?php echo $subProperty->subattribute_color_name; ?>"></span>
-													<span class='tagname'><?php echo $subProperty->subattribute_color_name; ?></span>
+													<input type="checkbox" name="redform[attribute][<?php echo $attribute->attribute_name;?>][subproperty][<?php echo $property->property_name;?>][]" value="<?php echo $valueSub; ?>"></span>
+													<span class='tagname'><?php echo $valueSub; ?></span>
 													</label>
 												</li>
+												<?php endforeach; ?>
 												<?php endif; ?>
-											<?php endforeach;?>
+											<?php endforeach; ?>
 											</ul>
 										</li>
 									<?php endif; ?>
-								<?php endforeach; ?>
+								<?php endforeach;?>
 							</ul>
 						</div>
-					<?php endforeach; ?>
+					<?php endforeach;?>
 				</div>
 			<?php endif; ?>
 			</div>
