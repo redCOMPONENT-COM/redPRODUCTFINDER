@@ -363,7 +363,7 @@ class RedproductfinderModelFindproducts extends RModelList
 					$j++;
 				}
 
-				$query->where($where3);
+				$query->where('(' . $where3 . ')');
 			}
 		}
 		elseif ($searchByComp == 0)

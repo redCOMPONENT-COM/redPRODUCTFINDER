@@ -18,6 +18,33 @@ defined('_JEXEC') or die;
  */
 class RedproductfinderModelFilters extends RModelList
 {
+	protected $filter_fields = array('id', 'f.id',
+									'tag_id', 'f.tag_id',
+									'published', 'f.published',
+									'filter_name', 'f.filter_name',
+									);
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState($ordering = 'f.filter_name', $direction = 'asc')
+	{
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		// List state information.
+		parent::populateState($ordering, $direction);
+	}
+
 	/**
 	 * This method will get filter item on each id
 	 *
@@ -129,23 +156,52 @@ class RedproductfinderModelFilters extends RModelList
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
-		// Get filter state - do it later
+		/*
+		 * @todo Get filter by state - we will continue on the next version
+		*/
 		$state = "1";
 
 		$query->select("f.*")
-		->from($db->qn("#__redproductfinder_filters", "f"))
-		->group($db->qn("f.ordering"))
-		->group($db->qn("f.id"));
+			->from($db->qn("#__redproductfinder_filters", "f"));
 
-		if ($state == "-2")
+		// Filter by published state
+		$published = $this->getState('filter.published');
+
+		// Filter by search in formname
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
 		{
-			$query->where($db->qn("f.published") . "=" . $db->q("-2"));
+			$search = $db->quote('%' . $db->escape(trim($search, true) . '%'));
+			$query->where('(f.filter_name LIKE ' . $search . ')');
 		}
-		else
-		{
-			$query->where($db->qn("f.published") . "!=" . $db->q("-2"));
-		}
+
+		// Add the list ordering clause.
+		$orderCol = $this->state->get('list.ordering', 'f.filter_name');
+		$orderDirn = $this->state->get('list.direction', 'asc');
+
+		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
+	}
+
+	/**
+	 * count Tags.
+	 *
+	 * @return JDatabaseQuery A JDatabaseQuery object
+	 */
+	public function countTags()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Select the required fields from the table.
+		$query->select('count(*)');
+		$query->from($db->qn('#__redproductfinder_tags'));
+		$db->setQuery($query);
+		$count = $db->loadResult();
+
+		return $count;
 	}
 }

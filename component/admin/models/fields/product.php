@@ -10,7 +10,8 @@
 defined('JPATH_BASE') or die;
 
 jimport('joomla.form.formfield');
-
+JLoader::load('RedshopHelperProduct');
+require_once JPATH_SITE . "/administrator/components/com_redshop/helpers/redshop.cfg.php";
 /**
  * Form Field class for the Joomla Framework.
  *
@@ -33,48 +34,15 @@ class JFormFieldProduct extends JFormField
 		$id = $input->get("id", 0, "INT");
 		$catid = $input->get("catid", 0, "INT");
 		$modelAssociations = JModelLegacy::getInstance("Associations", "RedproductfinderModel");
-		$products = 0;
-
-		if ($id != 0)
-		{
-			$productId = $modelAssociations->getProductByAssociation($id);
-
-			if ($catid)
-			{
-				$products = $modelAssociations->getProductByCategory($catid);
-			}
-			else
-			{
-				$catid = $modelAssociations->getCategoryById($productId);
-				$products = $modelAssociations->getProductByCategory($catid);
-			}
-		}
-		else
-		{
-			$products = $modelAssociations->getProductByCategory($catid);
-		}
+		$producthelper = new producthelper;
+		$productId = $modelAssociations->getProductByAssociation($id);
 
 		$layout = new JLayoutFile('product');
-		$selected = array();
-
-		// Get association ID
-		if ($id != 0)
-		{
-			$proSelected = $modelAssociations->getAssociationProduct($id);
-
-			if (count($proSelected) > 0)
-			{
-				foreach ($proSelected as $k => $pro)
-				{
-					$selected[] = $pro["product_id"];
-				}
-			}
-		}
 
 		$html = $layout->render(
 			array(
-				"selected" => $selected,
-				"products" => $products
+				"product_id" => $productId,
+				"producthelper" => $producthelper,
 			)
 		);
 

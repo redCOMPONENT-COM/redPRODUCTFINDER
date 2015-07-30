@@ -14,7 +14,6 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.keepalive');
 JHtml::_('rbootstrap.tooltip');
-JHtml::_('rjquery.chosen', 'select');
 JHtml::_('behavior.modal', 'a.modal-thumb');
 JHtml::_('behavior.formvalidator');
 
@@ -36,9 +35,6 @@ JFactory::getDocument()->addScriptDeclaration('
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
 					<div>
-						<?php echo $this->form->renderField("category_id"); ?>
-					</div>
-					<div>
 						<?php echo $this->form->renderField("product_id"); ?>
 					</div>
 					<div>
@@ -49,9 +45,6 @@ JFactory::getDocument()->addScriptDeclaration('
 					</div>
 					<div>
 						<?php echo $this->form->renderField('published'); ?>
-					</div>
-					<div>
-						<?php echo $this->form->renderField('id'); ?>
 					</div>
 				</div>
 			</div>
