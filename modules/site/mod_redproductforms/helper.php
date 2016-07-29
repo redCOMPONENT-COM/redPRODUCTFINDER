@@ -120,35 +120,32 @@ class ModRedproductForms
 		$min = 0;
 		$producthelper = new producthelper;
 		$allProductPrices = array();
+		$param = JComponentHelper::getParams('com_redproductfinder');
 
-		// Get product price
-		foreach ($pids as $k => $id)
+		if (!empty($pids))
 		{
-			$productprices = $producthelper->getProductNetPrice($id);
-			$allProductPrices[] = $productprices['product_price'];
-		}
+			// Get product price
+			$productPrices = $producthelper->getProductsNetPrice($pids);
 
-		// Get first value to make sure it won't zero value
-		$max = $min = $allProductPrices[0];
-
-		// Loop to check max min
-		foreach ($allProductPrices as $k => $value)
-		{
-			// Check max
-			if ($value >= $max)
+			if (!empty($productPrices))
 			{
-				$max = $value;
+				$min = $max = $productPrices[0]['product_price'];
+
+				foreach ($productPrices as $productPrice)
+				{
+					$max = ($productPrice['product_price'] > $max) ? $productPrice['product_price'] : $max;
+					$min = ($productPrice['product_price'] < $min) ? $productPrice['product_price'] : $min;
+				}
 			}
-
-			// Check min
-			if ($value <= $min)
+			else
 			{
-				$min = $value;
+				$min = $param->get('filter_price_min_value');
+				$max = $param->get('filter_price_max_value');
 			}
 		}
 
 		$arrays = array(
-			"max" => $max + 100,
+			"max" => $max,
 			"min" => $min
 		);
 
