@@ -28,16 +28,23 @@ class RedproductfinderModelRedproductfinder extends RModelList
 		$db = JFactory::getDBO();
 		$totals = array();
 		/* Type totals */
-		$q = "SELECT COUNT(id) AS total FROM #__redproductfinder_types;";
-		$db->setQuery($q);
-		$totals['types']['total'] = $db->loadResult();
-		$q = "SELECT COUNT(id) AS total FROM #__redproductfinder_tags;";
-		$db->setQuery($q);
-		$totals['tags']['total'] = $db->loadResult();
-		/* Product totals */
-		$q = "SELECT COUNT(id) AS total FROM #__redproductfinder_associations";
-		$db->setQuery($q);
-		$totals['associations']['total'] = $db->loadResult();
+		$query = $db->getQuery(true)
+			->select('COUNT(id) AS total')
+			->from($db->qn('#__redproductfinder_types'));
+		$db->setQuery($query);
+		$totals['Types']['total'] = $db->loadResult();
+
+		$query = $db->getQuery(true)
+			->select('COUNT(id) AS total')
+			->from($db->qn('#__redproductfinder_tags'));
+		$db->setQuery($query);
+		$totals['Tags']['total'] = $db->loadResult();
+
+		$query = $db->getQuery(true)
+			->select('COUNT(id) AS total')
+			->from($db->qn('#__redproductfinder_associations'));
+		$db->setQuery($query);
+		$totals['Associations']['total'] = $db->loadResult();
 
 		return $totals;
 	}

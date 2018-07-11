@@ -8,17 +8,50 @@
 defined('_JEXEC') or die;
 
 $param = JComponentHelper::getParams('com_redproductfinder');
+$searchBy = $param->get("search_by");
+$description = $param->get('product_description');
 $template_id = $param->get('prod_template');
+$showPrice = $param->get("show_price");
+$showCart = $param->get("show_add_to_cart");
+$searchTag = $param->get("search_tag_display");
 $input = JFactory::getApplication()->input;
-$redform = $input->post->get('redform', array(), "filter");
 $isredshop = JComponentHelper::isEnabled('com_redshop');
-$app = JFactory::getApplication();
+$redform = $input->get('redform', array(), "array");
+
+if ($redform)
+{
+	$pk = $redform;
+}
+else
+{
+	$json = $input->get('jsondata', "", "string");
+
+	// Decode from string to array data
+	$pk = json_decode($json, true);
+}
+
+unset($pk["filterprice"]);
+unset($pk["template_id"]);
+unset($pk["manufacturer_id"]);
+unset($pk["cid"]);
+
+if (isset($pk))
+{
+	foreach ( $pk as $k => $value )
+	{
+		if (isset($value['tags']))
+		{
+			$values[] = $value;
+		}
+	}
+}
 
 if (!$isredshop)
 {
 	JError::raiseError('500', 'redShop Component is not installed');
 }
 
+JLoader::import('findproducts', JPATH_SITE . '/components/com_redproductfinder/helpers');
 JLoader::import('redshop.library');
 JLoader::load('RedshopHelperProduct');
 JLoader::load('RedshopHelperAdminConfiguration');
@@ -78,6 +111,8 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		// Count accessory
 		$accessorylist = $producthelper->getProductAccessory(0, $product->product_id);
 		$totacc = count($accessorylist);
+		$netPrice = $producthelper->getProductNetPrice($pid);
+		$productPrice = $netPrice['productPrice'] + $netPrice['productVat'];
 
 		$data_add = $template_product;
 
@@ -102,6 +137,15 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 		$data_add = str_replace("{product_number_lbl}", JText::_('COM_REDSHOP_PRODUCT_NUMBER_LBL'), $data_add);
 		$product_number_output = '<span id="product_number_variable' . $product->product_id . '">' . $product->product_number . '</span>';
 		$data_add = str_replace("{product_number}", $product_number_output, $data_add);
+
+		if ($showPrice == 1)
+		{
+			$data_add = str_replace("{product_price}", $producthelper->getProductFormattedPrice($productPrice), $data_add);
+		}
+		else
+		{
+			$data_add = str_replace("{product_price}", '', $data_add);
+		}
 
 		// Replace VAT information
 		$data_add = $producthelper->replaceVatinfo($data_add);
@@ -141,14 +185,16 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 
 		if (strstr($data_add, '{product_s_desc}'))
 		{
-			$p_s_desc = $Redconfiguration->maxchar($product->product_s_desc, CATEGORY_PRODUCT_SHORT_DESC_MAX_CHARS, CATEGORY_PRODUCT_SHORT_DESC_END_SUFFIX);
-			$data_add = str_replace("{product_s_desc}", $p_s_desc, $data_add);
-		}
-
-		if (strstr($data_add, '{product_desc}'))
-		{
-			$p_desc = $Redconfiguration->maxchar($product->product_desc, CATEGORY_PRODUCT_DESC_MAX_CHARS, CATEGORY_PRODUCT_DESC_END_SUFFIX);
-			$data_add = str_replace("{product_desc}", $p_desc, $data_add);
+			if ($description == 'short')
+			{
+				$p_s_desc = $Redconfiguration->maxchar($product->product_s_desc, CATEGORY_PRODUCT_SHORT_DESC_MAX_CHARS, CATEGORY_PRODUCT_SHORT_DESC_END_SUFFIX);
+				$data_add = str_replace("{product_s_desc}", $p_s_desc, $data_add);
+			}
+			else
+			{
+				$p_desc = $Redconfiguration->maxchar($product->product_desc, CATEGORY_PRODUCT_DESC_MAX_CHARS, CATEGORY_PRODUCT_DESC_END_SUFFIX);
+				$data_add = str_replace("{product_desc}", $p_desc, $data_add);
+			}
 		}
 
 		if (strstr($data_add, '{product_rating_summary}'))
@@ -407,6 +453,11 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 			}
 		}
 
+		if ($showCart == 0)
+		{
+			$data_add = str_replace("{form_addtocart:add_to_cart1}", "", $data_add);
+		}
+
 		/* get cart tempalte */
 		$data_add = $producthelper->replaceCartTemplate($product->product_id, $catid, 0, 0, $data_add, $isChilds, $userfieldArr, $totalatt, $totacc, $count_no_user_field, "");
 
@@ -414,6 +465,38 @@ if (strstr($template_desc, "{product_loop_start}") && strstr($template_desc, "{p
 	}
 
 	$product_tmpl = $product_data;
+
+	if (strstr($template_desc, "{display_tag}"))
+	{
+		if ($searchTag == 1)
+		{
+			if (isset($values))
+			{
+				foreach ($values as $value)
+				{
+					$typeName = RedproductfinderFindProducts::getTypeName($value['typeid']);
+
+					foreach ($value['tags'] as $tags)
+					{
+						$tagName = RedproductfinderFindProducts::getTagName($tags);
+						$displayTag[] = "<span><strong>" . $typeName . " - " . $tagName . "</strong></span><br>";
+					}
+				}
+
+				$display = implode('<br>', $displayTag);
+
+				$template_desc = str_replace("{display_tag}", $display, $template_desc);
+			}
+			else
+			{
+				$template_desc = str_replace("{display_tag}", "", $template_desc);
+			}
+		}
+		else
+		{
+			$template_desc = str_replace("{display_tag}", "", $template_desc);
+		}
+	}
 
 	$db    = JFactory::getDbo();
 	$query = 'SELECT category_name'

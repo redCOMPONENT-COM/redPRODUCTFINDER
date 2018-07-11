@@ -226,6 +226,11 @@ class RedproductfinderModelFindproducts extends RModelList
 		$saveFilter = $session->get('saveFilter');
 
 		$searchByComp = $param->get('search_by');
+		$searchParentProduct = $param->get('show_main_product');
+		$searchChildProduct = $param->get('search_child_product');
+		$qualityScore = $param->get('use_quality_score');
+		$filterOption = $param->get('redshop_filter_option');
+		$considerAllTags = $param->get('consider_all_tags');
 
 		// Filter by cid
 		$cid = $this->getState("catid");
@@ -237,6 +242,8 @@ class RedproductfinderModelFindproducts extends RModelList
 		if (isset($pk["filterprice"]))
 		{
 			$filter = $pk["filterprice"];
+			$min = $filter['min'];
+			$max = $filter['max'];
 		}
 
 		$orderBy = $this->getState('order_by');
@@ -273,7 +280,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			// Begin join query
 			foreach ($saveFilter as $type_id => $value)
 			{
-				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
+				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id AND ac.published = 1');
 
 				foreach ($value as $tag_id => $type_tag)
 				{
@@ -396,23 +403,39 @@ class RedproductfinderModelFindproducts extends RModelList
 				{
 					if (isset($pk[$type]['tags']))
 					{
-						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
-
 						$typeString = implode(',', $pk[$type]["tags"]);
+					}
 
-						if (isset($pk[$type]["tags"]))
+					if (isset($pk[$type]['tags']) && isset($typeString) && !empty($typeString))
+					{
+						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id AND ac.published = 1');
+
+						$arrQuery[] = 'ac_t' . $j . '.tag_id IN (' . $typeString . ")";
+						$tagString = implode(' OR ', $arrQuery);
+
+						if ($qualityScore == 1)
 						{
-							$arrQuery[] = 'ac_t' . $j . '.tag_id IN (' . $typeString . ")";
-							$tagString = implode(' OR ', $arrQuery);
+							$query->order('ac_t' . $i . '.quality_score ASC');
 						}
 
 						$j++;
 						$i++;
 					}
+					elseif (isset($pk[$type]['from']) && !empty($pk[$type]['from']) && isset($pk[$type]['to']) && !empty($pk[$type]['to']))
+					{
+						$from = $pk[$type]['from'];
+						$to = $pk[$type]['to'];
+						$dateFrom = date_format(date_create($from), "Y-m-d H:i:s");
+						$dateTo = date_format(date_create($to), "Y-m-d H:i:s");
+						$where = "p.publish_date BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
+						$query->where($where);
+					}
 				}
 
-				$query->where($tagString);
-				$query->group($db->qn("p.product_id"));
+				if (isset($typeString) && !empty($typeString))
+				{
+					$query->where('(' . $tagString . ')');
+				}
 			}
 			else
 			{
@@ -426,12 +449,24 @@ class RedproductfinderModelFindproducts extends RModelList
 			}
 		}
 
+		if ($searchParentProduct == 1 && $searchChildProduct == 0)
+		{
+			$query->where("p.product_parent_id = 0");
+		}
+		elseif ($searchChildProduct == 1 && $searchParentProduct == 0)
+		{
+			$query->where("p.product_parent_id <> 0");
+		}
+		elseif ($searchParentProduct == $searchChildProduct)
+		{
+			$query->where("p.product_parent_id IS NOT NULL");
+		}
+
 		$query->where("p.published = 1")
 			->where("p.expired = 0")
-			->where("p.product_parent_id = 0")
 			->group($db->qn("p.product_id"));
 
-		if (isset($filter))
+		if (!empty($min) && !empty($max))
 		{
 			// Condition min max
 			$min = $filter['min'];
@@ -457,6 +492,10 @@ class RedproductfinderModelFindproducts extends RModelList
 		{
 			$query->order($db->escape($orderBy));
 		}
+		elseif ($filterOption == 1)
+		{
+			$query->order('p.product_id DESC');
+		}
 
 		return $query;
 	}
@@ -479,6 +518,11 @@ class RedproductfinderModelFindproducts extends RModelList
 		$db = JFactory::getDbo();
 
 		$searchByComp = $param->get('search_by');
+		$searchParentProduct = $param->get('show_main_product');
+		$searchChildProduct = $param->get('search_child_product');
+		$qualityScore = $param->get('use_quality_score');
+		$filterOption = $param->get('redshop_filter_option');
+		$considerAllTags = $param->get('consider_all_tags');
 
 		$orderBy = $this->getState('order_by');
 
@@ -524,7 +568,7 @@ class RedproductfinderModelFindproducts extends RModelList
 			// Begin join query
 			foreach ($saveFilter as $type_id => $value)
 			{
-				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
+				$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id AND ac.published = 1');
 
 				foreach ($value as $tag_id => $type_tag)
 				{
@@ -635,28 +679,54 @@ class RedproductfinderModelFindproducts extends RModelList
 				{
 					if (isset($pk[$type]['tags']))
 					{
-						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id');
+						$tagString = implode(',', $pk[$type]["tags"]);
+					}
 
-						$typeString = implode(',', $pk[$type]["tags"]);
+					if (isset($tagString) && !empty($tagString) && isset($pk[$type]['tags']))
+					{
+						$query->join("LEFT", $db->qn('#__redproductfinder_association_tag', 'ac_t' . $i) . ' ON ac.id = ac_t' . $i . '.association_id AND ac.published = 1');
 
-						if (isset($pk[$type]["tags"]))
+						$query->where('ac_t' . $j . '.tag_id IN (' . $tagString . ")");
+
+						if ($qualityScore == 1)
 						{
-							$query->where('ac_t' . $j . '.tag_id IN (' . $typeString . ")");
+							$query->order('ac_t' . $i . '.quality_score ASC');
 						}
 
 						$j++;
 						$i++;
 					}
+					elseif (isset($pk[$type]['from']) && !empty($pk[$type]['from']) && isset($pk[$type]['to']) && !empty($pk[$type]['to']))
+					{
+						$from = $pk[$type]['from'];
+						$to = $pk[$type]['to'];
+						$dateFrom = date_format(date_create($from), "Y-m-d H:i:s");
+						$dateTo = date_format(date_create($to), "Y-m-d H:i:s");
+						$where = "p.publish_date BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
+						$query->where($where);
+					}
 				}
 			}
 		}
 
+		if ($searchParentProduct == 1 && $searchChildProduct == 0)
+		{
+			$query->where("p.product_parent_id = 0");
+		}
+		elseif ($searchChildProduct == 1 && $searchParentProduct == 0)
+		{
+			$query->where("p.product_parent_id <> 0");
+		}
+		elseif ($searchParentProduct == $searchChildProduct)
+		{
+			$query->where("p.product_parent_id IS NOT NULL");
+		}
+
 		$query->where("p.published = 1")
 			->where("p.expired = 0")
-			->where("p.product_parent_id = 0")
 			->group("p.product_id");
 
-		if ($filter)
+		if (!empty($min) && !empty($max))
 		{
 			$priceNormal = $db->qn("p.product_price") . " BETWEEN $min AND $max";
 			$priceDiscount = $db->qn("p.discount_price") . " BETWEEN $min AND $max";
@@ -677,6 +747,10 @@ class RedproductfinderModelFindproducts extends RModelList
 		if ($orderBy)
 		{
 			$query->order($db->escape($orderBy));
+		}
+		elseif ($filterOption == 1)
+		{
+			$query->order('p.product_id DESC');
 		}
 
 		return $query;
